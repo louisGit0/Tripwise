@@ -11,6 +11,7 @@ import { TripsModule } from './trips/trips.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FuelPricesModule } from './fuel-prices/fuel-prices.module';
 import { ChargingStationsModule } from './charging-stations/charging-stations.module';
+import { MapboxModule } from './mapbox/mapbox.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 
@@ -25,6 +26,7 @@ import databaseConfig from './config/database.config';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.get('database')!,
     }),
+    MapboxModule,
     AuthModule,
     UsersModule,
     VehiclesModule,
