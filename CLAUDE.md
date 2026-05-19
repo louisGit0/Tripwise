@@ -220,6 +220,37 @@ Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
 
 ---
 
+## Vehicles — Endpoints
+
+### Catalogue (public)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/vehicles/catalog` | Liste paginée de VehicleModel. Query : `search` (brand+model), `fuelType`, `page`, `limit` |
+| GET | `/api/v1/vehicles/catalog/:id` | Détail d'un VehicleModel |
+
+### Véhicules utilisateur (JWT requis)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/vehicles/me` | Liste les UserVehicle de l'utilisateur (avec VehicleModel) |
+| POST | `/api/v1/vehicles/me` | Ajoute un véhicule. Body : `{ vehicleModelId, nickname?, homeElectricityPrice?, publicChargingPrice? }` |
+| PATCH | `/api/v1/vehicles/me/:id` | Modifie nickname ou tarifs électricité |
+| DELETE | `/api/v1/vehicles/me/:id` | Supprime (204) |
+
+### Règles métier
+- Véhicule **ELECTRIC** : `homeElectricityPrice` et `publicChargingPrice` requis à la création (> 0)
+- Véhicule **non-ELECTRIC** : ces deux champs sont forcés à `null` côté service
+- 403 si on tente de modifier/supprimer un véhicule appartenant à un autre utilisateur
+
+### Tests e2e
+```bash
+npx jest --config test/jest-e2e.json --testPathPatterns="vehicles" --forceExit
+# 20 tests
+```
+
+---
+
 ## Auth — Endpoints & configuration
 
 ### Endpoints disponibles
@@ -301,6 +332,15 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 - Logique liaison : si email OAuth existe déjà en local → linkOAuthProvider (pas de doublon)
 - simple-enum utilisé dans les entités (compatible SQLite pour tests, migration PG utilise native enum)
 - Tests e2e : 11 tests (register, login, /me, validations, cas d'erreur) — SQLite in-memory + mock OAuth
+
+### 2026-05-19 — Module Vehicles
+- VehiclesService : findCatalog (recherche LIKE brand+model, filtre fuelType, pagination), findOneModel, findUserVehicles, addUserVehicle, updateUserVehicle, removeUserVehicle
+- Validation métier : électrique → homeElectricityPrice et publicChargingPrice requis ; thermique → ces champs forcés à null
+- 403 ForbiddenException si userId ne correspond pas au propriétaire du UserVehicle
+- relations TypeORM v1 : objet `{ vehicleModel: true }` (pas tableau)
+- Tests e2e : 20/20 (catalogue, CRUD, 403, 404, validations, auth)
+- app.e2e-spec.ts remplacé par un test health-check (SQLite, sans PG)
+- Suite e2e complète : 32/32 tests passent (3 suites : app, auth, vehicles)
 
 ### 2026-05-19 — Entités TypeORM et migration initiale
 - Entités créées : User, VehicleModel, UserVehicle, Favorite
