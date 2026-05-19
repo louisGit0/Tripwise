@@ -1,0 +1,88 @@
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ── Environment variables ──────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# ── Build outputs ──────────────────────────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+.expo/
+.expo-shared/
+
+# ── NestJS ────────────────────────────────────────────────────────────────────
+backend/dist/
+
+# ── Next.js ───────────────────────────────────────────────────────────────────
+web/.next/
+web/out/
+
+# ── Expo / React Native ───────────────────────────────────────────────────────
+mobile/.expo/
+mobile/android/
+mobile/ios/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# ── TypeScript ────────────────────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+# (docker-compose.yml is committed; override files are local)
+docker-compose.override.yml
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.history/
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.tgz
+*.zip
+.cache/
+tmp/
+temp/
