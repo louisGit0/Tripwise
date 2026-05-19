@@ -32,7 +32,7 @@ export class User {
   @Column({ default: 'fr', length: 5 })
   locale!: string;
 
-  @Column({ type: 'enum', enum: AuthProvider, default: AuthProvider.LOCAL })
+  @Column({ type: 'simple-enum', enum: AuthProvider, default: AuthProvider.LOCAL })
   provider!: AuthProvider;
 
   @Column({ name: 'provider_id', nullable: true, type: 'varchar' })
