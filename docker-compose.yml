@@ -19,6 +19,20 @@ services:
       timeout: 5s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: tripwise_pgadmin
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@tripwise.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - '5050:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
   backend:
     build:
       context: ./backend
@@ -28,15 +42,22 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - ./backend/.env
     environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-tripwise}:${POSTGRES_PASSWORD:-tripwise}@postgres:5432/${POSTGRES_DB:-tripwise}
+      NODE_ENV: ${NODE_ENV:-development}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-tripwise}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-tripwise}
+      DB_NAME: ${POSTGRES_DB:-tripwise}
+      PORT: 3000
     ports:
       - '3000:3000'
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src
       - /app/node_modules
-    # command sera défini dans le Dockerfile du backend
 
 volumes:
   postgres_data:
+  pgadmin_data:

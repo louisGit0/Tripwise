@@ -20,7 +20,7 @@
 - Runtime : Node.js (LTS)
 - Framework : NestJS (TypeScript strict)
 - Base de données : PostgreSQL
-- ORM : à définir (Prisma ou TypeORM — décision en attente)
+- ORM : TypeORM v1 (installé via @nestjs/typeorm v11)
 - Conteneurisation : Docker + Docker Compose
 
 ### Frontend Web
@@ -136,12 +136,82 @@ Tripwise/
 
 ---
 
+## Backend — Commandes utiles
+
+### Démarrage en local (sans Docker)
+```bash
+cd backend
+cp .env.example .env   # remplir les valeurs
+npm run start:dev      # hot-reload via NestJS watch
+```
+
+### Démarrage via Docker Compose (recommandé)
+```bash
+# Depuis la racine du projet :
+cp backend/.env.example backend/.env   # remplir les valeurs
+docker compose up -d                   # lance postgres + pgadmin + backend
+docker compose logs -f backend         # suivre les logs
+```
+
+Services exposés :
+| Service | URL |
+|---------|-----|
+| Backend API | http://localhost:3000/api/v1 |
+| Health check | http://localhost:3000/api/v1/health |
+| pgAdmin | http://localhost:5050 (admin@tripwise.local / admin) |
+| PostgreSQL | localhost:5432 |
+
+### Migrations TypeORM
+```bash
+cd backend
+
+# Générer une migration depuis les entités
+npm run migration:generate -- src/database/migrations/NomDeLaMigration
+
+# Appliquer les migrations
+npm run migration:run
+
+# Annuler la dernière migration
+npm run migration:revert
+
+# Lister l'état des migrations
+npm run migration:show
+```
+
+### Modules NestJS créés (V1 squelettes)
+| Module | Rôle |
+|--------|------|
+| `auth` | Authentification (email, Google, Apple), JWT |
+| `users` | Gestion des comptes utilisateurs |
+| `vehicles` | Véhicules thermiques et électriques par utilisateur |
+| `trips` | Calcul de trajet (distance, durée, coût) |
+| `favorites` | Sauvegarde de trajets favoris |
+| `fuel-prices` | Récupération des prix carburants (prix-carburants.gouv.fr) |
+| `charging-stations` | Bornes de recharge (IRVE / data.gouv.fr) |
+
+Chaque module dispose d'un controller et d'un service vide, prêts à être implémentés.
+
+---
+
 ## Journal des décisions & mises à jour
 
 ### 2026-05-19 — Initialisation du projet
 - Création de la structure monorepo (backend, web, mobile, shared)
 - Stack décidée : NestJS + PostgreSQL + Next.js 14 + Expo
 - APIs externes identifiées : Mapbox, prix-carburants.gouv.fr, IRVE
-- ORM non encore choisi (Prisma vs TypeORM — à trancher lors de l'init backend)
+- ORM choisi : TypeORM (via @nestjs/typeorm)
 - Dépôt git initialisé avec commit initial
-- backend/, web/ et mobile/ non encore scaffoldés (étape suivante)
+
+### 2026-05-19 — Scaffold backend NestJS
+- NestJS scaffoldé avec @nestjs/cli
+- Dépendances installées : @nestjs/config, @nestjs/typeorm, typeorm, pg, class-validator, class-transformer, helmet, dotenv
+- TypeScript strict activé (strict: true)
+- main.ts configuré : helmet, CORS, ValidationPipe global, logger
+- app.module.ts : ConfigModule global + TypeOrmModule async (synchronize: false)
+- src/config/database.config.ts et app.config.ts (registerAs)
+- src/database/data-source.ts pour la CLI TypeORM
+- src/health/health.controller.ts → GET /api/v1/health → { status: 'ok', timestamp }
+- 7 modules créés avec controller + service vides : auth, users, vehicles, trips, favorites, fuel-prices, charging-stations
+- backend/Dockerfile : multi-stage Node 20 Alpine (build → runner)
+- docker-compose.yml : postgres 16 + pgadmin (port 5050) + backend (port 3000)
+- .env.example créé avec toutes les variables (DB, JWT, Mapbox, Google OAuth, Apple OAuth, CORS)
