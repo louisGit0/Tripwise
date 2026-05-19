@@ -30,7 +30,7 @@ export class VehicleModel {
   @Column({ nullable: true, type: 'int' })
   year!: number | null;
 
-  @Column({ name: 'fuel_type', type: 'enum', enum: FuelType })
+  @Column({ name: 'fuel_type', type: 'simple-enum', enum: FuelType })
   fuelType!: FuelType;
 
   /**
