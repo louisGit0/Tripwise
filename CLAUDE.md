@@ -220,6 +220,51 @@ Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
 
 ---
 
+## Trips — Endpoints & Mapbox
+
+### Endpoints (JWT requis sur tous)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/trips/geocode?q=...&country=fr&limit=5` | Proxie l'autocomplétion Mapbox (évite d'exposer le token au frontend) |
+| POST | `/api/v1/trips/calculate` | Calcule distance + durée + géométrie pour un trajet |
+
+### Corps de POST /trips/calculate
+```json
+{
+  "origin":      { "lat": 48.8566, "lng": 2.3522, "label": "Paris" },
+  "destination": { "lat": 43.2965, "lng": 5.3698, "label": "Marseille" },
+  "userVehicleId": "uuid"
+}
+```
+
+### Réponse (sans cost pour l'instant)
+```json
+{
+  "distance":  { "meters": 450000, "km": 450 },
+  "duration":  { "seconds": 14400, "formatted": "4h" },
+  "geometry":  { "type": "LineString", "coordinates": [...] },
+  "waypoints": [...],
+  "vehicle":   { "id", "nickname", "brand", "model", "fuelType", "consumption" }
+}
+```
+Le champ `cost` sera ajouté dans un prochain module.
+
+### Configuration Mapbox
+- Token : `MAPBOX_TOKEN` dans `.env`
+- Créer/copier sur **https://account.mapbox.com** → "Access tokens"
+- Quota indicatif plan gratuit : ~100 000 req/mois (Geocoding et Directions)
+  — **à vérifier dans le dashboard Mapbox**, les limites peuvent évoluer
+- Le `MapboxService` est déclaré `@Global()` : disponible dans tous les modules sans ré-import
+
+### Tests e2e
+```bash
+npx jest --config test/jest-e2e.json --testPathPatterns="trips" --forceExit
+# 19 tests (MapboxService entièrement mocké, aucun appel réseau)
+```
+
+---
+
 ## Vehicles — Endpoints
 
 ### Catalogue (public)
@@ -341,6 +386,18 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 - Tests e2e : 20/20 (catalogue, CRUD, 403, 404, validations, auth)
 - app.e2e-spec.ts remplacé par un test health-check (SQLite, sans PG)
 - Suite e2e complète : 32/32 tests passent (3 suites : app, auth, vehicles)
+
+### 2026-05-19 — Module Trips + MapboxService
+- MapboxService (@Global) : geocode (Mapbox Geocoding v5) + getDirections (Directions v5)
+- fetch natif Node 24 — pas d'axios
+- Gestion erreurs Mapbox : 401 (token invalide), 429 (quota), réseau, code non-Ok
+- Quota Mapbox : ~100k req/mois sur plan gratuit — à vérifier sur account.mapbox.com
+- GET /trips/geocode : proxy autocomplétion (filtre country, limit 1-10)
+- POST /trips/calculate : distance + durée (formatée) + géométrie GeoJSON + véhicule
+- 404 si userVehicleId n'appartient pas à l'utilisateur connecté
+- @IsDefined() sur origin/destination pour valider les champs manquants
+- enableImplicitConversion: true dans ValidationPipe des tests (query params int)
+- Tests e2e : 19/19 trips (MapboxService mocké) — suite complète : 51/51 (4 suites)
 
 ### 2026-05-19 — Entités TypeORM et migration initiale
 - Entités créées : User, VehicleModel, UserVehicle, Favorite
