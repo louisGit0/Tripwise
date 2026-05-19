@@ -191,6 +191,33 @@ npm run migration:show
 
 Chaque module dispose d'un controller et d'un service vide, prêts à être implémentés.
 
+### Seed — catalogue de véhicules
+```bash
+cd backend
+
+# Prérequis : DB lancée et migrations appliquées
+npm run migration:run
+
+# Insérer les 41 véhicules initiaux (idempotent : ignoré si la table est non vide)
+npx ts-node -r tsconfig-paths/register src/seeds/vehicle-models.seed.ts
+```
+
+### Entités TypeORM créées
+| Entité | Fichier | Table SQL |
+|--------|---------|-----------|
+| `User` | `users/entities/user.entity.ts` | `users` |
+| `VehicleModel` | `vehicles/entities/vehicle-model.entity.ts` | `vehicle_models` |
+| `UserVehicle` | `vehicles/entities/user-vehicle.entity.ts` | `user_vehicles` |
+| `Favorite` | `favorites/entities/favorite.entity.ts` | `favorites` |
+
+Relations :
+- `User` → `UserVehicle` : OneToMany (cascade delete)
+- `User` → `Favorite` : OneToMany (cascade delete)
+- `UserVehicle` → `VehicleModel` : ManyToOne (eager)
+- `Favorite` → `UserVehicle` : ManyToOne nullable (SET NULL on delete)
+
+Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
+
 ---
 
 ## Journal des décisions & mises à jour
@@ -201,6 +228,14 @@ Chaque module dispose d'un controller et d'un service vide, prêts à être impl
 - APIs externes identifiées : Mapbox, prix-carburants.gouv.fr, IRVE
 - ORM choisi : TypeORM (via @nestjs/typeorm)
 - Dépôt git initialisé avec commit initial
+
+### 2026-05-19 — Entités TypeORM et migration initiale
+- Entités créées : User, VehicleModel, UserVehicle, Favorite
+- Enums : AuthProvider (local/google/apple), FuelType (SP95/SP95_E10/SP98/DIESEL/E85/GPL/ELECTRIC)
+- Migration manuelle : 1747699200000-InitialSchema.ts (SQL explicite, up + down)
+- Seed : 41 véhicules courants en France avec consommations indicatives WLTP (src/seeds/vehicle-models.seed.ts)
+- Correction : définite assignment assertions (!) sur toutes les propriétés d'entités (strict TS)
+- Note : migration:generate nécessite une DB active — préférer la migration manuelle en CI/CD sans DB
 
 ### 2026-05-19 — Scaffold backend NestJS
 - NestJS scaffoldé avec @nestjs/cli
