@@ -220,6 +220,68 @@ Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
 
 ---
 
+## Auth — Endpoints & configuration
+
+### Endpoints disponibles
+
+| Méthode | Route | Auth | Description |
+|---------|-------|------|-------------|
+| POST | `/api/v1/auth/register` | Non | Création compte local (email + password) |
+| POST | `/api/v1/auth/login` | Non | Connexion locale |
+| GET | `/api/v1/auth/google` | Non | Redirection vers Google OAuth |
+| GET | `/api/v1/auth/google/callback` | Non | Callback Google → JWT |
+| GET | `/api/v1/auth/apple` | Non | Redirection vers Apple Sign In |
+| GET | `/api/v1/auth/apple/callback` | Non | Callback Apple → JWT |
+| GET | `/api/v1/auth/me` | JWT Bearer | Profil utilisateur connecté |
+
+### JWT
+- Payload : `{ sub: userId, email, provider }`
+- Durée : 7 jours (configurable via `JWT_REFRESH_EXPIRES_IN`)
+- Secret : `JWT_SECRET` (obligatoire, ≥ 64 caractères en production)
+- Utilisation : `Authorization: Bearer <token>`
+
+### Guard et décorateur réutilisables
+```typescript
+// Protéger un endpoint
+@UseGuards(JwtAuthGuard)
+@Get('mon-endpoint')
+maRoute(@CurrentUser() user: User) { ... }
+```
+
+### Configuration Google OAuth
+Pour activer `GET /auth/google` :
+1. Créer un projet sur Google Cloud Console
+2. Activer l'API "Google+ API" ou "Google Identity"
+3. Créer des identifiants OAuth 2.0 (type : "Application Web")
+4. Ajouter les URIs de redirection autorisées : `http://localhost:3000/api/v1/auth/google/callback`
+5. Renseigner dans `.env` : `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_CALLBACK_URL`
+
+### Configuration Apple Sign In
+Pour activer `GET /auth/apple` :
+1. Disposer d'un compte Apple Developer Program (99 $/an)
+2. Dans App Store Connect → Certificats, identifiants et profils :
+   - Créer un **Service ID** (ex: `com.yourapp.web`) → c'est le `APPLE_OAUTH_CLIENT_ID`
+   - Activer "Sign In with Apple" sur ce Service ID
+   - Enregistrer l'URL de callback : `https://votre-domaine.com/api/v1/auth/apple/callback`
+     ⚠️ Apple exige HTTPS et un domaine enregistré — localhost ne fonctionne pas en production
+   - Créer une **clé privée** (.p8) avec Sign In with Apple activé → donne `APPLE_OAUTH_KEY_ID`
+3. Récupérer le **Team ID** depuis la page Account → Membership
+4. Renseigner dans `.env` : `APPLE_OAUTH_CLIENT_ID`, `APPLE_OAUTH_TEAM_ID`, `APPLE_OAUTH_KEY_ID`, `APPLE_OAUTH_PRIVATE_KEY`, `APPLE_OAUTH_CALLBACK_URL`
+
+**Note :** Apple Sign In ne renvoie l'email qu'au premier login. Les logins suivants ne contiennent que le `sub` (identifiant Apple unique). Le backend gère ce cas via `idToken.sub`.
+
+### Tests e2e
+```bash
+cd backend
+
+# Lancer les tests auth (SQLite en mémoire, sans Docker)
+npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
+
+# 11 tests : register, login, /auth/me, validations DTO, cas d'erreur
+```
+
+---
+
 ## Journal des décisions & mises à jour
 
 ### 2026-05-19 — Initialisation du projet
@@ -228,6 +290,17 @@ Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
 - APIs externes identifiées : Mapbox, prix-carburants.gouv.fr, IRVE
 - ORM choisi : TypeORM (via @nestjs/typeorm)
 - Dépôt git initialisé avec commit initial
+
+### 2026-05-19 — Module Auth complet
+- Stratégies Passport : local (email/password), JWT, Google OAuth 2.0, Apple Sign In
+- Dépendances : @nestjs/jwt, @nestjs/passport, passport, passport-local, passport-jwt, passport-google-oauth20, passport-apple, bcrypt
+- DTOs : RegisterDto (email valide, password ≥8 chars + 1 chiffre), LoginDto
+- AuthService : register (bcrypt salt 12), validateLocalUser, login, findOrCreateOAuthUser (liaison compte si email existant)
+- JwtAuthGuard + @CurrentUser() decorator réutilisables
+- GET /auth/me protégé — retourne profil sans passwordHash
+- Logique liaison : si email OAuth existe déjà en local → linkOAuthProvider (pas de doublon)
+- simple-enum utilisé dans les entités (compatible SQLite pour tests, migration PG utilise native enum)
+- Tests e2e : 11 tests (register, login, /me, validations, cas d'erreur) — SQLite in-memory + mock OAuth
 
 ### 2026-05-19 — Entités TypeORM et migration initiale
 - Entités créées : User, VehicleModel, UserVehicle, Favorite
