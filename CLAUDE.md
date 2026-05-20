@@ -35,8 +35,11 @@
 - Navigation : Expo Router (file-based)
 
 ### Shared
-- Package TypeScript partagé contenant les types communs (DTOs, modèles, enums)
-- Référencé en workspace depuis backend, web et mobile
+- Package TypeScript partagé : `shared/` à la racine du monorepo
+- Exporte : enums (FuelType, AuthProvider, ChargingMode), interfaces (UserProfile, UserVehicle, Favorite, TripResult, etc.)
+- Aucune dépendance framework — TypeScript pur
+- Référencé via path alias `@tripwise/shared` dans backend/tsconfig.json
+- Frontend/mobile peuvent l'importer directement (chemin relatif ou workspace)
 
 ### Infra
 - Docker Compose : backend NestJS + PostgreSQL (+ Redis si besoin)
@@ -238,17 +241,56 @@ Migration initiale : `src/database/migrations/1747699200000-InitialSchema.ts`
 }
 ```
 
-### Réponse (sans cost pour l'instant)
+### Corps de POST /trips/calculate (champs électrique)
+```json
+{
+  "origin": ..., "destination": ..., "userVehicleId": "uuid",
+  "chargingMode": "home" | "public" | "mix",
+  "chargingMixRatio": 0.5
+}
+```
+`chargingMode` optionnel pour les thermiques (ignoré). Défaut `"home"` pour les électriques.
+`chargingMixRatio` : proportion de charge à domicile (0.0–1.0), uniquement pour `"mix"`.
+
+### Réponse (véhicule thermique — avec cost)
 ```json
 {
   "distance":  { "meters": 450000, "km": 450 },
   "duration":  { "seconds": 14400, "formatted": "4h" },
   "geometry":  { "type": "LineString", "coordinates": [...] },
   "waypoints": [...],
-  "vehicle":   { "id", "nickname", "brand", "model", "fuelType", "consumption" }
+  "vehicle":   { "id", "nickname", "brand", "model", "fuelType", "consumption" },
+  "cost": {
+    "type": "fuel",
+    "fuelType": "SP95_E10",
+    "consumptionLitres": 24.3,
+    "pricePerLitre": 1.754,
+    "priceSource": {
+      "originStation": { "stationName", "address", "price", "distanceKm", "source" },
+      "destinationStation": { "stationName", "address", "price", "distanceKm", "source" },
+      "source": "api"
+    },
+    "totalCost": 42.62
+  }
 }
 ```
-Le champ `cost` sera ajouté dans un prochain module.
+- `source` peut être `"api"` (données Opendatasoft) ou `"fallback"` (prix moyens hardcodés)
+
+### Réponse (véhicule électrique — avec cost)
+```json
+{
+  "distance": ..., "duration": ..., "geometry": ..., "waypoints": ..., "vehicle": ...,
+  "cost": {
+    "type": "electric",
+    "consumptionKwh": 67.05,
+    "pricePerKwh": 0.2272,
+    "chargingMode": "home",
+    "totalCost": 15.23,
+    "nearbyStations": [ ...max 20 bornes le long du trajet... ],
+    "disclaimer": "Les tarifs affichés sont ceux configurés dans votre profil véhicule. Le coût réel sur une borne publique peut différer."
+  }
+}
+```
 
 ### Configuration Mapbox
 - Token : `MAPBOX_TOKEN` dans `.env`
@@ -260,8 +302,414 @@ Le champ `cost` sera ajouté dans un prochain module.
 ### Tests e2e
 ```bash
 npx jest --config test/jest-e2e.json --testPathPatterns="trips" --forceExit
-# 19 tests (MapboxService entièrement mocké, aucun appel réseau)
+# 30 tests (MapboxService + FuelPricesService + ChargingStationsService entièrement mockés)
 ```
+
+---
+
+## Charging Stations — Endpoints & API
+
+### Endpoints (JWT requis)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/charging-stations/nearby?lat=...&lng=...&radius=5` | Bornes dans un rayon (défaut 5 km, max 50 km) |
+| POST | `/api/v1/charging-stations/along-route` | Bornes à moins de `maxDistanceMeters` (défaut 2000 m) d'un itinéraire |
+
+### Corps POST /along-route
+```json
+{
+  "geometry": { "type": "LineString", "coordinates": [[lng, lat], ...] },
+  "maxDistanceMeters": 2000
+}
+```
+
+### Réponse (tableau de bornes)
+```json
+[{
+  "id": "FR*VER*E123",
+  "name": "Supercharger Paris",
+  "operator": "Tesla",
+  "address": "20 Bd Diderot, Paris",
+  "lat": 48.8448,
+  "lng": 2.3737,
+  "powerKw": 250,
+  "connectorTypes": ["CCS"],
+  "openingHours": "24/7",
+  "isFreeAccess": false,
+  "distanceKm": 1.2
+}]
+```
+
+⚠️ **La base IRVE ne contient PAS les tarifs** — uniquement localisation, puissance, connecteurs.
+
+### Source des données IRVE
+- **Dataset** : Base nationale des IRVE — publié sur data.gouv.fr
+- **API** : `https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records`
+- **Filtre géo** : `within_distance(coordonneesXY, geom'POINT(lng lat)', Xkm)`
+- **Pas de clé API** requise
+- **Volume** : ~42 000 points de charge, ~18 500 stations (vérifié le 2026-05-20)
+- **Schema** : https://schema.data.gouv.fr/etalab/schema-irve-statique/
+- **Cache in-memory** : TTL 1h, clé `lat:lng:radius`
+- Algorithme along-route : échantillonne ≤10 points de la LineString, requête API par point, déduplique par `id_pdc_itinerance`
+
+### Tests e2e
+```bash
+npx jest --config test/jest-e2e.json --testPathPatterns="charging-stations" --forceExit
+# 10 tests (ChargingStationsService entièrement mocké)
+```
+
+---
+
+## Fuel Prices — Endpoints & API
+
+### Endpoint (JWT requis)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/fuel-prices/nearest?lat=...&lng=...&fuelType=...` | Station la plus proche avec prix actuel pour le carburant demandé |
+
+### Paramètres
+- `lat`, `lng` : coordonnées WGS84 (float)
+- `fuelType` : un de `SP95 | SP95_E10 | SP98 | DIESEL | E85 | GPL` (`ELECTRIC` rejeté → 400)
+
+### Réponse
+```json
+{
+  "stationName": "Total Paris",
+  "address": "1 rue de Rivoli, Paris",
+  "price": 1.749,
+  "lastUpdate": "2024-01-01T00:00:00.000Z",
+  "distanceKm": 0.3,
+  "source": "api"
+}
+```
+
+### API primaire (Opendatasoft)
+- **URL** : `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records`
+- Filtre géographique : `distance(geom, geom'POINT(lng lat)', 20km)`
+- Prix retournés en millièmes d'euro (ex : `1750` → `1.750 €/L`)
+- Mise à jour toutes les 10 minutes
+- Timeout : 8 secondes
+
+### Prix de repli (fallback hardcodés)
+Utilisés si l'API est indisponible ou retourne 0 résultat :
+| Carburant | Prix €/L |
+|-----------|----------|
+| SP95 | 1.75 |
+| SP95_E10 | 1.72 |
+| SP98 | 1.85 |
+| DIESEL | 1.68 |
+| E85 | 0.88 |
+| GPL | 0.92 |
+
+### Cache en mémoire
+- TTL : 1 heure
+- Clé : `"lat:lng:fuelType:count"` (lat/lng arrondis à 4 décimales)
+- Pas de Redis — simple `Map<string, CacheEntry>` en mémoire de processus
+
+### Tests e2e
+```bash
+npx jest --config test/jest-e2e.json --testPathPatterns="fuel-prices" --forceExit
+# 7 tests (FuelPricesService entièrement mocké)
+```
+
+---
+
+## Favorites — Endpoints
+
+### Endpoints (JWT requis)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/favorites` | Liste des favoris de l'utilisateur (tri par date DESC) |
+| GET | `/api/v1/favorites/:id` | Détail d'un favori |
+| POST | `/api/v1/favorites` | Crée un favori |
+| PATCH | `/api/v1/favorites/:id` | Modifie le nom |
+| DELETE | `/api/v1/favorites/:id` | Supprime (204) |
+
+### Corps de POST /favorites
+```json
+{
+  "name": "Maison → Bureau",
+  "originLabel": "Paris 12e",
+  "originLat": 48.8448,
+  "originLng": 2.3737,
+  "destinationLabel": "La Défense",
+  "destinationLat": 48.8921,
+  "destinationLng": 2.2358,
+  "vehicleId": "uuid"
+}
+```
+`vehicleId` optionnel (référence à un UserVehicle).
+
+### Règles métier
+- 403 si le favori n'appartient pas à l'utilisateur connecté
+- PATCH : seul le champ `name` est modifiable
+- DELETE retourne 204 (no content)
+
+### Tests e2e
+```bash
+npx jest --config test/jest-e2e.json --testPathPatterns="favorites" --forceExit
+# 19 tests (I18nService @Optional → null en test, fallback sur la clé i18n)
+```
+
+---
+
+## i18n — Internationalisation backend
+
+### Configuration
+- Librairie : `nestjs-i18n`
+- Langue par défaut : `fr`
+- Détection : `?lang=fr|en` (query param) ou header `Accept-Language`
+- Fichiers de traduction : `src/i18n/fr/messages.json` et `src/i18n/en/messages.json`
+- En production, les JSON sont copiés dans `dist/i18n/` via la config `assets` dans `nest-cli.json`
+
+### Clés disponibles
+- `messages.auth.*` — erreurs d'authentification
+- `messages.favorites.*` — favoris (not_found, forbidden)
+- `messages.vehicles.*` — véhicules (not_found, model_not_found, forbidden, electric_prices_required)
+- `messages.trips.*` — trajets
+- `messages.fuel_prices.*` — prix carburants
+- `messages.validation.*` — validations DTO
+- `messages.common.*` — erreurs génériques
+
+### Utilisation dans un service
+```typescript
+// @Optional() permet au service de fonctionner sans I18nModule (tests)
+constructor(@Optional() private readonly i18n: I18nService | null) {}
+
+private async t(key: string, lang: string) {
+  if (this.i18n) return this.i18n.translate<string>(key, { lang });
+  return key; // fallback : retourne la clé brute
+}
+```
+
+Le contrôleur détecte la langue depuis la requête et la passe au service :
+```typescript
+private detectLang(req: Request): string {
+  const q = req.query['lang'];
+  if (typeof q === 'string' && ['fr','en'].includes(q)) return q;
+  const accept = req.headers['accept-language'];
+  if (accept) { const l = accept.split(',')[0].split('-')[0]; if (['fr','en'].includes(l)) return l; }
+  return 'fr';
+}
+```
+
+---
+
+## Shared Types
+
+### Structure
+```
+shared/
+├── package.json          @tripwise/shared, private, pas de build step
+├── tsconfig.json         module: ESNext, moduleResolution: bundler
+└── src/
+    ├── index.ts          re-exporte tout
+    ├── enums/
+    │   └── index.ts      FuelType, AuthProvider, ChargingMode
+    └── types/
+        ├── user.types.ts    UserProfile, AuthResponse, LoginRequest, RegisterRequest
+        ├── vehicle.types.ts VehicleModel, UserVehicle, AddVehicleRequest, ...
+        ├── favorite.types.ts Favorite, CreateFavoriteRequest, UpdateFavoriteRequest
+        └── trip.types.ts    TripCalculateRequest, TripResult, FuelCost, ElectricCost, ...
+```
+
+### Utilisation depuis le backend
+Le path alias est configuré dans `backend/tsconfig.json` :
+```json
+"paths": {
+  "@tripwise/shared": ["../shared/src/index.ts"],
+  "@tripwise/shared/*": ["../shared/src/*"]
+}
+```
+
+Et dans `backend/test/jest-e2e.json` (moduleNameMapper pour ts-jest).
+
+### Utilisation depuis web/mobile
+Importer directement via chemin relatif ou yarn/npm workspace :
+```typescript
+import { FuelType, TripResult } from '../../shared/src';
+// ou avec workspace : import { FuelType } from '@tripwise/shared';
+```
+
+---
+
+## Web — Frontend Next.js
+
+### Démarrage
+```bash
+cd web
+cp .env.example .env.local   # remplir les valeurs
+npm run dev                  # http://localhost:3001 (ou 3000 si backend arrêté)
+```
+
+### Variables d'environnement
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_API_URL` | URL du backend NestJS (défaut : `http://localhost:3000/api/v1`) |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Token Mapbox public (utilisé côté client par mapbox-gl) |
+
+### ⚠️ Sécurité token Mapbox public
+`NEXT_PUBLIC_MAPBOX_TOKEN` est visible dans le bundle JS client — c'est normal pour `mapbox-gl`.
+Pour limiter l'abus, **restreindre ce token aux domaines autorisés** dans le dashboard Mapbox :
+[account.mapbox.com](https://account.mapbox.com) → Access tokens → Token → URL restrictions
+Ajouter les domaines : `http://localhost:3000`, `https://votre-domaine.com`
+
+### Structure des pages
+```
+src/
+├── proxy.ts                   Route proxy (Next.js 16) — protège /app/*
+├── i18n/request.ts            Détection locale via cookie
+├── types/api.ts               Types TypeScript frontend (GeoPoint, UserVehicle, TripResult…)
+├── hooks/useDebounce.ts       Hook debounce générique
+├── lib/api.ts                 Axios (injecte JWT cookie, redirect 401→/login)
+├── lib/auth.ts                register(), login(), logout()
+├── providers/
+│   ├── Providers.tsx          ThemeProvider + ToastProvider
+│   └── ToastProvider.tsx      Context toast (success/error/info, 4s)
+├── components/
+│   ├── AutocompleteInput.tsx  Champ avec suggestions geocode (debounce 300ms)
+│   ├── MapboxMap.tsx          Carte mapbox-gl (dynamic ssr:false) — route + bornes électriques
+│   ├── LogoutButton.tsx
+│   └── ui/
+│       ├── Button.tsx         (variant, size, loading)
+│       ├── Input.tsx          (label, error, hint)
+│       ├── Select.tsx         (options[], placeholder)
+│       ├── Card.tsx           (padding: none|sm|md|lg)
+│       └── Modal.tsx          (open, onClose, title, footer)
+└── app/
+    ├── globals.css            Variables CSS light/dark
+    ├── layout.tsx             Root layout (Inter, Providers)
+    ├── page.tsx               / — Landing
+    ├── login/page.tsx         /login — Email + Google + Apple
+    ├── register/page.tsx      /register — Email + Google + Apple
+    ├── auth/callback/
+    │   ├── google/page.tsx    Reçoit ?token=, set cookie, → /app/dashboard
+    │   └── apple/page.tsx     Idem
+    ├── api/auth/
+    │   ├── set-cookie/route.ts  POST → httpOnly cookie 7j
+    │   └── logout/route.ts      POST → delete cookie
+    └── app/
+        ├── layout.tsx           Layout authentifié (nav top + bottom mobile)
+        ├── dashboard/page.tsx   Autocomplete + véhicule + mode recharge + Mapbox + résultats
+        ├── vehicles/page.tsx    Liste + ajout (catalogue search) + édition + suppression
+        ├── favorites/page.tsx   Liste + "Utiliser ce trajet" (deep-link dashboard) + suppression
+        └── settings/page.tsx    Thème (3 modes) + langue (FR/EN) + déconnexion
+```
+
+### Architecture auth frontend
+- JWT **jamais** dans localStorage — uniquement cookie httpOnly
+- Login/register → POST `/api/auth/set-cookie` (route Next.js BFF)
+- `proxy.ts` (Next.js 16) protège `/app/*` — redirect vers `/login` si pas de cookie
+- OAuth : redirect vers `${API_URL}/auth/google` → callback page reçoit `?token=` → set cookie
+- Axios intercepte chaque requête : lit `access_token` cookie → header `Authorization`
+
+### Dashboard — Fonctionnalités
+- **Autocomplétion** : `AutocompleteInput` → GET `/trips/geocode?q=...` avec debounce 300ms
+- **Sélecteur véhicule** : chargé depuis GET `/vehicles/me`
+- **Mode recharge** (électrique uniquement) : home / public / mix avec slider ratio
+- **Calcul** : POST `/trips/calculate` → résultats + carte Mapbox
+- **Carte Mapbox** : route polyline bleue + markers origine/destination + markers bornes (bleu cercle)
+- **Favoris deep-link** : `handleUse(f)` passe les coords + vehicleId en query params vers `/app/dashboard?originLabel=...`
+- **Partager** : `navigator.share` (mobile) ou copie dans presse-papiers + toast
+- **Résultat** : distance, durée, consommation, prix unitaire, coût total (highlight)
+- **Disclaimer électrique** : affiché dans un bandeau ambre si type=electric
+
+### Vehicles — Fonctionnalités
+- Add modal : recherche catalogue (GET `/vehicles/catalog?search=...`) → sélection → nickname + prix électriques
+- Edit modal : nickname + tarifs électriques (PATCH `/vehicles/me/:id`)
+- Delete : confirmation modal → DELETE `/vehicles/me/:id`
+
+### Vehicles — Fonctionnalités web
+- Add modal : recherche catalogue (GET `/vehicles/catalog?search=...`) → sélection → nickname + prix électriques
+- Edit modal : nickname + tarifs électriques (PATCH `/vehicles/me/:id`)
+- Delete : confirmation modal → DELETE `/vehicles/me/:id`
+
+### Prochaine étape possible (web)
+- Carte en pleine page (Mapbox GL, style satellite)
+- Historique des calculs (session)
+- PWA (manifest, service worker)
+
+---
+
+## Mobile — Application Expo
+
+### Démarrage
+```bash
+cd mobile
+cp .env.example .env   # remplir les valeurs
+npx expo start         # QR code → Expo Go (sans carte) ou dev build
+```
+
+### Build natif (requis pour Mapbox + Apple Sign In)
+```bash
+# Dev build (simulateur iOS)
+eas build --profile development --platform ios
+
+# Preview (simulateur iOS)
+eas build --profile preview --platform ios
+
+# Production
+eas build --profile production --platform all
+```
+
+### Variables d'environnement
+| Variable | Description |
+|----------|-------------|
+| `EXPO_PUBLIC_API_URL` | URL du backend NestJS |
+| `EXPO_PUBLIC_MAPBOX_TOKEN` | Token Mapbox public (runtime, visible dans le bundle) |
+| `MAPBOX_DOWNLOAD_TOKEN` | Token Mapbox **secret** (build-time uniquement, EAS) |
+| `EXPO_PUBLIC_GOOGLE_CLIENT_ID` | Client ID Google pour expo-auth-session |
+
+### Structure des fichiers
+```
+mobile/
+├── app.config.ts            Plugins : expo-secure-store, @rnmapbox/maps, expo-apple-authentication
+├── eas.json                 Profils build EAS (development / preview / production)
+├── constants/theme.ts       Palette Primary, Colors light/dark, Fonts, FontSizes, Spacing, Radius
+├── app/
+│   ├── _layout.tsx          Root layout : AuthProvider + StatusBar + Toast
+│   ├── (auth)/
+│   │   ├── _layout.tsx
+│   │   ├── login.tsx        Email/password + Google (WebBrowser OAuth)
+│   │   └── register.tsx     Email/password
+│   └── (tabs)/
+│       ├── _layout.tsx      Bottom tab bar (4 tabs)
+│       ├── dashboard.tsx    Autocomplete + véhicule + mode recharge + Mapbox + résultats + favoris
+│       ├── vehicles.tsx     CRUD véhicules (catalogue search modal + edit modal)
+│       ├── favorites.tsx    Liste favoris + "use trip" (deep-link dashboard) + suppression
+│       └── settings.tsx     Thème (Appearance API) + langue (i18next) + déconnexion
+└── src/
+    ├── api/client.ts        Axios : getToken() pour Authorization, deleteToken() si 401
+    ├── auth/storage.ts      SecureStore wrappers : saveToken, getToken, deleteToken
+    ├── context/AuthContext.tsx  Auth state + useSegments routing (auth) ↔ (tabs)
+    ├── hooks/useDebounce.ts
+    ├── i18n/
+    │   ├── index.ts         i18next init avec expo-localization
+    │   └── translations/    fr.ts + en.ts
+    ├── types/api.ts         Types partagés frontend (GeoPoint, UserVehicle, TripResult…)
+    └── components/
+        ├── AutocompleteInput.tsx   Geocode avec debounce 300ms (FlatList dropdown)
+        ├── MapboxMap.tsx           @rnmapbox/maps + fallback placeholder (Expo Go)
+        └── ui/
+            ├── Button.tsx    (variant: primary|secondary|ghost|destructive, size, loading)
+            ├── Input.tsx     (label, error, hint, focus border)
+            └── Card.tsx      (padding: none|sm|md|lg)
+```
+
+### Auth mobile
+- JWT dans `expo-secure-store` (chiffré, hors sandbox JS)
+- `AuthContext` : lit le token au démarrage → useSegments pour router vers `(auth)` ou `(tabs)`
+- Google OAuth : `expo-web-browser.openAuthSessionAsync` → backend `/auth/google` → deep link `tripwise://auth/callback?token=...`
+- Apple Sign In : `expo-apple-authentication` (iOS natif, physique uniquement en prod)
+
+### Limitations connues
+- **@rnmapbox/maps** : incompatible Expo Go → placeholder affiché (texte d'info). Utiliser `eas build --profile development` pour tester la carte.
+- **Apple Sign In** : nécessite un device iOS physique en build de production. En simulateur/dev, le flow est disponible mais Apple peut bloquer.
+- **MAPBOX_DOWNLOAD_TOKEN** : secret build-time (scope `DOWNLOADS:READ`), **ne pas préfixer `EXPO_PUBLIC_`**, configuré dans les secrets EAS (`eas secret:create`).
+- **Token Mapbox public** `EXPO_PUBLIC_MAPBOX_TOKEN` : visible dans le bundle JS — restreindre aux app IDs autorisés dans le dashboard Mapbox.
 
 ---
 
@@ -360,6 +808,46 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 
 ## Journal des décisions & mises à jour
 
+### 2026-05-20 — Étape finale : sécurité, qualité, tests, documentation
+- **Rate limiting** : @nestjs/throttler installé ; ThrottlerGuard global (100 req/min par IP) ; /auth/login et /auth/register surchargés à 5 req/min via @Throttle()
+- **Guards vérifiés** : tous les endpoints protégés par JwtAuthGuard sauf /auth/* (LocalAuthGuard/GoogleAuthGuard/AppleAuthGuard), /vehicles/catalog (public), /health (public)
+- **CORS** : déjà restreint via CORS_ORIGINS (variable env, séparée par virgule) — vérifié dans main.ts
+- **.gitignore** : .env exclus, *.p8 exclu — aucun secret commité
+- **Tests unitaires** : `src/trips/trips.service.spec.ts` — 19 tests couvrant computeFuelCost, computeElectricCost, formatDuration (modes home/public/mix, ratio, arrondi, fallback)
+- **Tests e2e** : 96/96 passent (7 suites), vérifiés après ajout du ThrottlerModule
+- **Scripts npm cohérents** : `format`, `type-check` ajoutés dans web et mobile ; `build:preview`, `build:prod` dans mobile
+- **Monorepo racine** : `package.json` créé avec `concurrently` — scripts `dev`, `dev:all`, `build`, `lint`, `format`, `test`, `test:e2e`, `db:up`, `db:migrate`, `setup`
+- **README.md** : rédaction complète (présentation, stack, prérequis, installation pas à pas, variables d'env, commandes, sécurité, limitations, liens API)
+- **ROADMAP.md** : créé — évolutions court/moyen/long terme (péages, historique, multi-devises, flotte, PWA)
+- **CLAUDE.md** : journal mis à jour
+
+### 2026-05-20 — Application mobile Expo (SDK 54)
+- Expo SDK 54, Expo Router v6, React 19, React Native 0.81.5, new architecture activée
+- StyleSheet API (pas NativeWind) pour éviter incompatibilités React 19 / new arch
+- Auth : JWT dans expo-secure-store, AuthContext avec useSegments() pour routing (auth)↔(tabs)
+- Google OAuth : expo-web-browser.openAuthSessionAsync → backend /auth/google → deep link tripwise://
+- Apple Sign In : expo-apple-authentication (iOS natif, device physique en prod)
+- Mapbox : @rnmapbox/maps avec fallback placeholder si Expo Go (Constants.appOwnership === 'expo')
+- i18n : i18next + react-i18next + expo-localization, langues FR/EN, detectedLang via getLocales()[0]
+- Thème : useColorScheme() + Appearance.setColorScheme() pour override manuel
+- 4 onglets : dashboard (calcul + carte + favoris), vehicles (CRUD + catalog search), favorites (list + deep-link), settings
+- EAS Build configuré : development (developmentClient) / preview (simulateur iOS) / production
+- MAPBOX_DOWNLOAD_TOKEN : secret build-time, configurer via `eas secret:create`
+- ⚠️ @rnmapbox/maps incompatible Expo Go — utiliser `eas build --profile development`
+- ⚠️ Token public EXPO_PUBLIC_MAPBOX_TOKEN visible dans le bundle — restreindre aux app IDs Mapbox
+
+### 2026-05-20 — Frontend web — fonctionnalités cœur
+- Dashboard : autocomplétion via `AutocompleteInput` (GET /trips/geocode, debounce 300ms), sélecteur véhicule, mode recharge électrique (home/public/mix + slider), POST /trips/calculate, résultats avec carte Mapbox
+- Carte Mapbox : `MapboxMap.tsx` (dynamic ssr:false), route LineString bleue, markers origine/destination, markers bornes (popup nom+adresse+kW)
+- Favoris deep-link : clic "Utiliser" → `/app/dashboard?originLabel=...&originLat=...&originLng=...&destinationLabel=...&destinationLat=...&destinationLng=...&vehicleId=...`
+- Favoris : suppression avec confirmation modal, texte i18n
+- Vehicles : add modal (recherche catalogue avec debounce), edit modal, delete modal — tous avec états de chargement
+- Partage : `navigator.share` (mobile) ou clipboard + toast "Copié"
+- i18n : tous les textes via `useTranslations` (next-intl), fichiers fr.json + en.json complets
+- Next.js 16 : `middleware.ts` renommé en `proxy.ts`, export `proxy()` (Next.js 16 breaking change)
+- ⚠️ Token Mapbox public (`NEXT_PUBLIC_MAPBOX_TOKEN`) visible côté client — restreindre aux domaines dans dashboard Mapbox
+- Build : 14 routes compilées sans erreur ni avertissement
+
 ### 2026-05-19 — Initialisation du projet
 - Création de la structure monorepo (backend, web, mobile, shared)
 - Stack décidée : NestJS + PostgreSQL + Next.js 14 + Expo
@@ -393,11 +881,67 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 - Gestion erreurs Mapbox : 401 (token invalide), 429 (quota), réseau, code non-Ok
 - Quota Mapbox : ~100k req/mois sur plan gratuit — à vérifier sur account.mapbox.com
 - GET /trips/geocode : proxy autocomplétion (filtre country, limit 1-10)
-- POST /trips/calculate : distance + durée (formatée) + géométrie GeoJSON + véhicule
+- POST /trips/calculate : distance + durée (formatée) + géométrie GeoJSON + véhicule + cost
 - 404 si userVehicleId n'appartient pas à l'utilisateur connecté
 - @IsDefined() sur origin/destination pour valider les champs manquants
 - enableImplicitConversion: true dans ValidationPipe des tests (query params int)
-- Tests e2e : 19/19 trips (MapboxService mocké) — suite complète : 51/51 (4 suites)
+- Tests e2e trips : 30/30 (MapboxService + FuelPricesService + ChargingStationsService mockés)
+
+### 2026-05-20 — Frontend Web (Next.js 15)
+- Next.js 15 App Router, TypeScript strict, Tailwind CSS 4, ESLint
+- Dépendances : next-intl, next-themes, axios, react-hook-form + zod + @hookform/resolvers, mapbox-gl, lucide-react
+- Palette Tailwind custom `primary-50..900` (bleu), variables CSS light/dark (`--background`, `--foreground`, `--card`, `--border`, etc.)
+- Police Inter (next/font/google), variable CSS `--font-inter`
+- JWT stocké dans cookie httpOnly via route API Next.js `/api/auth/set-cookie` (BFF pattern)
+- Middleware `/app/*` → redirige vers `/login` si cookie absent
+- i18n : `next-intl`, détection via cookie `locale`, messages FR/EN dans `messages/`
+- Thème : `next-themes`, sélection light/dark/system dans paramètres
+- Pages créées : `/` (landing), `/login`, `/register`, `/auth/callback/google`, `/auth/callback/apple`, `/app/layout`, `/app/dashboard`, `/app/vehicles`, `/app/favorites`, `/app/settings`
+- Composants UI : Button, Input, Select, Card, Modal, LogoutButton
+- ToastProvider (context) : success/error/info, auto-dismiss 4s
+- Providers wrapper : ThemeProvider + ToastProvider
+- lib/api.ts : axios avec intercepteur JWT depuis cookie + redirect /login si 401
+- lib/auth.ts : register(), login(), logout()
+- .env.example : NEXT_PUBLIC_API_URL + NEXT_PUBLIC_MAPBOX_TOKEN
+- Carte interactive et calcul de trajet : prochaine étape
+- Build : 14 routes compilées sans erreur (TS + Next.js)
+
+### 2026-05-20 — Favorites, i18n, Shared Types
+- Module Favorites : CRUD complet (GET list/one, POST, PATCH name, DELETE 204)
+- 403 ForbiddenException pour l'accès aux favoris d'un autre utilisateur
+- i18n : nestjs-i18n installé, I18nModule configuré dans AppModule, résolution Accept-Language + ?lang=
+- Fichiers de traduction : src/i18n/fr/messages.json + en/messages.json (6 namespaces)
+- Pattern @Optional() pour I18nService → service fonctionne sans le module (tests)
+- nest-cli.json : assets i18n copiés dans dist/ à la compilation
+- Shared types : package @tripwise/shared à la racine (TypeScript pur, pas de build)
+- Enums FuelType, AuthProvider, ChargingMode ; interfaces User, Vehicle, Favorite, Trip
+- Path alias @tripwise/shared dans backend/tsconfig.json + moduleNameMapper dans jest-e2e.json
+- Tests e2e : 19/19 favorites — suite complète : 96/96 (7 suites)
+
+### 2026-05-20 — Module Charging Stations
+- API : ODRÉ Opendatasoft `bornes-irve` — filtre `within_distance()`, pas de clé API
+- ⚠️ Base IRVE sans tarifs — prix proviennent du profil véhicule utilisateur
+- findStationsNearPoint : cache 1h, rayon 5 km par défaut
+- findStationsAlongRoute : échantillonnage ≤10 points de la LineString GeoJSON
+- GET /charging-stations/nearby + POST /along-route (POST car body GeoJSON)
+- Extension POST /trips/calculate véhicule électrique :
+  - chargingMode : 'home' | 'public' | 'mix' (défaut 'home')
+  - chargingMixRatio : proportion home (0-1) pour mode 'mix'
+  - cost.type='electric' avec consumptionKwh, pricePerKwh, totalCost, nearbyStations (max 20), disclaimer
+  - disclaimer : "Les tarifs affichés sont ceux configurés dans votre profil véhicule. Le coût réel sur une borne publique peut différer."
+- Tests e2e : 10/10 charging-stations + 8 nouveaux trips electric — suite complète : 77/77 (6 suites)
+
+### 2026-05-19 — Module Fuel Prices
+- API primaire : Opendatasoft `prix-des-carburants-en-france-flux-instantane-v2`
+- Filtre géographique `distance()` Opendatasoft (rayon 20 km), tri par distance
+- Prix API en millièmes d'euro (÷1000 pour obtenir €/L)
+- Cache in-memory Map avec TTL 1h (clé lat:lng:fuelType:count)
+- Fallback prix moyens hardcodés si API indisponible ou sans résultat
+- FuelType.ELECTRIC exclu du endpoint (400 si passé en query)
+- POST /trips/calculate étendu : véhicule thermique → champ `cost` avec consumptionLitres, pricePerLitre, priceSource (originStation + destinationStation), totalCost
+- Véhicule électrique : pas de champ `cost`
+- FuelPricesModule exporté → importé dans TripsModule
+- Tests e2e : 7/7 fuel-prices (FuelPricesService mocké)
 
 ### 2026-05-19 — Entités TypeORM et migration initiale
 - Entités créées : User, VehicleModel, UserVehicle, Favorite

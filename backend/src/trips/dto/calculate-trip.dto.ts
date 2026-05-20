@@ -4,6 +4,7 @@ import {
   IsUUID,
   IsOptional,
   IsDefined,
+  IsIn,
   Min,
   Max,
   MaxLength,
@@ -41,4 +42,19 @@ export class CalculateTripDto {
 
   @IsUUID()
   userVehicleId!: string;
+
+  /** Requis pour les véhicules électriques. Ignoré pour les thermiques. */
+  @IsOptional()
+  @IsIn(['home', 'public', 'mix'])
+  chargingMode?: 'home' | 'public' | 'mix';
+
+  /**
+   * Pour chargingMode='mix' : proportion de charge à domicile (0.0–1.0).
+   * Défaut : 0.5
+   */
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(1)
+  chargingMixRatio?: number;
 }

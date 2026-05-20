@@ -1,0 +1,22 @@
+{
+  "name": "tripwise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo — backend NestJS + web Next.js + mobile Expo",
+  "scripts": {
+    "dev": "concurrently --names \"backend,web\" --prefix-colors \"blue,green\" \"npm run dev --prefix backend\" \"npm run dev --prefix web\"",
+    "dev:all": "concurrently --names \"backend,web,mobile\" --prefix-colors \"blue,green,magenta\" \"npm run dev --prefix backend\" \"npm run dev --prefix web\" \"npm run start --prefix mobile\"",
+    "build": "npm run build --prefix backend && npm run build --prefix web",
+    "lint": "npm run lint --prefix backend && npm run lint --prefix web && npm run lint --prefix mobile",
+    "format": "npm run format --prefix backend && npm run format --prefix web && npm run format --prefix mobile",
+    "test": "npm run test --prefix backend",
+    "test:e2e": "npm run test:e2e --prefix backend",
+    "db:up": "docker compose up -d postgres",
+    "db:migrate": "npm run migration:run --prefix backend",
+    "db:seed": "npx ts-node -r tsconfig-paths/register src/seeds/vehicle-models.seed.ts --prefix backend",
+    "setup": "npm install --prefix backend && npm install --prefix web && npm install --prefix mobile"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

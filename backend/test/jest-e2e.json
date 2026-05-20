@@ -5,5 +5,9 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@tripwise/shared$": "<rootDir>/../shared/src/index.ts",
+    "^@tripwise/shared/(.*)$": "<rootDir>/../shared/src/$1"
   }
 }
