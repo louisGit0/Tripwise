@@ -4,6 +4,7 @@ import { FuelPricesService } from './fuel-prices.service';
 
 @Module({
   controllers: [FuelPricesController],
-  providers: [FuelPricesService]
+  providers: [FuelPricesService],
+  exports: [FuelPricesService],
 })
 export class FuelPricesModule {}

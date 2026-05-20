@@ -1,0 +1,33 @@
+{
+  "auth": {
+    "email_taken": "This email is already in use",
+    "invalid_credentials": "Invalid email or password",
+    "unauthorized": "Authentication required"
+  },
+  "common": {
+    "not_found": "Resource not found",
+    "forbidden": "Access denied"
+  },
+  "favorites": {
+    "not_found": "Favorite not found",
+    "forbidden": "You do not have access to this favorite"
+  },
+  "vehicles": {
+    "not_found": "Vehicle not found",
+    "model_not_found": "Vehicle model not found",
+    "forbidden": "Access denied to this vehicle",
+    "electric_prices_required": "homeElectricityPrice and publicChargingPrice are required for an electric vehicle"
+  },
+  "trips": {
+    "vehicle_not_found": "Vehicle not found or does not belong to this user"
+  },
+  "fuel_prices": {
+    "electric_not_supported": "ELECTRIC fuel type is not supported for fuel price lookup"
+  },
+  "validation": {
+    "is_email": "The email address is not valid",
+    "min_length": "The value is too short",
+    "is_number": "The value must be a number",
+    "is_uuid": "The identifier must be a valid UUID"
+  }
+}

@@ -21,6 +21,10 @@ import { VehiclesModule } from '../src/vehicles/vehicles.module';
 import { TripsModule } from '../src/trips/trips.module';
 import { MapboxModule } from '../src/mapbox/mapbox.module';
 import { MapboxService } from '../src/mapbox/mapbox.service';
+import { FuelPricesModule } from '../src/fuel-prices/fuel-prices.module';
+import { FuelPricesService } from '../src/fuel-prices/fuel-prices.service';
+import { ChargingStationsModule } from '../src/charging-stations/charging-stations.module';
+import { ChargingStationsService } from '../src/charging-stations/charging-stations.service';
 import { User } from '../src/users/entities/user.entity';
 import { UserVehicle } from '../src/vehicles/entities/user-vehicle.entity';
 import { VehicleModel, FuelType } from '../src/vehicles/entities/vehicle-model.entity';
@@ -69,6 +73,56 @@ const mapboxMock = {
   getDirections: jest.fn().mockResolvedValue(DIRECTIONS_STUB),
 };
 
+// ── Mock FuelPricesService ─────────────────────────────────────────────────
+
+const ORIGIN_STATION = {
+  stationName: 'Total Paris',
+  address: '1 rue de Rivoli, Paris',
+  price: 1.749,
+  lastUpdate: '2024-01-01T00:00:00.000Z',
+  distanceKm: 0.3,
+  source: 'api' as const,
+};
+
+const DEST_STATION = {
+  stationName: 'BP Marseille',
+  address: '10 avenue du Prado, Marseille',
+  price: 1.759,
+  lastUpdate: '2024-01-01T00:00:00.000Z',
+  distanceKm: 0.8,
+  source: 'api' as const,
+};
+
+const fuelPricesMock = {
+  findNearestStationPrice: jest.fn().mockResolvedValue(ORIGIN_STATION),
+  averagePriceBetweenPoints: jest.fn().mockResolvedValue({
+    price: 1.754,
+    originStation: ORIGIN_STATION,
+    destinationStation: DEST_STATION,
+  }),
+};
+
+// ── Mock ChargingStationsService ───────────────────────────────────────────
+
+const CHARGING_STATION_STUB = {
+  id: 'FR*VER*E123',
+  name: 'Supercharger Test',
+  operator: 'Tesla',
+  address: '1 rue Test, Paris',
+  lat: 48.85,
+  lng: 2.35,
+  powerKw: 250,
+  connectorTypes: ['CCS'],
+  openingHours: '24/7',
+  isFreeAccess: false,
+  distanceKm: 0.5,
+};
+
+const chargingMock = {
+  findStationsNearPoint: jest.fn().mockResolvedValue([CHARGING_STATION_STUB]),
+  findStationsAlongRoute: jest.fn().mockResolvedValue([CHARGING_STATION_STUB]),
+};
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 async function registerAndLogin(app: INestApplication<App>, email: string) {
@@ -114,12 +168,16 @@ describe('Trips (e2e)', () => {
         AuthModule,
         UsersModule,
         VehiclesModule,
+        FuelPricesModule,
+        ChargingStationsModule,
         TripsModule,
       ],
     })
       .overrideProvider(GoogleStrategy).useClass(GoogleStrategyMock)
       .overrideProvider(AppleStrategy).useClass(AppleStrategyMock)
       .overrideProvider(MapboxService).useValue(mapboxMock)
+      .overrideProvider(FuelPricesService).useValue(fuelPricesMock)
+      .overrideProvider(ChargingStationsService).useValue(chargingMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -150,6 +208,14 @@ describe('Trips (e2e)', () => {
     jest.clearAllMocks();
     mapboxMock.geocode.mockResolvedValue(GEOCODE_STUB);
     mapboxMock.getDirections.mockResolvedValue(DIRECTIONS_STUB);
+    fuelPricesMock.findNearestStationPrice.mockResolvedValue(ORIGIN_STATION);
+    fuelPricesMock.averagePriceBetweenPoints.mockResolvedValue({
+      price: 1.754,
+      originStation: ORIGIN_STATION,
+      destinationStation: DEST_STATION,
+    });
+    chargingMock.findStationsNearPoint.mockResolvedValue([CHARGING_STATION_STUB]);
+    chargingMock.findStationsAlongRoute.mockResolvedValue([CHARGING_STATION_STUB]);
   });
 
   // ── Auth ───────────────────────────────────────────────────────────────────
@@ -250,11 +316,15 @@ describe('Trips (e2e)', () => {
         fuelType: 'SP95_E10',
         consumption: 5.4,
       });
-      // Pas encore de cost
-      expect(res.body).not.toHaveProperty('cost');
+      // Véhicule thermique → cost présent
+      expect(res.body).toHaveProperty('cost');
+      expect(res.body.cost).toMatchObject({
+        type: 'fuel',
+        fuelType: 'SP95_E10',
+      });
     });
 
-    it('retourne le bon véhicule (électrique)', async () => {
+    it('retourne cost.type=electric pour un véhicule électrique (mode home par défaut)', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/v1/trips/calculate')
         .set('Authorization', `Bearer ${token}`)
@@ -262,6 +332,103 @@ describe('Trips (e2e)', () => {
         .expect(201);
 
       expect(res.body.vehicle).toMatchObject({ brand: 'Tesla', fuelType: 'ELECTRIC' });
+      expect(res.body.cost).toMatchObject({
+        type: 'electric',
+        chargingMode: 'home',
+      });
+      expect(res.body.cost.disclaimer).toBeTruthy();
+    });
+
+    it('calcule correctement le coût électrique (mode home)', async () => {
+      // 450 km × 14.9 kWh/100km = 67.05 kWh ; 67.05 × 0.2272 ≈ 15.23 €
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId, chargingMode: 'home' })
+        .expect(201);
+
+      expect(res.body.cost.consumptionKwh).toBeCloseTo(67.05, 1);
+      expect(res.body.cost.pricePerKwh).toBeCloseTo(0.2272, 3);
+      expect(res.body.cost.totalCost).toBeCloseTo(15.23, 0);
+    });
+
+    it('calcule correctement le coût électrique (mode public)', async () => {
+      // 450 km × 14.9 kWh/100km = 67.05 kWh ; 67.05 × 0.45 ≈ 30.17 €
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId, chargingMode: 'public' })
+        .expect(201);
+
+      expect(res.body.cost.pricePerKwh).toBeCloseTo(0.45, 2);
+      expect(res.body.cost.totalCost).toBeCloseTo(30.17, 0);
+    });
+
+    it('calcule correctement le coût électrique (mode mix 50/50)', async () => {
+      // prix moyen = (0.2272 + 0.45) / 2 = 0.3386 €/kWh
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId, chargingMode: 'mix', chargingMixRatio: 0.5 })
+        .expect(201);
+
+      expect(res.body.cost.chargingMode).toBe('mix');
+      expect(res.body.cost.pricePerKwh).toBeCloseTo(0.3386, 3);
+    });
+
+    it('inclut les bornes proches dans le coût électrique', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId })
+        .expect(201);
+
+      expect(Array.isArray(res.body.cost.nearbyStations)).toBe(true);
+      expect(res.body.cost.nearbyStations[0]).toMatchObject({ id: 'FR*VER*E123' });
+      expect(chargingMock.findStationsAlongRoute).toHaveBeenCalled();
+    });
+
+    it('rejette chargingMode invalide → 400', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId, chargingMode: 'invalid' })
+        .expect(400);
+    });
+
+    it('retourne cost avec consumptionLitres et totalCost corrects (thermique)', async () => {
+      // 450 km × 5.4 L/100km = 24.3 L ; 24.3 × 1.754 ≈ 42.62 €
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(res.body.cost.consumptionLitres).toBeCloseTo(24.3, 1);
+      expect(res.body.cost.pricePerLitre).toBeCloseTo(1.754, 2);
+      expect(res.body.cost.totalCost).toBeCloseTo(42.62, 0);
+      expect(res.body.cost.priceSource).toMatchObject({
+        originStation: { stationName: 'Total Paris', source: 'api' },
+        destinationStation: { stationName: 'BP Marseille', source: 'api' },
+        source: 'api',
+      });
+    });
+
+    it('source = fallback quand FuelPricesService retourne fallback', async () => {
+      const fallbackStation = { ...ORIGIN_STATION, source: 'fallback' as const };
+      fuelPricesMock.averagePriceBetweenPoints.mockResolvedValueOnce({
+        price: 1.72,
+        originStation: fallbackStation,
+        destinationStation: fallbackStation,
+      });
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(res.body.cost.priceSource.source).toBe('fallback');
     });
 
     it('formate correctement la durée (ex: 14400s → "4h")', async () => {

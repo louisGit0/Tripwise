@@ -1,0 +1,33 @@
+{
+  "auth": {
+    "email_taken": "Cet email est déjà utilisé",
+    "invalid_credentials": "Email ou mot de passe incorrect",
+    "unauthorized": "Authentification requise"
+  },
+  "common": {
+    "not_found": "Ressource introuvable",
+    "forbidden": "Accès refusé"
+  },
+  "favorites": {
+    "not_found": "Favori introuvable",
+    "forbidden": "Vous n'avez pas accès à ce favori"
+  },
+  "vehicles": {
+    "not_found": "Véhicule introuvable",
+    "model_not_found": "Modèle de véhicule introuvable",
+    "forbidden": "Accès refusé à ce véhicule",
+    "electric_prices_required": "homeElectricityPrice et publicChargingPrice sont requis pour un véhicule électrique"
+  },
+  "trips": {
+    "vehicle_not_found": "Véhicule introuvable ou n'appartient pas à cet utilisateur"
+  },
+  "fuel_prices": {
+    "electric_not_supported": "Le type ELECTRIC n'est pas pris en charge pour la recherche de prix carburant"
+  },
+  "validation": {
+    "is_email": "L'adresse email n'est pas valide",
+    "min_length": "La valeur est trop courte",
+    "is_number": "La valeur doit être un nombre",
+    "is_uuid": "L'identifiant doit être un UUID valide"
+  }
+}

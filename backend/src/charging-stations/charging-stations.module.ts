@@ -4,6 +4,7 @@ import { ChargingStationsService } from './charging-stations.service';
 
 @Module({
   controllers: [ChargingStationsController],
-  providers: [ChargingStationsService]
+  providers: [ChargingStationsService],
+  exports: [ChargingStationsService],
 })
 export class ChargingStationsModule {}
