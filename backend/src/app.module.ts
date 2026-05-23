@@ -20,6 +20,7 @@ import { TripsModule } from './trips/trips.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FuelPricesModule } from './fuel-prices/fuel-prices.module';
 import { ChargingStationsModule } from './charging-stations/charging-stations.module';
+import { PricesModule } from './prices/prices.module';
 import { MapboxModule } from './mapbox/mapbox.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
@@ -44,6 +45,7 @@ import databaseConfig from './config/database.config';
           // En production : dist/i18n/ (copié par nest-cli assets)
           // En développement (ts-node) : src/i18n/
           path: path.join(__dirname, 'i18n'),
+          watch: process.env.NODE_ENV !== 'production',
         }),
       ],
       resolvers: [
@@ -59,6 +61,7 @@ import databaseConfig from './config/database.config';
     FavoritesModule,
     FuelPricesModule,
     ChargingStationsModule,
+    PricesModule,
   ],
   controllers: [AppController, HealthController],
   providers: [

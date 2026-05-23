@@ -1,27 +1,24 @@
-import { HTMLAttributes } from 'react';
+import React from 'react';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+type Padding = 'none' | 'sm' | 'md' | 'lg';
+
+interface CardProps {
+  children: React.ReactNode;
+  padding?: Padding;
+  className?: string;
 }
 
-const paddingClasses = {
+const paddingClasses: Record<Padding, string> = {
   none: '',
   sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
+  md: 'p-5',
+  lg: 'p-8',
 };
 
-export default function Card({ padding = 'md', className = '', children, ...props }: CardProps) {
+export function Card({ children, padding = 'md', className = '' }: CardProps) {
   return (
     <div
-      className={[
-        'rounded-xl border bg-white dark:bg-slate-800 shadow-sm',
-        paddingClasses[padding],
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      {...props}
+      className={`bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm ${paddingClasses[padding]} ${className}`}
     >
       {children}
     </div>

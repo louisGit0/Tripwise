@@ -1,109 +1,224 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Car, Plus, Trash2, Pencil } from 'lucide-react';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Modal from '@/components/ui/Modal';
-import Input from '@/components/ui/Input';
+import { Plus, Pencil, Trash2, Car } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/providers/ToastProvider';
-import api from '@/lib/api';
-import type { UserVehicle, VehicleModel } from '@/types/api';
+import { apiClient } from '@/lib/api';
 import { useDebounce } from '@/hooks/useDebounce';
-
-// ── Fuel label map ─────────────────────────────────────────────────────────────
-
-const FUEL_LABELS: Record<string, string> = {
-  SP95: 'SP95', SP95_E10: 'SP95-E10', SP98: 'SP98',
-  DIESEL: 'Diesel', E85: 'E85', GPL: 'GPL', ELECTRIC: 'Électrique',
-};
-
-// ── Page ───────────────────────────────────────────────────────────────────────
+import type { UserVehicle, VehicleModel } from '@/types/api';
 
 export default function VehiclesPage() {
   const t = useTranslations('vehicles');
-  const tc = useTranslations('common');
-  const { toast } = useToast();
+  const tCommon = useTranslations('common');
+  const { showToast } = useToast();
 
   const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [addOpen, setAddOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Add modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [catalogSearch, setCatalogSearch] = useState('');
+  const [catalogResults, setCatalogResults] = useState<VehicleModel[]>([]);
+  const [selectedModel, setSelectedModel] = useState<VehicleModel | null>(null);
+  const [addNickname, setAddNickname] = useState('');
+  const [addHomePrice, setAddHomePrice] = useState('');
+  const [addPublicPrice, setAddPublicPrice] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const debouncedSearch = useDebounce(catalogSearch, 300);
+
+  // Edit modal state
   const [editVehicle, setEditVehicle] = useState<UserVehicle | null>(null);
+  const [editNickname, setEditNickname] = useState('');
+  const [editHomePrice, setEditHomePrice] = useState('');
+  const [editPublicPrice, setEditPublicPrice] = useState('');
+
+  // Delete modal state
   const [deleteVehicle, setDeleteVehicle] = useState<UserVehicle | null>(null);
 
-  const fetchVehicles = useCallback(async () => {
+  const loadVehicles = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const res = await api.get<UserVehicle[]>('/vehicles/me');
-      setVehicles(res.data);
+      const { data } = await apiClient.get<UserVehicle[]>('/vehicles/me');
+      setVehicles(data);
     } catch {
-      toast(tc('error'), 'error');
+      showToast('error', tCommon('error'));
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, [toast, tc]);
+  }, [showToast, tCommon]);
 
-  useEffect(() => { void fetchVehicles(); }, [fetchVehicles]);
+  useEffect(() => {
+    loadVehicles();
+  }, [loadVehicles]);
 
-  const handleDelete = async () => {
+  useEffect(() => {
+    if (!showAddModal || !selectedModel) return;
+    if (debouncedSearch.length < 1) {
+      setCatalogResults([]);
+      return;
+    }
+    apiClient
+      .get<{ data: VehicleModel[] }>('/vehicles/catalog', {
+        params: { search: debouncedSearch, limit: 10 },
+      })
+      .then(({ data }) => setCatalogResults(data.data ?? []))
+      .catch(() => setCatalogResults([]));
+  }, [debouncedSearch, showAddModal, selectedModel]);
+
+  useEffect(() => {
+    if (!showAddModal || selectedModel) return;
+    if (debouncedSearch.length < 2) {
+      setCatalogResults([]);
+      return;
+    }
+    apiClient
+      .get<{ data: VehicleModel[] }>('/vehicles/catalog', {
+        params: { search: debouncedSearch, limit: 10 },
+      })
+      .then(({ data }) => setCatalogResults(data.data ?? []))
+      .catch(() => setCatalogResults([]));
+  }, [debouncedSearch, showAddModal, selectedModel]);
+
+  function openAddModal() {
+    setSelectedModel(null);
+    setCatalogSearch('');
+    setCatalogResults([]);
+    setAddNickname('');
+    setAddHomePrice('');
+    setAddPublicPrice('');
+    setShowAddModal(true);
+  }
+
+  async function handleAdd() {
+    if (!selectedModel) return;
+    const isElectric = selectedModel.fuelType === 'ELECTRIC';
+    if (isElectric && (!addHomePrice || !addPublicPrice)) {
+      showToast('error', t('electricPricesRequired'));
+      return;
+    }
+    setIsSaving(true);
+    try {
+      await apiClient.post('/vehicles/me', {
+        vehicleModelId: selectedModel.id,
+        nickname: addNickname || undefined,
+        ...(isElectric
+          ? {
+              homeElectricityPrice: parseFloat(addHomePrice),
+              publicChargingPrice: parseFloat(addPublicPrice),
+            }
+          : {}),
+      });
+      setShowAddModal(false);
+      showToast('success', tCommon('success'));
+      await loadVehicles();
+    } catch {
+      showToast('error', tCommon('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  function openEdit(v: UserVehicle) {
+    setEditVehicle(v);
+    setEditNickname(v.nickname ?? '');
+    setEditHomePrice(v.homeElectricityPrice?.toString() ?? '');
+    setEditPublicPrice(v.publicChargingPrice?.toString() ?? '');
+  }
+
+  async function handleEdit() {
+    if (!editVehicle) return;
+    const isElectric = editVehicle.vehicleModel.fuelType === 'ELECTRIC';
+    setIsSaving(true);
+    try {
+      await apiClient.patch(`/vehicles/me/${editVehicle.id}`, {
+        nickname: editNickname || undefined,
+        ...(isElectric
+          ? {
+              homeElectricityPrice: editHomePrice ? parseFloat(editHomePrice) : undefined,
+              publicChargingPrice: editPublicPrice ? parseFloat(editPublicPrice) : undefined,
+            }
+          : {}),
+      });
+      setEditVehicle(null);
+      showToast('success', tCommon('success'));
+      await loadVehicles();
+    } catch {
+      showToast('error', tCommon('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleDelete() {
     if (!deleteVehicle) return;
     try {
-      await api.delete(`/vehicles/me/${deleteVehicle.id}`);
-      setVehicles((prev) => prev.filter((v) => v.id !== deleteVehicle.id));
-      toast(t('deleteSuccess'), 'success');
-    } catch {
-      toast(tc('error'), 'error');
-    } finally {
+      await apiClient.delete(`/vehicles/me/${deleteVehicle.id}`);
       setDeleteVehicle(null);
+      showToast('success', tCommon('success'));
+      await loadVehicles();
+    } catch {
+      showToast('error', tCommon('error'));
     }
-  };
-
-  if (loading) {
-    return <div className="text-slate-500 dark:text-slate-400 text-sm">{tc('loading')}</div>;
   }
+
+  const fuelLabel = (ft: string) =>
+    t(`fuelTypes.${ft}` as Parameters<typeof t>[0]) || ft;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">{t('title')}</h1>
-        <Button size="sm" onClick={() => setAddOpen(true)}>
-          <Plus className="h-4 w-4" />
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        <Button onClick={openAddModal} size="sm">
+          <Plus size={16} />
           {t('add')}
         </Button>
       </div>
 
-      {vehicles.length === 0 ? (
+      {isLoading ? (
+        <p className="text-[var(--muted)] text-sm">{tCommon('loading')}</p>
+      ) : vehicles.length === 0 ? (
         <Card>
-          <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <Car className="h-10 w-10 text-slate-300 dark:text-slate-600" />
-            <p className="text-sm text-slate-500 dark:text-slate-400">{t('empty')}</p>
-            <Button size="sm" onClick={() => setAddOpen(true)}>{t('add')}</Button>
-          </div>
+          <p className="text-center text-[var(--muted)] py-8">{t('empty')}</p>
         </Card>
       ) : (
         <div className="flex flex-col gap-3">
           {vehicles.map((v) => (
             <Card key={v.id} padding="md">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex flex-col min-w-0">
-                  <p className="font-medium text-slate-900 dark:text-white truncate">
-                    {v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`}
-                  </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    {v.vehicleModel.brand} {v.vehicleModel.model} ·{' '}
-                    {FUEL_LABELS[v.vehicleModel.fuelType] ?? v.vehicleModel.fuelType} ·{' '}
-                    {v.vehicleModel.fuelType === 'ELECTRIC'
-                      ? `${v.vehicleModel.consumptionPer100km} kWh/100km`
-                      : `${v.vehicleModel.consumptionPer100km} L/100km`}
-                  </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center">
+                    <Car size={18} className="text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">
+                      {v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`}
+                    </p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {v.vehicleModel.brand} {v.vehicleModel.model}
+                      {v.vehicleModel.year ? ` · ${v.vehicleModel.year}` : ''} ·{' '}
+                      {fuelLabel(v.vehicleModel.fuelType)} · {v.vehicleModel.consumption}{' '}
+                      {v.vehicleModel.fuelType === 'ELECTRIC' ? 'kWh' : 'L'}/100km
+                    </p>
+                  </div>
                 </div>
-                <div className="flex gap-1 shrink-0">
-                  <Button variant="ghost" size="sm" onClick={() => setEditVehicle(v)} aria-label={t('edit')}>
-                    <Pencil className="h-4 w-4 text-slate-500" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setDeleteVehicle(v)} aria-label={t('delete')}>
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => openEdit(v)}
+                    className="p-2 rounded-lg text-[var(--muted)] hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                  >
+                    <Pencil size={15} />
+                  </button>
+                  <button
+                    onClick={() => setDeleteVehicle(v)}
+                    className="p-2 rounded-lg text-[var(--muted)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  >
+                    <Trash2 size={15} />
+                  </button>
                 </div>
               </div>
             </Card>
@@ -111,299 +226,166 @@ export default function VehiclesPage() {
         </div>
       )}
 
-      {/* Add modal */}
-      <AddVehicleModal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        onAdded={(v) => {
-          setVehicles((prev) => [...prev, v]);
-          toast(t('addSuccess'), 'success');
-          setAddOpen(false);
-        }}
-      />
-
-      {/* Edit modal */}
-      {editVehicle && (
-        <EditVehicleModal
-          vehicle={editVehicle}
-          onClose={() => setEditVehicle(null)}
-          onSaved={(updated) => {
-            setVehicles((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
-            toast(t('editSuccess'), 'success');
-            setEditVehicle(null);
-          }}
-        />
-      )}
-
-      {/* Delete confirm modal */}
+      {/* Add Modal */}
       <Modal
-        open={!!deleteVehicle}
-        onClose={() => setDeleteVehicle(null)}
-        title={t('deleteConfirm')}
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title={selectedModel ? t('addTitle') : t('searchCatalog')}
         footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setDeleteVehicle(null)}>{tc('cancel')}</Button>
-            <Button variant="destructive" size="sm" onClick={handleDelete}>{t('delete')}</Button>
-          </>
+          selectedModel ? (
+            <>
+              <Button variant="secondary" onClick={() => setSelectedModel(null)}>
+                {tCommon('back')}
+              </Button>
+              <Button onClick={handleAdd} loading={isSaving}>
+                {tCommon('add')}
+              </Button>
+            </>
+          ) : undefined
         }
       >
-        <p className="text-sm text-slate-600 dark:text-slate-400">{t('deleteConfirmDesc')}</p>
-      </Modal>
-    </div>
-  );
-}
-
-// ── Add vehicle modal ──────────────────────────────────────────────────────────
-
-interface AddModalProps {
-  open: boolean;
-  onClose: () => void;
-  onAdded: (vehicle: UserVehicle) => void;
-}
-
-function AddVehicleModal({ open, onClose, onAdded }: AddModalProps) {
-  const t = useTranslations('vehicles');
-  const tc = useTranslations('common');
-  const { toast } = useToast();
-
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 300);
-  const [catalogResults, setCatalogResults] = useState<VehicleModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState<VehicleModel | null>(null);
-  const [nickname, setNickname] = useState('');
-  const [homePrice, setHomePrice] = useState('');
-  const [publicPrice, setPublicPrice] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (!open) {
-      setSearch(''); setSelectedModel(null); setNickname('');
-      setHomePrice(''); setPublicPrice(''); setCatalogResults([]); setErrors({});
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!debouncedSearch) { setCatalogResults([]); return; }
-    api.get<{ data: VehicleModel[] }>('/vehicles/catalog', { params: { search: debouncedSearch, limit: 10 } })
-      .then((res) => setCatalogResults(res.data.data))
-      .catch(() => {/* ignore */});
-  }, [debouncedSearch]);
-
-  const isElectric = selectedModel?.fuelType === 'ELECTRIC';
-
-  const validate = () => {
-    const errs: Record<string, string> = {};
-    if (!selectedModel) errs.model = 'Sélectionnez un modèle';
-    if (isElectric && !homePrice) errs.homePrice = 'Requis';
-    if (isElectric && !publicPrice) errs.publicPrice = 'Requis';
-    return errs;
-  };
-
-  const handleSubmit = async () => {
-    const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
-    setSubmitting(true);
-    try {
-      const body: Record<string, unknown> = { vehicleModelId: selectedModel!.id };
-      if (nickname) body.nickname = nickname;
-      if (isElectric) {
-        body.homeElectricityPrice = parseFloat(homePrice);
-        body.publicChargingPrice = parseFloat(publicPrice);
-      }
-      const res = await api.post<UserVehicle>('/vehicles/me', body);
-      onAdded(res.data);
-    } catch {
-      toast(tc('error'), 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={t('addModalTitle')}
-      footer={
-        <>
-          <Button variant="secondary" size="sm" onClick={onClose}>{tc('cancel')}</Button>
-          <Button size="sm" loading={submitting} onClick={handleSubmit}>{tc('save')}</Button>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
         {!selectedModel ? (
-          <>
+          <div className="flex flex-col gap-3">
             <Input
-              label={t('search')}
               placeholder={t('searchPlaceholder')}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              error={errors.model}
+              value={catalogSearch}
+              onChange={(e) => setCatalogSearch(e.target.value)}
+              autoFocus
             />
-            {catalogResults.length > 0 && (
-              <ul className="border rounded-lg overflow-hidden divide-y divide-slate-100 dark:divide-slate-700 max-h-48 overflow-y-auto">
-                {catalogResults.map((m) => (
-                  <li key={m.id}>
-                    <button
-                      type="button"
-                      onClick={() => { setSelectedModel(m); setSearch(''); }}
-                      className="w-full text-left px-3 py-2.5 text-sm hover:bg-primary-50 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <span className="font-medium text-slate-900 dark:text-white">{m.brand} {m.model}</span>
-                      <span className="ml-2 text-slate-500 text-xs">
-                        {FUEL_LABELS[m.fuelType] ?? m.fuelType} · {m.consumptionPer100km} {m.fuelType === 'ELECTRIC' ? 'kWh' : 'L'}/100
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            {catalogResults.length === 0 && catalogSearch.length >= 2 && (
+              <p className="text-sm text-[var(--muted)] text-center py-4">{t('noResults')}</p>
             )}
-            {debouncedSearch && catalogResults.length === 0 && (
-              <p className="text-sm text-slate-500">{t('noResults')}</p>
-            )}
-          </>
-        ) : (
-          <>
-            <div className="flex items-center justify-between rounded-lg bg-primary-50 dark:bg-primary-900/30 px-3 py-2.5">
-              <div>
-                <p className="text-sm font-medium text-primary-800 dark:text-primary-200">
-                  {selectedModel.brand} {selectedModel.model}
-                </p>
-                <p className="text-xs text-primary-600 dark:text-primary-400">
-                  {FUEL_LABELS[selectedModel.fuelType] ?? selectedModel.fuelType} · {selectedModel.consumptionPer100km} {selectedModel.fuelType === 'ELECTRIC' ? 'kWh' : 'L'}/100
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedModel(null)}
-                className="text-xs text-primary-600 dark:text-primary-400 underline"
-              >
-                Changer
-              </button>
+            <div className="flex flex-col gap-2 max-h-72 overflow-y-auto">
+              {catalogResults.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedModel(m)}
+                  className="flex items-center justify-between px-3 py-2.5 border border-[var(--border)] rounded-lg text-sm hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-left"
+                >
+                  <span>
+                    {m.brand} {m.model} {m.year ? `(${m.year})` : ''}
+                  </span>
+                  <span className="text-xs text-[var(--muted)]">{fuelLabel(m.fuelType)}</span>
+                </button>
+              ))}
             </div>
-
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <div className="p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg text-sm">
+              <span className="font-medium">
+                {selectedModel.brand} {selectedModel.model}
+              </span>
+              {selectedModel.year ? ` (${selectedModel.year})` : ''} ·{' '}
+              {fuelLabel(selectedModel.fuelType)}
+            </div>
             <Input
               label={t('nickname')}
               placeholder={t('nicknamePlaceholder')}
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              value={addNickname}
+              onChange={(e) => setAddNickname(e.target.value)}
             />
-
-            {isElectric && (
+            {selectedModel.fuelType === 'ELECTRIC' && (
               <>
                 <Input
-                  label={t('homeElectricity')}
+                  label={t('homePrice')}
                   type="number"
-                  step="0.001"
-                  min="0"
+                  step="0.0001"
                   placeholder="0.2272"
-                  value={homePrice}
-                  onChange={(e) => setHomePrice(e.target.value)}
-                  error={errors.homePrice}
-                  hint={t('electricPricesHint')}
+                  value={addHomePrice}
+                  onChange={(e) => setAddHomePrice(e.target.value)}
                 />
                 <Input
-                  label={t('publicCharging')}
+                  label={t('publicPrice')}
                   type="number"
-                  step="0.001"
-                  min="0"
-                  placeholder="0.55"
-                  value={publicPrice}
-                  onChange={(e) => setPublicPrice(e.target.value)}
-                  error={errors.publicPrice}
+                  step="0.0001"
+                  placeholder="0.4500"
+                  value={addPublicPrice}
+                  onChange={(e) => setAddPublicPrice(e.target.value)}
                 />
               </>
             )}
-          </>
+          </div>
         )}
-      </div>
-    </Modal>
-  );
-}
+      </Modal>
 
-// ── Edit vehicle modal ─────────────────────────────────────────────────────────
-
-interface EditModalProps {
-  vehicle: UserVehicle;
-  onClose: () => void;
-  onSaved: (vehicle: UserVehicle) => void;
-}
-
-function EditVehicleModal({ vehicle, onClose, onSaved }: EditModalProps) {
-  const t = useTranslations('vehicles');
-  const tc = useTranslations('common');
-  const { toast } = useToast();
-
-  const [nickname, setNickname] = useState(vehicle.nickname ?? '');
-  const [homePrice, setHomePrice] = useState(vehicle.homeElectricityPrice?.toString() ?? '');
-  const [publicPrice, setPublicPrice] = useState(vehicle.publicChargingPrice?.toString() ?? '');
-  const [submitting, setSubmitting] = useState(false);
-  const isElectric = vehicle.vehicleModel.fuelType === 'ELECTRIC';
-
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    try {
-      const body: Record<string, unknown> = { nickname: nickname || null };
-      if (isElectric) {
-        body.homeElectricityPrice = homePrice ? parseFloat(homePrice) : null;
-        body.publicChargingPrice = publicPrice ? parseFloat(publicPrice) : null;
-      }
-      const res = await api.patch<UserVehicle>(`/vehicles/me/${vehicle.id}`, body);
-      onSaved(res.data);
-    } catch {
-      toast(tc('error'), 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <Modal
-      open
-      onClose={onClose}
-      title={t('editModalTitle')}
-      footer={
-        <>
-          <Button variant="secondary" size="sm" onClick={onClose}>{tc('cancel')}</Button>
-          <Button size="sm" loading={submitting} onClick={handleSubmit}>{tc('save')}</Button>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <div className="rounded-lg bg-slate-50 dark:bg-slate-700/50 px-3 py-2">
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {vehicle.vehicleModel.brand} {vehicle.vehicleModel.model}
-          </p>
-        </div>
-        <Input
-          label={t('nickname')}
-          placeholder={t('nicknamePlaceholder')}
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-        {isElectric && (
+      {/* Edit Modal */}
+      <Modal
+        open={!!editVehicle}
+        onClose={() => setEditVehicle(null)}
+        title={t('editTitle')}
+        footer={
           <>
-            <Input
-              label={t('homeElectricity')}
-              type="number"
-              step="0.001"
-              min="0"
-              value={homePrice}
-              onChange={(e) => setHomePrice(e.target.value)}
-            />
-            <Input
-              label={t('publicCharging')}
-              type="number"
-              step="0.001"
-              min="0"
-              value={publicPrice}
-              onChange={(e) => setPublicPrice(e.target.value)}
-            />
+            <Button variant="secondary" onClick={() => setEditVehicle(null)}>
+              {tCommon('cancel')}
+            </Button>
+            <Button onClick={handleEdit} loading={isSaving}>
+              {tCommon('save')}
+            </Button>
           </>
+        }
+      >
+        {editVehicle && (
+          <div className="flex flex-col gap-4">
+            <div className="p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg text-sm">
+              {editVehicle.vehicleModel.brand} {editVehicle.vehicleModel.model} ·{' '}
+              {fuelLabel(editVehicle.vehicleModel.fuelType)}
+            </div>
+            <Input
+              label={t('nickname')}
+              placeholder={t('nicknamePlaceholder')}
+              value={editNickname}
+              onChange={(e) => setEditNickname(e.target.value)}
+            />
+            {editVehicle.vehicleModel.fuelType === 'ELECTRIC' && (
+              <>
+                <Input
+                  label={t('homePrice')}
+                  type="number"
+                  step="0.0001"
+                  value={editHomePrice}
+                  onChange={(e) => setEditHomePrice(e.target.value)}
+                />
+                <Input
+                  label={t('publicPrice')}
+                  type="number"
+                  step="0.0001"
+                  value={editPublicPrice}
+                  onChange={(e) => setEditPublicPrice(e.target.value)}
+                />
+              </>
+            )}
+          </div>
         )}
-      </div>
-    </Modal>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        open={!!deleteVehicle}
+        onClose={() => setDeleteVehicle(null)}
+        title={tCommon('confirm_delete')}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setDeleteVehicle(null)}>
+              {tCommon('cancel')}
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              {tCommon('delete')}
+            </Button>
+          </>
+        }
+      >
+        {deleteVehicle && (
+          <p className="text-sm">
+            {t('deleteConfirm')}
+            <br />
+            <strong>
+              {deleteVehicle.nickname ??
+                `${deleteVehicle.vehicleModel.brand} ${deleteVehicle.vehicleModel.model}`}
+            </strong>
+          </p>
+        )}
+      </Modal>
+    </div>
   );
 }

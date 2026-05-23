@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50:  '#eff6ff',
+          50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
           300: '#93c5fd',
@@ -24,7 +24,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

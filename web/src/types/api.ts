@@ -1,91 +1,45 @@
-// ── Geo ────────────────────────────────────────────────────────────────────────
+export type FuelType = 'SP95' | 'SP95_E10' | 'SP98' | 'DIESEL' | 'E85' | 'GPL' | 'ELECTRIC';
+export type AuthProvider = 'local' | 'google' | 'apple';
+export type ChargingMode = 'home' | 'public' | 'mix';
 
 export interface GeoPoint {
   lat: number;
   lng: number;
-  label: string;
+  label?: string;
 }
 
-export interface GeocodeFeature {
+export interface UserProfile {
   id: string;
-  place_name: string;
-  center: [number, number]; // [lng, lat]
+  email: string;
+  displayName: string | null;
+  locale: string;
+  provider: AuthProvider;
+  createdAt: string;
 }
 
-// ── Vehicles ───────────────────────────────────────────────────────────────────
+export interface AuthResponse {
+  accessToken: string;
+  user: UserProfile;
+}
 
 export interface VehicleModel {
   id: string;
   brand: string;
   model: string;
-  fuelType: string;
-  consumptionPer100km: number;
+  year?: number | null;
+  fuelType: FuelType;
+  consumption: number;
 }
 
 export interface UserVehicle {
   id: string;
   nickname: string | null;
+  vehicleModel: VehicleModel;
   homeElectricityPrice: number | null;
   publicChargingPrice: number | null;
-  vehicleModel: VehicleModel;
+  createdAt: string;
+  updatedAt: string;
 }
-
-// ── Trip ───────────────────────────────────────────────────────────────────────
-
-export interface ChargingStation {
-  id: string;
-  name: string;
-  operator: string | null;
-  address: string;
-  lat: number;
-  lng: number;
-  powerKw: number | null;
-  connectorTypes: string[];
-  openingHours: string | null;
-  isFreeAccess: boolean;
-  distanceKm: number;
-}
-
-export interface FuelCost {
-  type: 'fuel';
-  fuelType: string;
-  consumptionLitres: number;
-  pricePerLitre: number;
-  priceSource: {
-    originStation: { stationName: string; price: number; distanceKm: number; source: string };
-    destinationStation: { stationName: string; price: number; distanceKm: number; source: string };
-    source: 'api' | 'fallback';
-  };
-  totalCost: number;
-}
-
-export interface ElectricCost {
-  type: 'electric';
-  consumptionKwh: number;
-  pricePerKwh: number;
-  chargingMode: 'home' | 'public' | 'mix';
-  totalCost: number;
-  nearbyStations: ChargingStation[];
-  disclaimer: string;
-}
-
-export interface TripResult {
-  distance: { meters: number; km: number };
-  duration: { seconds: number; formatted: string };
-  geometry: { type: 'LineString'; coordinates: [number, number][] };
-  waypoints: Array<{ name: string; location: [number, number] }>;
-  vehicle: {
-    id: string;
-    nickname: string | null;
-    brand: string;
-    model: string;
-    fuelType: string;
-    consumption: number;
-  };
-  cost?: FuelCost | ElectricCost;
-}
-
-// ── Favorites ──────────────────────────────────────────────────────────────────
 
 export interface Favorite {
   id: string;
@@ -98,4 +52,86 @@ export interface Favorite {
   destinationLng: number;
   vehicleId: string | null;
   createdAt: string;
+}
+
+export interface NearbyStation {
+  id: string;
+  name: string;
+  operator?: string;
+  address?: string;
+  lat: number;
+  lng: number;
+  powerKw?: number;
+  connectorTypes?: string[];
+  openingHours?: string;
+  isFreeAccess?: boolean;
+  distanceKm?: number;
+}
+
+export interface StationInfo {
+  stationName?: string;
+  address?: string;
+  price?: number;
+  distanceKm?: number;
+  source: string;
+}
+
+export interface FuelCostResult {
+  type: 'fuel';
+  fuelType: string;
+  consumptionLitres: number;
+  pricePerLitre: number;
+  priceSource?: {
+    originStation?: StationInfo;
+    destinationStation?: StationInfo;
+    source: string;
+  };
+  totalCost: number;
+}
+
+export interface ElectricCostResult {
+  type: 'electric';
+  consumptionKwh: number;
+  pricePerKwh: number;
+  chargingMode: ChargingMode;
+  totalCost: number;
+  nearbyStations?: NearbyStation[];
+  disclaimer?: string;
+}
+
+export interface TripResult {
+  distance: { meters: number; km: number };
+  duration: { seconds: number; formatted: string };
+  geometry: {
+    type: 'LineString';
+    coordinates: [number, number][];
+  };
+  waypoints: Array<{ location: [number, number]; name: string }>;
+  vehicle: {
+    id: string;
+    nickname: string | null;
+    brand: string;
+    model: string;
+    fuelType: FuelType;
+    consumption: number;
+  };
+  cost?: FuelCostResult | ElectricCostResult;
+}
+
+export interface GeocodeFeature {
+  id: string;
+  place_name: string;
+  center: [number, number];
+  geometry: { type: 'Point'; coordinates: [number, number] };
+}
+
+export interface GeocodeResult {
+  features: GeocodeFeature[];
+}
+
+export interface CatalogPage {
+  data: VehicleModel[];
+  total: number;
+  page: number;
+  limit: number;
 }

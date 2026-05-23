@@ -46,6 +46,29 @@ export class UserVehicle {
   })
   publicChargingPrice!: number | null;
 
+  /** Plaque d'immatriculation — optionnelle, affichage uniquement */
+  @Column({ name: 'license_plate', nullable: true, type: 'varchar', length: 20 })
+  licensePlate!: string | null;
+
+  /** Véhicule par défaut de l'utilisateur (un seul par compte) */
+  @Column({ name: 'is_default', type: 'boolean', default: false })
+  isDefault!: boolean;
+
+  /**
+   * Proportion des recharges effectuées à domicile (0.00–1.00).
+   * Utilisée pour le mode de recharge « mix » dans le calcul de trajet.
+   * Défaut : 0.70 (70 % à domicile).
+   */
+  @Column({
+    name: 'home_charging_ratio',
+    type: 'decimal',
+    precision: 3,
+    scale: 2,
+    nullable: true,
+    default: 0.70,
+  })
+  homeChargingRatio!: number | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

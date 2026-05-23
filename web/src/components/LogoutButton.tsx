@@ -1,25 +1,27 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import { logout } from '@/lib/auth';
-import Button from '@/components/ui/Button';
+import { Button } from './ui/Button';
 
-export default function LogoutButton() {
+interface LogoutButtonProps {
+  label?: string;
+}
+
+export function LogoutButton({ label = 'Se déconnecter' }: LogoutButtonProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
-  const handleLogout = async () => {
-    setLoading(true);
+  async function handleLogout() {
     await logout();
     router.push('/login');
-  };
+    router.refresh();
+  }
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleLogout} loading={loading} aria-label="Déconnexion">
-      <LogOut className="h-4 w-4" />
-      <span className="hidden sm:inline">Déconnexion</span>
+    <Button variant="ghost" onClick={handleLogout} className="gap-2">
+      <LogOut size={16} />
+      {label}
     </Button>
   );
 }

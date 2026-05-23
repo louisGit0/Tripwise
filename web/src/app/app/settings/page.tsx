@@ -1,69 +1,60 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { Sun, Moon, Monitor } from 'lucide-react';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Modal from '@/components/ui/Modal';
+import { Sun, Moon, Monitor, Globe } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { logout } from '@/lib/auth';
+
+type Theme = 'light' | 'dark' | 'system';
 
 export default function SettingsPage() {
   const t = useTranslations('settings');
-  const tc = useTranslations('common');
+  const tAuth = useTranslations('auth');
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const [logoutOpen, setLogoutOpen] = useState(false);
-  const [locale, setLocaleState] = useState(
-    typeof document !== 'undefined'
-      ? document.cookie.split('; ').find((r) => r.startsWith('locale='))?.split('=')[1] ?? 'fr'
-      : 'fr',
-  );
 
-  const THEMES = [
-    { value: 'light', label: t('themeLight'), icon: Sun },
-    { value: 'dark', label: t('themeDark'), icon: Moon },
-    { value: 'system', label: t('themeSystem'), icon: Monitor },
+  const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
+    { value: 'light', label: t('themeLight'), icon: <Sun size={16} /> },
+    { value: 'dark', label: t('themeDark'), icon: <Moon size={16} /> },
+    { value: 'system', label: t('themeSystem'), icon: <Monitor size={16} /> },
   ];
 
-  const LOCALES = [
-    { value: 'fr', label: '🇫🇷 Français' },
-    { value: 'en', label: '🇬🇧 English' },
-  ];
+  function changeLocale(locale: 'fr' | 'en') {
+    document.cookie = `locale=${locale}; path=/; max-age=${365 * 24 * 60 * 60}; samesite=lax`;
+    window.location.reload();
+  }
 
-  const handleLocaleChange = (value: string) => {
-    setLocaleState(value);
-    document.cookie = `locale=${value}; path=/; max-age=${60 * 60 * 24 * 365}`;
-    router.refresh();
-  };
-
-  const handleLogout = async () => {
+  async function handleLogout() {
     await logout();
     router.push('/login');
-  };
+    router.refresh();
+  }
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white">{t('title')}</h1>
+    <div className="flex flex-col gap-6 max-w-md">
+      <h1 className="text-2xl font-bold">{t('title')}</h1>
 
       {/* Theme */}
       <Card>
-        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">{t('theme')}</h2>
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <Sun size={18} className="text-primary-600" />
+          {t('theme')}
+        </h2>
         <div className="flex gap-2">
-          {THEMES.map(({ value, label, icon: Icon }) => (
+          {themes.map(({ value, label, icon }) => (
             <button
               key={value}
               onClick={() => setTheme(value)}
-              className={[
-                'flex-1 flex flex-col items-center gap-1.5 rounded-lg border py-3 text-xs font-medium transition-colors',
+              className={`flex-1 flex flex-col items-center gap-1.5 py-3 px-2 rounded-lg border text-xs font-medium transition-all ${
                 theme === value
-                  ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
-              ].join(' ')}
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                  : 'border-[var(--border)] hover:bg-[var(--card)]'
+              }`}
             >
-              <Icon className="h-5 w-5" />
+              {icon}
               {label}
             </button>
           ))}
@@ -72,46 +63,41 @@ export default function SettingsPage() {
 
       {/* Language */}
       <Card>
-        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">{t('language')}</h2>
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <Globe size={18} className="text-primary-600" />
+          {t('language')}
+        </h2>
         <div className="flex gap-2">
-          {LOCALES.map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={() => handleLocaleChange(value)}
-              className={[
-                'flex-1 rounded-lg border py-2.5 text-sm font-medium transition-colors',
-                locale === value
-                  ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800',
-              ].join(' ')}
-            >
-              {label}
-            </button>
-          ))}
+          {(['fr', 'en'] as const).map((locale) => {
+            const label = locale === 'fr' ? t('french') : t('english');
+            const currentLocale =
+              typeof document !== 'undefined'
+                ? document.cookie.match(/locale=([^;]*)/)?.[1] ?? 'fr'
+                : 'fr';
+            return (
+              <button
+                key={locale}
+                onClick={() => changeLocale(locale)}
+                className={`flex-1 py-2.5 px-4 rounded-lg border text-sm font-medium transition-all ${
+                  currentLocale === locale
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                    : 'border-[var(--border)] hover:bg-[var(--card)]'
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </Card>
 
       {/* Account */}
       <Card>
-        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">{t('account')}</h2>
-        <Button variant="destructive" size="sm" onClick={() => setLogoutOpen(true)}>
-          {t('logout')}
+        <h2 className="font-semibold mb-4">{t('account')}</h2>
+        <Button variant="destructive" onClick={handleLogout} className="w-full">
+          {tAuth('logout')}
         </Button>
       </Card>
-
-      <Modal
-        open={logoutOpen}
-        onClose={() => setLogoutOpen(false)}
-        title={t('logoutConfirm')}
-        footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setLogoutOpen(false)}>{tc('cancel')}</Button>
-            <Button variant="destructive" size="sm" onClick={handleLogout}>{t('logout')}</Button>
-          </>
-        }
-      >
-        <p className="text-sm text-slate-600 dark:text-slate-400">{t('logoutConfirmDesc')}</p>
-      </Modal>
     </div>
   );
 }

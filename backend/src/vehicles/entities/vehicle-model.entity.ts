@@ -35,10 +35,38 @@ export class VehicleModel {
 
   /**
    * L/100km pour les thermiques, kWh/100km pour les électriques.
-   * Valeurs indicatives basées sur les moyennes constructeur.
+   * Valeurs indicatives basées sur les moyennes constructeur (WLTP).
    */
   @Column({ type: 'decimal', precision: 5, scale: 2 })
   consumption!: number;
+
+  /**
+   * Capacité brute de la batterie en kWh.
+   * Renseigné uniquement pour les véhicules électriques — null pour les thermiques.
+   * Valeurs indicatives (source : fiches constructeur).
+   */
+  @Column({
+    name: 'battery_capacity_kwh',
+    type: 'decimal',
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
+  batteryCapacityKwh!: number | null;
+
+  /**
+   * Capacité du réservoir en litres.
+   * Renseigné uniquement pour les thermiques — null pour les électriques.
+   * Valeurs indicatives (source : fiches constructeur).
+   */
+  @Column({
+    name: 'tank_capacity_liters',
+    type: 'decimal',
+    precision: 5,
+    scale: 1,
+    nullable: true,
+  })
+  tankCapacityLiters!: number | null;
 
   @OneToMany(() => UserVehicle, (uv) => uv.vehicleModel)
   userVehicles!: UserVehicle[];

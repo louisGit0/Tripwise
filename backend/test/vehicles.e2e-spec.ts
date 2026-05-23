@@ -21,6 +21,7 @@ import { User } from '../src/users/entities/user.entity';
 import { UserVehicle } from '../src/vehicles/entities/user-vehicle.entity';
 import { VehicleModel, FuelType } from '../src/vehicles/entities/vehicle-model.entity';
 import { Favorite } from '../src/favorites/entities/favorite.entity';
+import { Trip } from '../src/trips/entities/trip.entity';
 import { GoogleStrategy } from '../src/auth/strategies/google.strategy';
 import { AppleStrategy } from '../src/auth/strategies/apple.strategy';
 
@@ -71,7 +72,7 @@ describe('Vehicles (e2e)', () => {
         TypeOrmModule.forRoot({
           type: 'better-sqlite3',
           database: ':memory:',
-          entities: [User, UserVehicle, VehicleModel, Favorite],
+          entities: [User, UserVehicle, VehicleModel, Favorite, Trip],
           synchronize: true,
           logging: false,
         }),
@@ -191,6 +192,8 @@ describe('Vehicles (e2e)', () => {
       expect(res.body.nickname).toBe('Ma Clio');
       expect(res.body.homeElectricityPrice).toBeNull();
       expect(res.body.publicChargingPrice).toBeNull();
+      // Premier véhicule → forcé isDefault: true
+      expect(res.body.isDefault).toBe(true);
     });
 
     it('ajoute un véhicule électrique avec tarifs (201)', async () => {
@@ -319,6 +322,64 @@ describe('Vehicles (e2e)', () => {
         .patch(`/api/v1/vehicles/me/${vehicleId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ nickname: 'ghost' })
+        .expect(404);
+    });
+  });
+
+  describe('PATCH /api/v1/vehicles/me/:id/set-default', () => {
+    let token: string;
+    let firstVehicleId: string;
+    let secondVehicleId: string;
+
+    beforeAll(async () => {
+      token = await registerAndLogin(app, 'veh-setdefault@test.com');
+
+      const r1 = await request(app.getHttpServer())
+        .post('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ vehicleModelId: thermalModelId, nickname: 'First' });
+      firstVehicleId = r1.body.id as string;
+
+      const r2 = await request(app.getHttpServer())
+        .post('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ vehicleModelId: thermalModelId, nickname: 'Second' });
+      secondVehicleId = r2.body.id as string;
+    });
+
+    it('définit un véhicule par défaut — retourne { vehicleId, isDefault: true }', async () => {
+      const res = await request(app.getHttpServer())
+        .patch(`/api/v1/vehicles/me/${secondVehicleId}/set-default`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(res.body).toMatchObject({ vehicleId: secondVehicleId, isDefault: true });
+    });
+
+    it('le premier véhicule ne devrait plus être par défaut après le changement', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const first  = res.body.find((v: { id: string }) => v.id === firstVehicleId);
+      const second = res.body.find((v: { id: string }) => v.id === secondVehicleId);
+      expect(first.isDefault).toBe(false);
+      expect(second.isDefault).toBe(true);
+    });
+
+    it('refuse set-default sur un véhicule d\'un autre utilisateur (403)', async () => {
+      const otherToken = await registerAndLogin(app, 'veh-setdefault-other@test.com');
+      await request(app.getHttpServer())
+        .patch(`/api/v1/vehicles/me/${firstVehicleId}/set-default`)
+        .set('Authorization', `Bearer ${otherToken}`)
+        .expect(403);
+    });
+
+    it('retourne 404 pour un id inconnu', async () => {
+      await request(app.getHttpServer())
+        .patch('/api/v1/vehicles/me/00000000-0000-0000-0000-000000000000/set-default')
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
     });
   });
