@@ -29,6 +29,7 @@ import { User } from '../src/users/entities/user.entity';
 import { UserVehicle } from '../src/vehicles/entities/user-vehicle.entity';
 import { VehicleModel, FuelType } from '../src/vehicles/entities/vehicle-model.entity';
 import { Favorite } from '../src/favorites/entities/favorite.entity';
+import { Trip } from '../src/trips/entities/trip.entity';
 import { GoogleStrategy } from '../src/auth/strategies/google.strategy';
 import { AppleStrategy } from '../src/auth/strategies/apple.strategy';
 
@@ -160,7 +161,7 @@ describe('Trips (e2e)', () => {
         TypeOrmModule.forRoot({
           type: 'better-sqlite3',
           database: ':memory:',
-          entities: [User, UserVehicle, VehicleModel, Favorite],
+          entities: [User, UserVehicle, VehicleModel, Favorite, Trip],
           synchronize: true,
           logging: false,
         }),
@@ -533,6 +534,99 @@ describe('Trips (e2e)', () => {
           userVehicleId: vehicleId,
         });
       expect(res.body.duration?.formatted).toBe(expected);
+    });
+  });
+
+  // ── POST /trips/calculate-multi ─────────────────────────────────────────────
+
+  describe('POST /api/v1/trips/calculate-multi', () => {
+    let token: string;
+    let thermalVehicleId: string;
+    let electricVehicleId: string;
+
+    const BASE_BODY = {
+      origin:      { lat: 48.8566, lng: 2.3522, label: 'Paris' },
+      destination: { lat: 43.2965, lng: 5.3698, label: 'Marseille' },
+    };
+
+    beforeAll(async () => {
+      token = await registerAndLogin(app, 'trips-multi@test.com');
+
+      const r1 = await request(app.getHttpServer())
+        .post('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ vehicleModelId: thermalModelId, nickname: 'Multi-Clio' });
+      thermalVehicleId = r1.body.id as string;
+
+      const r2 = await request(app.getHttpServer())
+        .post('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          vehicleModelId: electricModelId,
+          nickname: 'Multi-Tesla',
+          homeElectricityPrice: 0.21,
+          publicChargingPrice:  0.49,
+        });
+      electricVehicleId = r2.body.id as string;
+    });
+
+    it('retourne 3 comparaisons avec userVehicleId thermique — isCurrent sur "gas"', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate-multi')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(Array.isArray(res.body.comparisons)).toBe(true);
+      expect(res.body.comparisons).toHaveLength(3);
+
+      const currentEntry = res.body.comparisons.find(
+        (c: { isCurrent: boolean }) => c.isCurrent === true,
+      );
+      expect(currentEntry).toBeDefined();
+      expect(currentEntry.category).toBe('gas');
+      expect(currentEntry.label).toContain('(actuel)');
+    });
+
+    it('retourne 3 comparaisons sans userVehicleId — tous isCurrent: false', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate-multi')
+        .set('Authorization', `Bearer ${token}`)
+        .send(BASE_BODY)
+        .expect(201);
+
+      expect(res.body.comparisons).toHaveLength(3);
+      expect(res.body.comparisons.every((c: { isCurrent: boolean }) => !c.isCurrent)).toBe(true);
+    });
+
+    it('isCurrent = ev pour un véhicule électrique', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate-multi')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: electricVehicleId })
+        .expect(201);
+
+      const currentEntry = res.body.comparisons.find(
+        (c: { isCurrent: boolean }) => c.isCurrent === true,
+      );
+      expect(currentEntry).toBeDefined();
+      expect(currentEntry.category).toBe('ev');
+      expect(res.body.disclaimer).toBeTruthy();
+    });
+
+    it('rejette un body sans origin → 400', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate-multi')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ destination: BASE_BODY.destination })
+        .expect(400);
+    });
+
+    it('retourne 401 sans token', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate-multi')
+        .send(BASE_BODY)
+        .expect(401);
     });
   });
 });

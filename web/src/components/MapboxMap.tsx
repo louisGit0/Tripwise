@@ -1,82 +1,97 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import type { ChargingStation } from '@/types/api';
+import type { NearbyStation } from '@/types/api';
 
-interface Props {
+interface MapboxMapProps {
   geometry: { type: 'LineString'; coordinates: [number, number][] };
-  chargingStations?: ChargingStation[];
+  origin: { lat: number; lng: number; label?: string };
+  destination: { lat: number; lng: number; label?: string };
+  stations?: NearbyStation[];
+  className?: string;
 }
 
-export default function MapboxMap({ geometry, chargingStations = [] }: Props) {
+export default function MapboxMap({
+  geometry,
+  origin,
+  destination,
+  stations,
+  className = 'w-full h-80 rounded-xl overflow-hidden',
+}: MapboxMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
+    let map: import('mapbox-gl').Map | undefined;
 
-    const map = new mapboxgl.Map({
-      container: containerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: geometry.coordinates[0],
-      zoom: 6,
-    });
+    (async () => {
+      const mapboxgl = (await import('mapbox-gl')).default;
 
-    mapRef.current = map;
+      const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
+      if (!token) {
+        console.warn('[MapboxMap] NEXT_PUBLIC_MAPBOX_TOKEN is not set');
+      }
+      mapboxgl.accessToken = token;
 
-    map.on('load', () => {
-      // Route line
-      map.addSource('route', {
-        type: 'geojson',
-        data: { type: 'Feature', properties: {}, geometry },
-      });
-      map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: 'route',
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': '#2563eb', 'line-width': 4 },
+      map = new mapboxgl.Map({
+        container: containerRef.current!,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [origin.lng, origin.lat],
+        zoom: 9,
       });
 
-      // Fit to route bounds
-      const coords = geometry.coordinates;
-      const bounds = coords.reduce(
-        (b, coord) => b.extend(coord as [number, number]),
-        new mapboxgl.LngLatBounds(coords[0], coords[0]),
-      );
-      map.fitBounds(bounds, { padding: 48, maxZoom: 14 });
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-      // Origin marker (green)
-      const start = coords[0];
-      new mapboxgl.Marker({ color: '#16a34a' }).setLngLat(start).addTo(map);
+      map.on('load', () => {
+        if (!map) return;
 
-      // Destination marker (red)
-      const end = coords[coords.length - 1];
-      new mapboxgl.Marker({ color: '#dc2626' }).setLngLat(end).addTo(map);
+        map.addSource('route', {
+          type: 'geojson',
+          data: { type: 'Feature', properties: {}, geometry },
+        });
 
-      // Charging station markers (blue bolt)
-      chargingStations.forEach((station) => {
-        const el = document.createElement('div');
-        el.className = 'charging-marker';
-        el.style.cssText =
-          'width:20px;height:20px;background:#2563eb;border:2px solid white;border-radius:50%;cursor:pointer;';
-        new mapboxgl.Marker({ element: el })
-          .setLngLat([station.lng, station.lat])
-          .setPopup(
-            new mapboxgl.Popup({ offset: 12 }).setHTML(
-              `<strong>${station.name}</strong><br>${station.address}<br>${station.powerKw ? `${station.powerKw} kW` : ''}`,
-            ),
-          )
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#3b82f6', 'line-width': 4 },
+        });
+
+        new mapboxgl.Marker({ color: '#3b82f6' })
+          .setLngLat([origin.lng, origin.lat])
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(origin.label ?? 'Départ'))
           .addTo(map);
+
+        new mapboxgl.Marker({ color: '#ef4444' })
+          .setLngLat([destination.lng, destination.lat])
+          .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(destination.label ?? 'Arrivée'))
+          .addTo(map);
+
+        if (stations) {
+          for (const station of stations) {
+            const popup = new mapboxgl.Popup({ offset: 20 }).setHTML(
+              `<p class="font-semibold text-xs">${station.name}</p>${station.powerKw ? `<p class="text-xs">${station.powerKw} kW</p>` : ''}${station.address ? `<p class="text-xs text-gray-500">${station.address}</p>` : ''}`,
+            );
+            new mapboxgl.Marker({ color: '#22c55e', scale: 0.7 })
+              .setLngLat([station.lng, station.lat])
+              .setPopup(popup)
+              .addTo(map!);
+          }
+        }
+
+        const bounds = new mapboxgl.LngLatBounds();
+        geometry.coordinates.forEach(([lng, lat]) => bounds.extend([lng, lat]));
+        map.fitBounds(bounds, { padding: 60, maxZoom: 14 });
       });
-    });
+    })();
 
-    return () => map.remove();
-  }, [geometry, chargingStations]);
+    return () => {
+      map?.remove();
+    };
+  }, [geometry, origin, destination, stations]);
 
-  return <div ref={containerRef} className="w-full h-64 rounded-xl overflow-hidden" />;
+  return <div ref={containerRef} className={className} />;
 }

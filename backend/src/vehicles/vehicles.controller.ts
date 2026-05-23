@@ -51,6 +51,15 @@ export class VehiclesController {
     return this.vehiclesService.addUserVehicle(user.id, dto);
   }
 
+  @Patch('me/:id/set-default')
+  @UseGuards(JwtAuthGuard)
+  setDefault(
+    @CurrentUser() user: User,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.vehiclesService.setDefaultVehicle(user.id, id);
+  }
+
   @Patch('me/:id')
   @UseGuards(JwtAuthGuard)
   updateVehicle(

@@ -560,7 +560,7 @@ Ajouter les domaines : `http://localhost:3000`, `https://votre-domaine.com`
 ### Structure des pages
 ```
 src/
-├── proxy.ts                   Route proxy (Next.js 16) — protège /app/*
+├── middleware.ts               Middleware Next.js 15 — protège /app/*, redirige les authentifiés
 ├── i18n/request.ts            Détection locale via cookie
 ├── types/api.ts               Types TypeScript frontend (GeoPoint, UserVehicle, TripResult…)
 ├── hooks/useDebounce.ts       Hook debounce générique
@@ -572,6 +572,7 @@ src/
 ├── components/
 │   ├── AutocompleteInput.tsx  Champ avec suggestions geocode (debounce 300ms)
 │   ├── MapboxMap.tsx          Carte mapbox-gl (dynamic ssr:false) — route + bornes électriques
+│   ├── AppNav.tsx             Navigation top (desktop) + bottom (mobile) — 4 onglets
 │   ├── LogoutButton.tsx
 │   └── ui/
 │       ├── Button.tsx         (variant, size, loading)
@@ -807,6 +808,113 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 ---
 
 ## Journal des décisions & mises à jour
+
+### 2026-05-22 — Extension schéma DB + package shared
+
+#### Entités étendues
+- **`vehicle_models`** : ajout de `battery_capacity_kwh numeric(5,2) NULL` et `tank_capacity_liters numeric(5,1) NULL` (valeurs indicatives constructeur, commentées)
+- **`user_vehicles`** : ajout de `license_plate varchar(20) NULL`, `is_default boolean NOT NULL DEFAULT false`, `home_charging_ratio numeric(3,2) NULL DEFAULT 0.70`
+
+#### Nouvelle entité `Trip`
+- Fichier : `backend/src/trips/entities/trip.entity.ts`
+- Table : `trips` (créée par la migration `1747700000000-AddTripsAndExtendVehicles.ts`)
+- Colonnes : origin/destination (label+lat+lng), distance_km, duration_seconds, fuel_type (réutilise `vehicle_models_fuel_type_enum`), energy_unit (nouvel enum `energy_unit_enum` : 'L' | 'kWh'), consumption_per_100, total_consumption, price_per_unit, total_cost, charging_mode (varchar NULL), trip_date (timestamp), is_archived, created_at
+- 3 index : `IDX_trips_user_date` (user_id, trip_date DESC), `IDX_trips_user_archived` (user_id, is_archived), `IDX_trips_user_fuel` (user_id, fuel_type)
+- FK : user_id → users (CASCADE), vehicle_id → user_vehicles (SET NULL)
+- **NON enregistré automatiquement** — aucun endpoint d'écriture dans TripsModule (fonctionnalité future)
+
+#### Utilitaire `FuelCategory`
+- Fichier : `backend/src/common/fuel-type-categories.ts`
+- Exporte `FuelCategory` (type alias `'gas' | 'diesel' | 'ev' | 'gpl'`) et `toCategory(fuelType: FuelType): FuelCategory`
+- gas = SP95/SP95_E10/SP98/E85 · diesel = DIESEL · ev = ELECTRIC · gpl = GPL
+
+#### Seed — UPSERT idempotent
+- `vehicle-models.seed.ts` remplacé par une logique UPSERT par (brand, model, year) via `findOneBy` + `IsNull()` pour year null
+- 41 véhicules complétés avec `batteryCapacityKwh` (EVs) et `tankCapacityLiters` (thermiques) — valeurs indicatives constructeur
+
+#### Package `@tripwise/shared` (créé)
+- Répertoire `shared/` à la racine — pas de build step, TypeScript pur
+- `shared/src/enums/index.ts` : FuelType, AuthProvider, ChargingMode, EnergyUnit
+- `shared/src/types/fuel-category.types.ts` : FuelCategory, toCategory
+- `shared/src/types/user.types.ts` : UserProfile, LoginRequest, RegisterRequest, AuthResponse
+- `shared/src/types/vehicle.types.ts` : VehicleModelEntry, UserVehicle, AddVehicleRequest, UpdateVehicleRequest, VehicleCatalogQuery
+- `shared/src/types/trip.types.ts` : TripCalculateRequest, TripResult, FuelCost, ElectricCost, SavedTrip, GeoPoint, StationInfo, ChargingStation, TripDistance, TripDuration, TripVehicleInfo
+- `shared/src/types/favorite.types.ts` : Favorite, CreateFavoriteRequest, UpdateFavoriteRequest
+- `shared/src/index.ts` : barrel re-export de tout
+- Path alias déjà configuré dans `backend/tsconfig.json` et `backend/test/jest-e2e.json`
+
+#### Vérifications
+- `npx tsc --noEmit` → 0 erreur ✅
+- `npx jest --config test/jest-e2e.json --forceExit` → 96/96 tests passent ✅
+- `npm run migration:run` → à lancer quand Docker est démarré (DB indisponible au moment de la session)
+
+### 2026-05-22 — Prompt 2 Carbon design : historique trips + stats + multi-énergie
+
+#### Nouveaux fichiers backend
+- `src/common/calculation-constants.ts` : constantes France 2026 (consommation et prix de référence gaz/diesel/EV)
+- `src/common/default-prices.ts` : objet `DEFAULT_PRICES` exporté (utilisé par PricesService et TripsService)
+- `src/database/migrations/1747701000000-AddTripMetaFields.ts` : 3 nouveaux champs sur `trips` — `note TEXT NULL`, `passengers_count SMALLINT DEFAULT 1`, `tolls_cost NUMERIC(8,2) DEFAULT 0`
+- `src/prices/prices.service.ts`, `prices.controller.ts`, `prices.module.ts` : module `PricesModule` — endpoint `GET /prices/defaults` (JWT requis)
+- `src/trips/dto/save-trip.dto.ts` : DTO de sauvegarde de trajet
+- `src/trips/dto/history-query.dto.ts` : pagination + filtre fuelCategory/month/includeArchived
+- `src/trips/dto/update-trip.dto.ts` : modification note/isArchived/tripDate
+- `src/trips/dto/stats-query.dto.ts` : filtre month optionnel
+- `src/trips/dto/calculate-multi.dto.ts` : comparaison multi-énergie
+- `test/trips-crud.e2e-spec.ts` : 25 tests e2e (save, history, stats, GET/:id, PATCH/:id, DELETE/:id)
+- `test/prices.e2e-spec.ts` : 3 tests e2e (auth, shape, valeurs numériques)
+
+#### Modules modifiés
+- `Trip` entity : 3 nouvelles colonnes (note, passengersCount, tollsCost)
+- `VehiclesModule` : TypeOrmModule.forFeature inclut `Trip` (pour stats agrégées par véhicule)
+- `VehiclesService` : `findUserVehicles` retourne stats agrégées (tripsCount, totalDistance, totalSpent, costPerKm) via GROUP BY ; `addUserVehicle` utilise une transaction pour la logique `isDefault` ; nouvelle méthode `setDefaultVehicle`
+- `VehiclesController` : ajout `PATCH me/:id/set-default` (avant `PATCH me/:id`)
+- `TripsModule` : TypeOrmModule.forFeature inclut `Trip` + `UserVehicle` ; imports VehiclesModule, FuelPricesModule, ChargingStationsModule
+- `TripsService` : 6 nouvelles méthodes (saveTrip, getHistory, getTripById, updateTrip, deleteTrip, getStats) + `calculateMulti` (comparaison gas/diesel/ev avec prix réels ou fallback) ; méthode helper `categoryToFuelTypes`
+- `TripsController` : routes statiques avant `:id` (geocode, history, stats, calculate, calculate-multi, save) puis routes paramétrées (GET/:id, PATCH/:id, DELETE/:id)
+- `AppModule` : PricesModule ajouté
+- DTOs véhicules : `AddUserVehicleDto` et `UpdateUserVehicleDto` étendus (licensePlate, isDefault, homeChargingRatio)
+- Tous les fichiers e2e (7 suites existantes) : entité `Trip` ajoutée dans la liste `entities` TypeORM
+
+#### Nouveaux endpoints
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/v1/prices/defaults` | Renvoie les prix de référence (JWT requis) |
+| POST | `/api/v1/trips/save` | Sauvegarde un trajet calculé (201) |
+| GET | `/api/v1/trips/history` | Historique paginé (filtre fuelCategory, month, includeArchived) |
+| GET | `/api/v1/trips/stats` | Stats agrégées mensuelles (totalCost, totalDistance, tripCount, savedVsGas, dailyExpenses) |
+| POST | `/api/v1/trips/calculate-multi` | Compare coût gaz / diesel / EV pour le même trajet |
+| GET | `/api/v1/trips/:id` | Détail d'un trajet sauvegardé |
+| PATCH | `/api/v1/trips/:id` | Modifie note, isArchived ou tripDate |
+| DELETE | `/api/v1/trips/:id` | Supprime un trajet (204) |
+| PATCH | `/api/v1/vehicles/me/:id/set-default` | Définit le véhicule par défaut |
+
+#### Tests e2e
+- Suite complète (9 fichiers) : **136/136 tests passent** ✅
+- `npx jest --config test/jest-e2e.json --forceExit`
+
+### 2026-05-23 — Consolidation : restauration mobile + commit des changements en attente
+
+#### Contexte
+- Session précédente interrompue (contexte saturé) pendant la phase de nettoyage du répertoire `mobile/src/`
+- Les fichiers `mobile/src/*.ts(x)` avaient été supprimés de l'arbre de travail mais pas remplacés
+- Le code des tabs/auth mobile référençait ces fichiers supprimés → app cassée
+
+#### Actions effectuées
+- **Restauration** : `git restore mobile/src/` — fichiers `mobile/src/` récupérés depuis le dernier commit
+- **Vérifications** : 136/136 tests e2e ✅, `tsc --noEmit` backend ✅ et web ✅
+- **CLAUDE.md** : `proxy.ts` renommé en `middleware.ts` dans la structure, `AppNav.tsx` documenté
+- **Commit** : tous les changements en attente (backend extensions, shared types, web refactor) regroupés
+
+### 2026-05-21 — Frontend web `web/` créé et build validé
+- **Création effective** du répertoire `web/` (Next.js 15.3.9 App Router, TypeScript strict, Tailwind CSS 3, next-intl 4, next-themes 0.4, mapbox-gl 3, axios, react-hook-form + zod, lucide-react 1)
+- **14 routes compilées**, build 100% propre (0 erreur TypeScript, 0 warning ESLint)
+- **Dépendances** : versions réelles vérifiées via `npm view` (next@15.3.9, next-intl@4.12.0, lucide-react@1.16.0, etc.)
+- **lucide-react v1** : renames appliqués — `Loader2`→`LoaderCircle`, `CheckCircle`→`CircleCheck`, `XCircle`→`CircleX`, `AlertCircle`→`CircleAlert`
+- **mapbox-gl CSS** : import statique en tête de `MapboxMap.tsx` (pas de `await import()` dans useEffect — incompatible TypeScript)
+- **useCallback** : `loadVehicles` et `loadFavorites` wrappés pour corriger l'avertissement `exhaustive-deps` (qui devient erreur en build Next.js)
+- **Auth** : JWT dans cookie non-httpOnly (BFF `/api/auth/set-cookie`), middleware protège `/app/*`, axios intercepte et injecte `Authorization: Bearer`
+- **Sécurité token Mapbox** : `NEXT_PUBLIC_MAPBOX_TOKEN` visible dans le bundle client — **restreindre aux domaines autorisés** dans dashboard Mapbox (account.mapbox.com → Access tokens → URL restrictions)
+- **Variables d'env** nécessaires dans `web/.env.local` : `NEXT_PUBLIC_API_URL` + `NEXT_PUBLIC_MAPBOX_TOKEN`
 
 ### 2026-05-20 — Étape finale : sécurité, qualité, tests, documentation
 - **Rate limiting** : @nestjs/throttler installé ; ThrottlerGuard global (100 req/min par IP) ; /auth/login et /auth/register surchargés à 5 req/min via @Throttle()

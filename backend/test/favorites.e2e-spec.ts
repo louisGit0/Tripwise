@@ -21,6 +21,7 @@ import { User } from '../src/users/entities/user.entity';
 import { UserVehicle } from '../src/vehicles/entities/user-vehicle.entity';
 import { VehicleModel } from '../src/vehicles/entities/vehicle-model.entity';
 import { Favorite } from '../src/favorites/entities/favorite.entity';
+import { Trip } from '../src/trips/entities/trip.entity';
 import { GoogleStrategy } from '../src/auth/strategies/google.strategy';
 import { AppleStrategy } from '../src/auth/strategies/apple.strategy';
 
@@ -68,7 +69,7 @@ describe('Favorites (e2e)', () => {
         TypeOrmModule.forRoot({
           type: 'better-sqlite3',
           database: ':memory:',
-          entities: [User, UserVehicle, VehicleModel, Favorite],
+          entities: [User, UserVehicle, VehicleModel, Favorite, Trip],
           synchronize: true,
           logging: false,
         }),

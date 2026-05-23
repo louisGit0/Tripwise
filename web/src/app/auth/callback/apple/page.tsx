@@ -2,38 +2,31 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { setAuthCookie } from '@/lib/auth';
 
-function AppleCallbackInner() {
+export default function AppleCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const token = searchParams.get('token');
     if (!token) {
-      router.replace('/login?error=oauth_failed');
+      router.replace('/login');
       return;
     }
-    fetch('/api/auth/set-cookie', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
-    })
+
+    setAuthCookie(token)
       .then(() => router.replace('/app/dashboard'))
-      .catch(() => router.replace('/login?error=oauth_failed'));
+      .catch(() => router.replace('/login'));
   }, [router, searchParams]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center text-slate-500 dark:text-slate-400">
-      Connexion Apple en cours…
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3 text-[var(--muted)]">
+        <LoaderCircle size={28} className="animate-spin text-primary-600" />
+        <p className="text-sm">Connexion Apple en cours…</p>
+      </div>
     </div>
-  );
-}
-
-export default function AppleCallbackPage() {
-  return (
-    <Suspense>
-      <AppleCallbackInner />
-    </Suspense>
   );
 }

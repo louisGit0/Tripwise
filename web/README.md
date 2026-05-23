@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tripwise — Frontend Web
 
-## Getting Started
+Application Next.js 15 pour le calcul du coût de trajet voiture.
 
-First, run the development server:
+## Stack
+
+- **Next.js 15** (App Router, TypeScript strict)
+- **Tailwind CSS 3** (dark mode, palette `primary-*`)
+- **next-intl** (i18n FR/EN, détection par cookie)
+- **next-themes** (light / dark / system)
+- **axios** (intercepteur JWT depuis cookie)
+- **react-hook-form + zod** (formulaires)
+- **mapbox-gl** (carte interactive, import dynamique SSR-safe)
+- **lucide-react** (icônes)
+
+## Prérequis
+
+- Node.js 20+
+- Backend NestJS démarré (voir `../backend/`)
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd web
+cp .env.example .env.local
+# Remplir NEXT_PUBLIC_API_URL et NEXT_PUBLIC_MAPBOX_TOKEN
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Démarrage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev       # http://localhost:3001
+npm run build     # build de production
+npm run type-check # vérification TypeScript sans emit
+npm run lint      # ESLint
+npm run format    # Prettier
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables d'environnement
 
-## Learn More
+| Variable | Requis | Description |
+|----------|--------|-------------|
+| `NEXT_PUBLIC_API_URL` | Oui | URL du backend (ex. `http://localhost:3000/api/v1`) |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Oui | Token Mapbox public |
 
-To learn more about Next.js, take a look at the following resources:
+### Sécurité token Mapbox
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`NEXT_PUBLIC_MAPBOX_TOKEN` est visible dans le bundle JS client (normal pour mapbox-gl).
+**Restreindre ce token aux domaines autorisés** dans le dashboard Mapbox :
+[account.mapbox.com](https://account.mapbox.com) → Access tokens → URL restrictions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Architecture
 
-## Deploy on Vercel
+```
+src/
+├── app/
+│   ├── layout.tsx              # Root layout (Inter, next-intl, Providers)
+│   ├── page.tsx                # Landing /
+│   ├── login/                  # /login
+│   ├── register/               # /register
+│   ├── auth/callback/          # Callbacks OAuth (Google, Apple)
+│   ├── api/auth/               # Routes BFF (set-cookie, logout)
+│   └── app/                    # Section authentifiée
+│       ├── layout.tsx          # Navigation (top desktop + bottom mobile)
+│       ├── dashboard/          # Calculateur + carte
+│       ├── vehicles/           # CRUD véhicules
+│       ├── favorites/          # Liste favoris
+│       └── settings/           # Thème + langue
+├── components/
+│   ├── AutocompleteInput.tsx   # Géocodage avec debounce
+│   ├── MapboxMap.tsx           # Carte (client-only)
+│   ├── AppNav.tsx              # Navigation
+│   └── ui/                    # Button, Input, Select, Card, Modal
+├── lib/
+│   ├── api.ts                  # Axios + intercepteur JWT
+│   └── auth.ts                 # register, login, logout, setAuthCookie
+├── providers/
+│   ├── Providers.tsx           # ThemeProvider + ToastProvider
+│   └── ToastProvider.tsx       # Toasts (success/error/info, 4s)
+├── hooks/
+│   └── useDebounce.ts
+├── i18n/
+│   └── request.ts              # Détection locale (cookie)
+└── types/
+    └── api.ts                  # Types TypeScript frontend
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## JWT & Authentification
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Le JWT est stocké dans un cookie `access_token` (non-httpOnly, lisible par Axios).
+Le middleware Next.js (`middleware.ts`) protège `/app/*` et redirige vers `/login` si absent.

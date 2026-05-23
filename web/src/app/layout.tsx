@@ -1,23 +1,32 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { getLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
+import { Providers } from '@/providers/Providers';
 import './globals.css';
-import Providers from '@/providers/Providers';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Tripwise — Calculez le coût de vos trajets',
-  description: 'Estimez le coût de vos trajets en voiture : essence, diesel ou électrique.',
+  description:
+    'Calculez le coût de votre trajet en voiture (essence, diesel, électrique) entre deux points.',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-[--background] text-[--foreground]">
-        <Providers>{children}</Providers>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans`}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

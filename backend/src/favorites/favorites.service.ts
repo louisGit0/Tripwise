@@ -20,7 +20,7 @@ export class FavoritesService {
   ) {}
 
   private async t(key: string, lang: string): Promise<string> {
-    if (this.i18n) return this.i18n.translate<string>(key, { lang });
+    if (this.i18n) return this.i18n.translate(key, { lang }) as unknown as string;
     return key;
   }
 

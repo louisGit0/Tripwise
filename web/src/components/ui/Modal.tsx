@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import Button from './Button';
 
 interface ModalProps {
   open: boolean;
@@ -12,33 +11,36 @@ interface ModalProps {
   footer?: React.ReactNode;
 }
 
-export default function Modal({ open, onClose, title, children, footer }: ModalProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-
+export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (open) document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, [open, onClose]);
 
   if (!open) return null;
 
   return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
-    >
-      <div className="w-full max-w-md rounded-xl bg-white dark:bg-slate-800 shadow-xl">
-        <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
-          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Fermer">
-            <X className="h-4 w-4" />
-          </Button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-lg bg-[var(--background)] border border-[var(--border)] rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card)] transition-colors"
+          >
+            <X size={18} />
+          </button>
         </div>
-        <div className="px-4 py-4">{children}</div>
-        {footer && <div className="flex justify-end gap-2 border-t px-4 py-3">{footer}</div>}
+        <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
+        {footer && (
+          <div className="flex justify-end gap-3 px-6 py-4 border-t border-[var(--border)]">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import { AuthProvider } from '../enums/index.js';
+import type { AuthProvider } from '../enums/index';
 
-/** Profil utilisateur exposé par l'API (sans passwordHash). */
+/** Profil utilisateur exposé par l'API */
 export interface UserProfile {
   id: string;
   email: string;
@@ -10,18 +10,21 @@ export interface UserProfile {
   createdAt: string;
 }
 
-export interface AuthResponse {
-  accessToken: string;
-  user: UserProfile;
+/** Corps de la requête de connexion */
+export interface LoginRequest {
+  email: string;
+  password: string;
 }
 
+/** Corps de la requête d'inscription */
 export interface RegisterRequest {
   email: string;
   password: string;
   displayName?: string;
 }
 
-export interface LoginRequest {
-  email: string;
-  password: string;
+/** Réponse renvoyée après une authentification réussie */
+export interface AuthResponse {
+  accessToken: string;
+  user: UserProfile;
 }

@@ -5,6 +5,8 @@ import {
   MaxLength,
   IsNumber,
   Min,
+  Max,
+  IsBoolean,
 } from 'class-validator';
 
 export class AddUserVehicleDto {
@@ -25,4 +27,19 @@ export class AddUserVehicleDto {
   @IsNumber({ maxDecimalPlaces: 4 })
   @Min(0.0001)
   publicChargingPrice?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  licensePlate?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isDefault?: boolean;
+
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1)
+  homeChargingRatio?: number;
 }
