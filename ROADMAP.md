@@ -5,6 +5,24 @@ Elles sont classées par priorité estimée et complexité d'implémentation.
 
 ---
 
+## V1 — Fonctionnalités livrées ✅
+
+Pour mémoire, voici ce qui a été inclus dans la V1 :
+
+- Calcul de trajet (autocomplétion Mapbox, distance, durée, coût réel)
+- Comparaison multi-énergie automatique (essence / diesel / électrique)
+- Gestion de plusieurs véhicules avec véhicule par défaut
+- Prix carburant en temps réel (Opendatasoft) + bornes IRVE
+- Historique de trajets persistant (sauvegarde, archivage, notes, stats mensuelles)
+- Favoris avec réutilisation en un clic
+- Partage de coût par passager (jusqu'à 9 passagers)
+- Configuration des prix carburant personnalisés
+- Authentification email + OAuth Google + OAuth Apple (iOS)
+- Web (Next.js 15) + Mobile (Expo SDK 54)
+- Internationalisation FR/EN complète
+
+---
+
 ## Court terme (V1.1)
 
 ### Péages routiers
@@ -13,42 +31,50 @@ Elles sont classées par priorité estimée et complexité d'implémentation.
 - **Approche alternative** : base de données statique des péages français (données ASFA publiques) avec calcul côté backend selon l'axe emprunté par la route Mapbox.
 - **Complexité** : moyenne. TollGuru dispose d'une API compatible Mapbox Directions.
 
-### Historique des calculs (session)
-- Stocker les N derniers trajets calculés côté client (localStorage web / AsyncStorage mobile).
-- Pas de persistence serveur — simple liste côté client, effacée à la déconnexion.
-- **Complexité** : faible.
-
 ### Export PDF du résultat
 - Générer un PDF récapitulatif du trajet (distance, durée, coût, carte statique Mapbox).
 - Utile pour les notes de frais professionnelles.
 - **Complexité** : faible (librairie `pdf-lib` ou `jsPDF` côté web).
 
+### Tests mobile (React Native Testing Library)
+- Jest + React Native Testing Library non configurés en V1 (priorisation du delivery).
+- Cibler 60%+ de couverture sur les hooks et utilitaires mobiles.
+- **Complexité** : faible.
+
+### Mode hors-ligne partiel (web)
+- Mettre en cache les derniers résultats dans IndexedDB.
+- Afficher un bandeau "Hors ligne" et servir les données en cache.
+- **Complexité** : faible.
+
 ---
 
 ## Moyen terme (V1.2)
 
-### Historique persistant des trajets
-- Nouvelle entité `TripHistory` liée à l'utilisateur.
-- Endpoint `POST /trips/history` déclenché automatiquement après chaque calcul.
-- Endpoint `GET /trips/history` avec pagination et filtres (véhicule, période, coût min/max).
-- **Complexité** : moyenne (migration DB, module NestJS, UI list).
+### PWA (web)
+- Manifest + Service Worker pour le frontend Next.js.
+- Installation en tant qu'app sur mobile depuis le navigateur.
+- Fonctionnement offline partiel (résultats récents, favoris mis en cache).
+- **Complexité** : faible à moyenne.
 
 ### Multi-devises
-- Utile pour les trajets transfrontaliers (France → Espagne, Belgique, etc.).
+- Utile pour les trajets transfrontaliers (France → Espagne, Belgique, Suisse…).
 - Récupération des taux de change via l'API publique [Frankfurter](https://www.frankfurter.app/) (BCE).
 - Prix carburant affiché dans la devise locale du pays de destination.
 - **Complexité** : moyenne (logique de conversion, UI selector).
 
-### Comparateur de véhicules
-- Calculer et comparer le coût d'un même trajet pour plusieurs véhicules simultanément.
-- Affichage côte à côte des résultats avec le delta en euros.
-- Utile pour aider à choisir entre deux voitures.
-- **Complexité** : faible (appels parallèles `POST /trips/calculate`, UI comparaison).
+### Carte plein écran et style satellite
+- Option d'affichage de la carte Mapbox en plein écran avec style satellite.
+- Visualisation améliorée du tracé du trajet.
+- **Complexité** : faible.
 
-### Partage de coût entre passagers
-- Saisir le nombre de passagers → diviser le coût total.
-- Pas de fonctionnalité sociale — simple division affichée dans le résultat.
-- **Complexité** : très faible (calcul côté frontend uniquement).
+### Intégration cartes statiques dans le partage
+- Générer une image statique de la carte (Mapbox Static Images API) à joindre au partage.
+- **Complexité** : faible.
+
+### Notifications push — alertes prix carburant
+- Notifier l'utilisateur quand le prix du carburant baisse sous un seuil configuré près de chez lui.
+- Nécessite `expo-notifications` + tâche cron backend.
+- **Complexité** : moyenne.
 
 ---
 
@@ -70,20 +96,15 @@ Elles sont classées par priorité estimée et complexité d'implémentation.
 - Tableau de bord administrateur : kilométrages, coûts par véhicule, remboursements.
 - **Complexité** : élevée (multi-tenant, rôles, rapports).
 
-### Intégration cartes statiques dans le partage
-- Générer une image statique de la carte (Mapbox Static Images API) à joindre au partage.
-- **Complexité** : faible.
-
-### Notifications push — alertes prix carburant
-- Notifier l'utilisateur quand le prix du carburant baisse sous un seuil configuré près de chez lui.
-- Nécessite `expo-notifications` + tâche cron backend.
+### Refresh tokens (sécurité renforcée)
+- Remplacer le JWT 7j par access token 15min + refresh token 30j.
+- Nécessite un endpoint `POST /auth/refresh` et une gestion côté client.
 - **Complexité** : moyenne.
 
-### PWA (web)
-- Manifest + Service Worker pour le frontend web.
-- Installation en tant qu'app sur mobile depuis le navigateur.
-- Fonctionnement offline partiel (résultats récents mis en cache).
-- **Complexité** : faible à moyenne.
+### Redis (mise à l'échelle)
+- Remplacer le cache in-memory des prix carburants et des bornes IRVE par Redis.
+- Nécessaire si plusieurs instances backend (déploiement en cluster).
+- **Complexité** : faible (configuration uniquement).
 
 ---
 
@@ -103,6 +124,7 @@ Elles sont classées par priorité estimée et complexité d'implémentation.
 ## Décisions différées
 
 - **Multi-tenant / SaaS** : non envisagé avant une validation du marché.
-- **Redis** : non nécessaire en V1 (cache in-memory suffisant) ; à introduire si plusieurs instances backend.
-- **Refresh tokens** : JWT 7j actuellement (compromis UX/sécurité) ; à remplacer par access 15min + refresh 30j si usage professionnel.
-- **Tests mobile** : Jest + React Native Testing Library non configurés en V1 (priorisation du delivery) ; à ajouter en V1.1.
+- **Redis** : non nécessaire en V1 (cache in-memory suffisant pour une instance) ; à introduire si déploiement multi-instances.
+- **Refresh tokens** : JWT 7j actuellement (compromis UX/sécurité acceptable pour un usage personnel) ; à remplacer par access 15min + refresh 30j si usage professionnel.
+- **Tests mobile** : non configurés en V1 (priorisation du delivery) ; à ajouter en V1.1.
+- **WebSocket (temps réel)** : non nécessaire en V1 ; envisageable pour les alertes prix ou le mode collaboratif en V2.

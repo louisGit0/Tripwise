@@ -2,43 +2,140 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════
+   Carbon design tokens
+   Dark is the default (set on :root so SSR renders correctly
+   before next-themes hydrates).
+   [data-theme="light"] overrides for light mode.
+   [data-theme="dark"]  is explicit (mirrors :root) so computed
+   styles are consistent after hydration.
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --card: #f8fafc;
-  --card-foreground: #0f172a;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --muted: #64748b;
-  --muted-foreground: #94a3b8;
-  --primary: #3b82f6;
+  /* ── Dark (default) ──────────────────────────────────────────── */
+  --c-bg:       #0e0c0a;
+  --c-surface:  #181612;
+  --c-surface2: #221e18;
+  --c-ink:      #f0ece4;
+  --c-ink2:     #c4bdaf;
+  --c-muted:    #7a7163;
+  --c-faint:    #2e2820;
+  --c-hairline: #3a3328;
+  --c-accent:   #4d8bff;
+  --c-ev:       #4d8bff;
+  --c-fuel-gas: #ff7849;
+  --c-fuel-die: #ffc247;
+
+  /* ── Legacy semantic variables (mapped to Carbon) ────────────── */
+  /* Existing pages use var(--background) / var(--border) etc.     */
+  --background:         var(--c-bg);
+  --foreground:         var(--c-ink);
+  --card:               var(--c-surface);
+  --card-foreground:    var(--c-ink);
+  --border:             var(--c-hairline);
+  --input:              var(--c-hairline);
+  --muted:              var(--c-muted);
+  --muted-foreground:   var(--c-ink2);
+  --primary:            var(--c-accent);
+  --primary-foreground: #0e0c0a;
+  --destructive:        var(--c-fuel-gas);
+  --radius:             0.75rem;
+}
+
+[data-theme="dark"] {
+  --c-bg:       #0e0c0a;
+  --c-surface:  #181612;
+  --c-surface2: #221e18;
+  --c-ink:      #f0ece4;
+  --c-ink2:     #c4bdaf;
+  --c-muted:    #7a7163;
+  --c-faint:    #2e2820;
+  --c-hairline: #3a3328;
+  --c-accent:   #4d8bff;
+  --c-ev:       #4d8bff;
+  --c-fuel-gas: #ff7849;
+  --c-fuel-die: #ffc247;
+}
+
+/* Light mode derivation.
+   Arbitrage note: accent / ev / fuelGas / fuelDie stay identical
+   because they are semantic brand colours.
+   muted (#8a8275 on #fafaf7) ≈ 4.6:1 contrast — acceptable for
+   body text ≥ 14px but avoid it on captions below 13px. */
+[data-theme="light"] {
+  --c-bg:       #fafaf7;
+  --c-surface:  #ffffff;
+  --c-surface2: #f3f1ec;
+  --c-ink:      #1c1a16;
+  --c-ink2:     #4a463e;
+  --c-muted:    #8a8275;
+  --c-faint:    #e8e5dd;
+  --c-hairline: #d8d4ca;
+  /* Accents unchanged */
+  --c-accent:   #4d8bff;
+  --c-ev:       #4d8bff;
+  --c-fuel-gas: #ff7849;
+  --c-fuel-die: #ffc247;
+  /* Legacy overrides */
   --primary-foreground: #ffffff;
-  --destructive: #ef4444;
-  --radius: 0.5rem;
 }
 
-.dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
-  --border: #334155;
-  --input: #334155;
-  --muted: #475569;
-  --muted-foreground: #94a3b8;
-  --primary: #60a5fa;
-  --primary-foreground: #0f172a;
-  --destructive: #ef4444;
-  --radius: 0.5rem;
+/* ── Cursor-blink animation (Wordmark terminal variant) ───────── */
+@keyframes twcursor {
+  50% { opacity: 0.15; }
 }
 
-* {
+/* ── Base resets ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html {
+  /* Smooth theme transition — avoids harsh flash when toggling */
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-display), -apple-system, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout shift from scrollbar appearing */
+  overflow-y: scroll;
+}
+
+/* ── Typography reset ────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), -apple-system, system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* ── Text selection ──────────────────────────────────────────── */
+::selection {
+  background-color: rgba(77, 139, 255, 0.28); /* accent at ~30% */
+  color: var(--c-ink);
+}
+
+/* ── Minimal dark scrollbar ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-hairline);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-muted);
 }

@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { UserVehicle } from '../../vehicles/entities/user-vehicle.entity';
+import { decimalTransformer } from '../../common/column-transformers';
 
 @Entity('favorites')
 export class Favorite {
@@ -23,19 +24,19 @@ export class Favorite {
   @Column({ name: 'origin_label' })
   originLabel!: string;
 
-  @Column({ name: 'origin_lat', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'origin_lat', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   originLat!: number;
 
-  @Column({ name: 'origin_lng', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'origin_lng', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   originLng!: number;
 
   @Column({ name: 'destination_label' })
   destinationLabel!: string;
 
-  @Column({ name: 'destination_lat', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'destination_lat', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   destinationLat!: number;
 
-  @Column({ name: 'destination_lng', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'destination_lng', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   destinationLng!: number;
 
   @Column({ name: 'vehicle_id', nullable: true, type: 'uuid' })

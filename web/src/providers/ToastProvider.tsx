@@ -24,15 +24,15 @@ export function useToast() {
 }
 
 const icons: Record<ToastType, React.ReactNode> = {
-  success: <CircleCheck size={16} className="text-green-500" />,
-  error: <CircleX size={16} className="text-red-500" />,
-  info: <Info size={16} className="text-blue-500" />,
+  success: <CircleCheck size={16} className="text-emerald-400" />,
+  error:   <CircleX size={16} className="text-red-400" />,
+  info:    <Info size={16} className="text-blue-400" />,
 };
 
-const bgColors: Record<ToastType, string> = {
-  success: 'border-green-200 dark:border-green-800',
-  error: 'border-red-200 dark:border-red-800',
-  info: 'border-blue-200 dark:border-blue-800',
+const borderColors: Record<ToastType, string> = {
+  success: 'border-emerald-500/40',
+  error:   'border-red-500/40',
+  info:    'border-blue-500/40',
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -51,17 +51,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full">
+      {/* Toast container — fixed top-right, above everything */}
+      <div className="fixed top-4 right-4 z-[200] flex flex-col gap-2 w-full max-w-sm pointer-events-none">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`flex items-start gap-3 p-3 rounded-lg border bg-[var(--card)] shadow-lg ${bgColors[toast.type]} animate-in slide-in-from-top-2`}
+            className={`flex items-start gap-3 px-4 py-3 rounded-xl border bg-carbon-surface shadow-xl pointer-events-auto ${borderColors[toast.type]}`}
           >
             <span className="mt-0.5 shrink-0">{icons[toast.type]}</span>
-            <p className="flex-1 text-sm">{toast.message}</p>
+            <p className="flex-1 text-sm text-carbon-ink leading-snug">{toast.message}</p>
             <button
               onClick={() => dismiss(toast.id)}
-              className="shrink-0 text-[var(--muted)] hover:text-[var(--foreground)]"
+              className="shrink-0 text-carbon-muted hover:text-carbon-ink transition-colors"
             >
               <X size={14} />
             </button>

@@ -18,7 +18,7 @@ const paddingClasses: Record<Padding, string> = {
 export function Card({ children, padding = 'md', className = '' }: CardProps) {
   return (
     <div
-      className={`bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm ${paddingClasses[padding]} ${className}`}
+      className={`bg-carbon-surface border border-carbon-hairline rounded-card ${paddingClasses[padding]} ${className}`}
     >
       {children}
     </div>

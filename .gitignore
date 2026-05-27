@@ -86,3 +86,7 @@ desktop.ini
 .cache/
 tmp/
 temp/
+
+# Editor and local tooling artifacts
+.claude/
+**/.claude/
