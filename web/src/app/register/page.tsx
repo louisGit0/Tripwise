@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -15,24 +14,20 @@ import { Input } from '@/components/ui/Input';
 import { useToast } from '@/providers/ToastProvider';
 import { register as registerUser, setAuthCookie } from '@/lib/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1';
-
-function buildSchema(passwordMismatch: string) {
-  return z
-    .object({
-      displayName: z.string().optional(),
-      email: z.string().email(),
-      password: z
-        .string()
-        .min(8, 'Minimum 8 caractères')
-        .regex(/\d/, 'Doit contenir au moins un chiffre'),
-      confirmPassword: z.string().min(1),
-    })
-    .refine((d) => d.password === d.confirmPassword, {
-      message: passwordMismatch,
-      path: ['confirmPassword'],
-    });
-}
+const schema = z
+  .object({
+    displayName: z.string().optional(),
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(8, 'Minimum 8 caractères')
+      .regex(/\d/, 'Doit contenir au moins un chiffre'),
+    confirmPassword: z.string().min(1),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['confirmPassword'],
+  });
 
 type FormData = {
   displayName?: string;
@@ -40,6 +35,8 @@ type FormData = {
   password: string;
   confirmPassword: string;
 };
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1';
 
 // Google SVG icon
 function GoogleIcon() {
@@ -54,12 +51,9 @@ function GoogleIcon() {
 }
 
 export default function RegisterPage() {
-  const t = useTranslations('auth');
   const router = useRouter();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-
-  const schema = buildSchema(t('passwordMismatch'));
 
   const {
     register,
@@ -75,7 +69,7 @@ export default function RegisterPage() {
       router.push('/app/dashboard');
       router.refresh();
     } catch {
-      showToast('error', t('registerError'));
+      showToast('error', 'Impossible de créer le compte');
     } finally {
       setIsLoading(false);
     }
@@ -89,35 +83,35 @@ export default function RegisterPage() {
         <div className="flex flex-col items-center gap-3 mb-8">
           <TWAppIcon size={44} />
           <Wordmark size="md" />
-          <p className="text-sm text-carbon-muted mt-1">{t('registerTitle')}</p>
+          <p className="text-sm text-carbon-muted mt-1">Créer un compte</p>
         </div>
 
         {/* Card */}
         <div className="rounded-card bg-carbon-surface border border-carbon-hairline p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
-              label={t('displayName')}
+              label="Prénom"
               type="text"
               autoComplete="given-name"
               {...register('displayName')}
             />
             <Input
-              label={t('email')}
+              label="Adresse email"
               type="email"
               autoComplete="email"
               error={errors.email?.message}
               {...register('email')}
             />
             <Input
-              label={t('password')}
+              label="Mot de passe"
               type="password"
               autoComplete="new-password"
-              hint={t('passwordHint')}
+              hint="8 caractères minimum dont un chiffre"
               error={errors.password?.message}
               {...register('password')}
             />
             <Input
-              label={t('confirmPassword')}
+              label="Confirmer le mot de passe"
               type="password"
               autoComplete="new-password"
               error={errors.confirmPassword?.message}
@@ -130,13 +124,13 @@ export default function RegisterPage() {
               size="lg"
               className="w-full mt-1"
             >
-              {t('register')}
+              Créer un compte
             </CTAButton>
           </form>
 
           <div className="my-5 flex items-center gap-3">
             <Hairline className="flex-1" />
-            <span className="text-xs text-carbon-muted">{t('orContinueWith')}</span>
+            <span className="text-xs text-carbon-muted">ou</span>
             <Hairline className="flex-1" />
           </div>
 
@@ -145,14 +139,14 @@ export default function RegisterPage() {
             className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors"
           >
             <GoogleIcon />
-            {t('googleLogin')}
+            Continuer avec Google
           </a>
         </div>
 
         <p className="text-center text-sm text-carbon-muted mt-6">
-          {t('alreadyAccount')}{' '}
+          Déjà un compte ?{' '}
           <Link href="/login" className="text-carbon-accent font-medium hover:underline">
-            {t('loginLink')}
+            Se connecter
           </Link>
         </p>
       </div>

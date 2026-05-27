@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, History } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -46,9 +45,15 @@ function formatDuration(seconds: number): string {
   return `${m} min`;
 }
 
+const FILTERS: { key: FuelFilter; label: string }[] = [
+  { key: 'all', label: 'Tous' },
+  { key: 'ev', label: 'Électrique' },
+  { key: 'gas', label: 'Essence' },
+  { key: 'diesel', label: 'Diesel' },
+  { key: 'gpl', label: 'GPL' },
+];
+
 export default function TripsPage() {
-  const t = useTranslations('trips.history');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -91,10 +96,10 @@ export default function TripsPage() {
           setTotalPages(data.totalPages);
           setTotalCount(data.total);
         })
-        .catch(() => showToast('error', tCommon('error')))
+        .catch(() => showToast('error', 'Une erreur est survenue'))
         .finally(() => setIsLoading(false));
     },
-    [showToast, tCommon],
+    [showToast],
   );
 
   useEffect(() => {
@@ -112,19 +117,11 @@ export default function TripsPage() {
       setPage(next);
       setTotalPages(data.totalPages);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsLoadingMore(false);
     }
   }
-
-  const filters: { key: FuelFilter; label: string }[] = [
-    { key: 'all', label: t('filterAll') },
-    { key: 'ev', label: t('filterEV') },
-    { key: 'gas', label: t('filterGas') },
-    { key: 'diesel', label: t('filterDiesel') },
-    { key: 'gpl', label: t('filterGpl') },
-  ];
 
   const groups = groupByMonth(trips);
 
@@ -132,8 +129,8 @@ export default function TripsPage() {
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
-        <Eyebrow className="mb-0.5">{t('eyebrow')}</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
+        <Eyebrow className="mb-0.5">Trajets</Eyebrow>
+        <h1 className="text-2xl font-bold font-display text-carbon-ink">Historique</h1>
       </div>
 
       {/* ── Stats strip ───────────────────────────────────────── */}
@@ -141,10 +138,10 @@ export default function TripsPage() {
         <SectionCard padding="none">
           <div className="grid grid-cols-3 divide-x divide-carbon-hairline">
             {[
-              { label: t('total'), value: fmtEur.format(stats.totalCost) },
-              { label: t('km'), value: `${fmtNum.format(stats.totalDistance)} km` },
+              { label: 'TOTAL', value: fmtEur.format(stats.totalCost) },
+              { label: 'KM', value: `${fmtNum.format(stats.totalDistance)} km` },
               {
-                label: t('perKm'),
+                label: '€/KM',
                 value: stats.averageCostPerKm
                   ? `${stats.averageCostPerKm.toFixed(3)} €`
                   : '—',
@@ -165,7 +162,7 @@ export default function TripsPage() {
 
       {/* ── Filter chips ──────────────────────────────────────── */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {filters.map(({ key, label }) => (
+        {FILTERS.map(({ key, label }) => (
           <button
             key={key}
             type="button"
@@ -192,7 +189,7 @@ export default function TripsPage() {
         <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
           <History size={40} strokeWidth={1} className="opacity-40" />
           <p className="text-sm text-center">
-            {filter === 'all' ? t('empty') : t('emptyFilter')}
+            {filter === 'all' ? 'Aucun trajet enregistré' : 'Aucun trajet pour ce filtre'}
           </p>
           {filter === 'all' && (
             <CTAButton
@@ -200,7 +197,7 @@ export default function TripsPage() {
               size="sm"
               onClick={() => router.push('/app/dashboard')}
             >
-              {tCommon('new')}
+              Calculer un trajet
             </CTAButton>
           )}
         </div>
@@ -215,7 +212,7 @@ export default function TripsPage() {
                 </span>
                 <span className="text-[11px] font-mono text-carbon-muted">
                   {monthTrips.length}{' '}
-                  {monthTrips.length > 1 ? t('tripsPlural') : t('trips')}
+                  {monthTrips.length > 1 ? 'trajets' : 'trajet'}
                 </span>
               </div>
 
@@ -253,7 +250,7 @@ export default function TripsPage() {
                           )}
                           {trip.isArchived && (
                             <span className="text-[10px] text-carbon-muted border border-carbon-hairline rounded px-1 py-px">
-                              {t('archived')}
+                              Archivé
                             </span>
                           )}
                         </div>
@@ -282,7 +279,7 @@ export default function TripsPage() {
                 onClick={loadMore}
                 loading={isLoadingMore}
               >
-                {t('loadMore')} ({totalCount - trips.length})
+                Charger plus ({totalCount - trips.length})
               </CTAButton>
             </div>
           )}
@@ -292,7 +289,7 @@ export default function TripsPage() {
       <Hairline />
       <p className="text-xs font-mono text-carbon-muted text-center pb-4">
         {totalCount > 0
-          ? `${totalCount} ${totalCount > 1 ? t('tripsPlural') : t('trips')}`
+          ? `${totalCount} ${totalCount > 1 ? 'trajets' : 'trajet'}`
           : '—'}
       </p>
     </div>

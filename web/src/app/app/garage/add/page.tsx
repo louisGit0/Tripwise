@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -18,9 +17,6 @@ import type { VehicleModel, UserVehicle, CatalogPage } from '@/types/api';
 type Step = 1 | 2;
 
 export default function AddVehiclePage() {
-  const t = useTranslations('garage.add');
-  const tGarage = useTranslations('garage');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -72,7 +68,7 @@ export default function AddVehiclePage() {
     if (!selectedModel) return;
     const isElectric = selectedModel.fuelType === 'ELECTRIC';
     if (isElectric && (!homePrice || !publicPrice)) {
-      showToast('error', tGarage('electricPricesRequired'));
+      showToast('error', 'Les prix d\'électricité sont requis pour un véhicule électrique.');
       return;
     }
     setIsAdding(true);
@@ -88,10 +84,10 @@ export default function AddVehiclePage() {
             }
           : {}),
       });
-      showToast('success', tCommon('success'));
+      showToast('success', 'Véhicule ajouté !');
       router.push(`/app/garage/${data.id}`);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsAdding(false);
     }
@@ -107,13 +103,13 @@ export default function AddVehiclePage() {
           className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
         >
           <ChevronLeft size={13} />
-          {tCommon('back')}
+          Retour
         </button>
         <Eyebrow className="mb-0.5">
-          {step === 1 ? t('step1Eyebrow') : t('step2Eyebrow')}
+          {step === 1 ? 'Étape 1/2' : 'Étape 2/2'}
         </Eyebrow>
         <h1 className="text-2xl font-bold font-display text-carbon-ink">
-          {step === 1 ? t('step1Title') : t('step2Title')}
+          {step === 1 ? 'Choisir un modèle' : 'Configurer le véhicule'}
         </h1>
       </div>
 
@@ -121,18 +117,18 @@ export default function AddVehiclePage() {
       {step === 1 && (
         <div className="flex flex-col gap-4">
           <Input
-            placeholder={t('searchBrand')}
+            placeholder="Rechercher une marque ou un modèle..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             autoFocus
           />
 
           {isSearching && (
-            <p className="text-sm text-carbon-muted">{tCommon('loading')}</p>
+            <p className="text-sm text-carbon-muted">Chargement...</p>
           )}
 
           {!isSearching && search.length >= 2 && results.length === 0 && (
-            <p className="text-sm text-carbon-muted text-center py-6">{t('noModels')}</p>
+            <p className="text-sm text-carbon-muted text-center py-6">Aucun modèle trouvé</p>
           )}
 
           {results.length > 0 && (
@@ -200,36 +196,38 @@ export default function AddVehiclePage() {
           <SectionCard padding="md">
             <div className="flex flex-col gap-4">
               <Input
-                label={t('nickname')}
-                placeholder={t('nicknamePlaceholder')}
+                label="Surnom (optionnel)"
+                placeholder="Ex. Ma citadine"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
               />
               <Input
-                label={t('plate')}
-                placeholder={t('platePlaceholder')}
+                label="Plaque d'immatriculation (optionnel)"
+                placeholder="AB-123-CD"
                 value={licensePlate}
                 onChange={(e) => setLicensePlate(e.target.value)}
               />
               {selectedModel.fuelType === 'ELECTRIC' && (
                 <>
                   <Input
-                    label={t('homePrice')}
+                    label="Prix domicile (€/kWh)"
                     type="number"
                     step="0.0001"
-                    placeholder={t('homePricePlaceholder')}
+                    placeholder="0.2272"
                     value={homePrice}
                     onChange={(e) => setHomePrice(e.target.value)}
                   />
                   <Input
-                    label={t('publicPrice')}
+                    label="Prix borne publique (€/kWh)"
                     type="number"
                     step="0.0001"
-                    placeholder={t('publicPricePlaceholder')}
+                    placeholder="0.4500"
                     value={publicPrice}
                     onChange={(e) => setPublicPrice(e.target.value)}
                   />
-                  <p className="text-xs text-carbon-muted">{t('electricRequired')}</p>
+                  <p className="text-xs text-carbon-muted">
+                    Requis pour calculer le coût de recharge.
+                  </p>
                 </>
               )}
             </div>
@@ -242,7 +240,7 @@ export default function AddVehiclePage() {
               size="md"
               onClick={() => setStep(1)}
             >
-              {t('back')}
+              Retour
             </CTAButton>
             <CTAButton
               variant="accent"
@@ -251,7 +249,7 @@ export default function AddVehiclePage() {
               loading={isAdding}
               className="flex-1"
             >
-              {isAdding ? t('adding') : t('addVehicle')}
+              {isAdding ? 'Ajout en cours...' : 'Ajouter au garage'}
             </CTAButton>
           </div>
         </div>

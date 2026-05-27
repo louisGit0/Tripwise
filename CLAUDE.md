@@ -24,10 +24,11 @@
 - Conteneurisation : Docker + Docker Compose
 
 ### Frontend Web
-- Framework : Next.js 14+ (App Router)
+- Framework : Next.js 15 (App Router)
 - Langage : TypeScript strict
-- UI : React + Tailwind CSS
+- UI : React + Tailwind CSS + Carbon Design System
 - Rendu : SSR / RSC selon la page
+- i18n : **désactivé en V1** (textes hardcodés en FR) — prévu en V2
 
 ### Mobile
 - Framework : Expo (SDK latest) + React Native
@@ -808,6 +809,57 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 ---
 
 ## Journal des décisions & mises à jour
+
+### 2026-05-27 — Désactivation next-intl (i18n différé à V2)
+
+#### Contexte
+`next-intl` provoquait un crash `ReferenceError: __dirname is not defined` sur le runtime Edge de Vercel. Décision : retirer entièrement la couche i18n en V1 et coder les textes UI en français. L'i18n FR/EN sera réintégré en V2.
+
+#### Fichiers supprimés
+| Fichier / Répertoire | Raison |
+|----------------------|--------|
+| `web/src/i18n/` | Configuration next-intl — inutile |
+| `web/messages/fr.json` | Fichier de traductions — inutile |
+| `web/messages/en.json` | Fichier de traductions — inutile |
+
+#### Fichiers modifiés
+| Fichier | Modification |
+|---------|-------------|
+| `web/next.config.ts` | Suppression du wrapper `withNextIntl` |
+| `web/src/app/layout.tsx` | Suppression `NextIntlClientProvider`, `getLocale`, `getMessages` ; `lang="fr"` hardcodé |
+| `web/src/app/page.tsx` | Conversion async→sync, suppression `getTranslations`, constante `FEATURES` inline |
+| `web/src/components/layouts/AppLayout.tsx` | Suppression `useTranslations('nav')`, constante `NAV_LABELS` |
+| `web/src/app/login/page.tsx` | Strings FR hardcodées |
+| `web/src/app/register/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/settings/page.tsx` | Strings FR hardcodées + suppression de la section "Langue" |
+| `web/src/app/app/favorites/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/garage/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/garage/[id]/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/garage/add/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/fuel-prices/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/trips/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/trips/[id]/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/trips/result/page.tsx` | Strings FR hardcodées |
+| `web/src/app/app/dashboard/page.tsx` | Strings FR hardcodées |
+| `web/src/app/auth/callback/apple/page.tsx` | Refactoring Suspense (useSearchParams dans un sous-composant) |
+| `web/src/app/auth/callback/google/page.tsx` | Refactoring Suspense (useSearchParams dans un sous-composant) |
+| `web/package.json` | Suppression `"next-intl"` des dépendances |
+
+#### Correction bonus — Suspense / useSearchParams
+`withNextIntl` masquait une non-conformité Next.js 15 : les pages callback OAuth (`/auth/callback/google` et `/auth/callback/apple`) utilisaient `useSearchParams()` sans `<Suspense>` parent. Sans le wrapper next-intl, le build échouait avec `useSearchParams() should be wrapped in a suspense boundary`. Fix : extraction d'un sous-composant `*Content` wrappé dans `<Suspense>` dans le default export.
+
+#### Vérifications
+| Vérification | Résultat |
+|-------------|----------|
+| `web tsc --noEmit` | ✅ 0 erreur |
+| `web npm run build` | ✅ 18/18 routes |
+| `grep next-intl web/src/` | ✅ 0 match |
+| `grep useTranslations web/src/` | ✅ 0 match |
+
+#### Impact sur le déploiement
+- Plus de crash Edge Runtime `__dirname`
+- Section "Langue" retirée de `/app/settings` (seule différence UX visible)
+- Toutes les pages en français, la langue par défaut de l'application
 
 ### 2026-05-27 — Préparation déploiement Vercel + Render + Supabase
 

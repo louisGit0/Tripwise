@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus, Save, RotateCcw } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -46,8 +45,6 @@ function categoryColor(category: EnergyComparison['category']): string {
 }
 
 export default function TripResultPage() {
-  const t = useTranslations('trips.result');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -112,11 +109,11 @@ export default function TripResultPage() {
       });
 
       setIsSaved(true);
-      showToast('success', t('saved'));
+      showToast('success', 'Trajet enregistré !');
       sessionStorage.removeItem(SESSION_KEY);
       router.push(`/app/trips/${data.id}`);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsSaving(false);
     }
@@ -152,7 +149,7 @@ export default function TripResultPage() {
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
-        <Eyebrow className="mb-0.5">{t('eyebrow')}</Eyebrow>
+        <Eyebrow className="mb-0.5">Résultat</Eyebrow>
         <h1 className="text-2xl font-bold font-display text-carbon-ink">
           {session.origin?.label?.split(',')[0] ?? '—'}
           <span className="text-carbon-muted mx-2">→</span>
@@ -163,7 +160,7 @@ export default function TripResultPage() {
       {/* ── Hero cost ─────────────────────────────────────────── */}
       <SectionCard padding="md">
         <p className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted mb-2">
-          {t('totalCost')}
+          Coût estimé
         </p>
         <p className="text-[104px] font-bold font-display text-carbon-ink leading-none tabular-nums">
           {(totalCost / passengers).toFixed(2)}
@@ -180,24 +177,24 @@ export default function TripResultPage() {
         <div className="grid grid-cols-2 gap-3">
           {[
             {
-              label: t('energy'),
+              label: 'ÉNERGIE',
               value: cost
                 ? `${isFuelCost(cost) ? cost.consumptionLitres.toFixed(2) : cost.consumptionKwh.toFixed(1)} ${isFuelCost(cost) ? 'L' : 'kWh'}`
-                : t('notAvailable'),
+                : 'Non calculé',
             },
             {
-              label: t('tolls'),
-              value: t('notAvailable'),
+              label: 'PÉAGES',
+              value: 'Non calculé',
             },
             {
-              label: t('perKm'),
+              label: '€/KM',
               value:
                 result.distance.km > 0
                   ? `${(totalCost / result.distance.km).toFixed(3)} €`
-                  : t('notAvailable'),
+                  : 'Non calculé',
             },
             {
-              label: t('perPerson'),
+              label: 'PAR PERS.',
               value: fmtEur.format(totalCost / passengers),
             },
           ].map(({ label, value }) => (
@@ -231,7 +228,7 @@ export default function TripResultPage() {
         {/* Estimate note for distance mode */}
         {mode === 'distance' && (
           <p className="mt-3 text-[11px] text-amber-400 bg-amber-500/10 rounded-lg px-3 py-2 leading-relaxed">
-            {t('estimateOnly')}
+            Estimation indicative — calcul sans itinéraire précis.
           </p>
         )}
 
@@ -248,7 +245,7 @@ export default function TripResultPage() {
         <SectionCard
           title={
             <span className="flex items-center gap-1.5">
-              <Eyebrow>{t('compareTitle')}</Eyebrow>
+              <Eyebrow>Comparatif énergétique</Eyebrow>
             </span>
           }
           padding="md"
@@ -298,14 +295,14 @@ export default function TripResultPage() {
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
-            <Eyebrow>{t('passengersLabel')}</Eyebrow>
+            <Eyebrow>Passagers</Eyebrow>
           </span>
         }
         padding="md"
       >
         <div className="flex items-center justify-between mt-2">
           <p className="text-sm text-carbon-ink2">
-            {t('passengers')} ×{passengers}
+            Passager ×{passengers}
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -342,7 +339,7 @@ export default function TripResultPage() {
             loading={isSaving}
             className="w-full"
           >
-            {isSaving ? t('saving') : t('saveLog')}
+            {isSaving ? 'Enregistrement...' : 'Enregistrer dans l\'historique'}
           </CTAButton>
         )}
         <CTAButton
@@ -352,7 +349,7 @@ export default function TripResultPage() {
           onClick={handleNewTrip}
           className="w-full"
         >
-          {t('newTrip')}
+          Nouveau trajet
         </CTAButton>
       </div>
 

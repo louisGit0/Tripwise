@@ -19,7 +19,7 @@ Pour mémoire, voici ce qui a été inclus dans la V1 :
 - Configuration des prix carburant personnalisés
 - Authentification email + OAuth Google + OAuth Apple (iOS)
 - Web (Next.js 15) + Mobile (Expo SDK 54)
-- Internationalisation FR/EN complète
+- Interface en français (i18n FR/EN différé à V2)
 
 ---
 
@@ -80,6 +80,13 @@ Pour mémoire, voici ce qui a été inclus dans la V1 :
 
 ## Long terme (V2)
 
+### Internationalisation FR/EN
+- Réintroduire `next-intl` (ou équivalent compatible Edge Runtime) une fois la stabilité Vercel confirmée.
+- Alternativement, évaluer une solution sans `__dirname` (dictionnaires JSON importés directement, sans filesystem runtime).
+- Ajouter le sélecteur de langue dans `/app/settings`.
+- Synchroniser les traductions web et mobile.
+- **Complexité** : faible (travail de traduction) à moyenne (si choix d'une nouvelle librairie).
+
 ### Géolocalisation background et historique automatique
 - Détecter automatiquement les déplacements en voiture (distance, vitesse).
 - Enregistrer les trajets sans saisie manuelle.
@@ -128,3 +135,4 @@ Pour mémoire, voici ce qui a été inclus dans la V1 :
 - **Refresh tokens** : JWT 7j actuellement (compromis UX/sécurité acceptable pour un usage personnel) ; à remplacer par access 15min + refresh 30j si usage professionnel.
 - **Tests mobile** : non configurés en V1 (priorisation du delivery) ; à ajouter en V1.1.
 - **WebSocket (temps réel)** : non nécessaire en V1 ; envisageable pour les alertes prix ou le mode collaboratif en V2.
+- **i18n next-intl** : retiré en V1 suite à un crash Edge Runtime Vercel (`__dirname`). Textes hardcodés en français. À réintroduire en V2 avec une librairie compatible Edge ou une approche sans filesystem.
