@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -54,6 +54,14 @@ export default function RegisterPage() {
   const router = useRouter();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect already-authenticated users away from register
+  useEffect(() => {
+    const hasToken = document.cookie
+      .split(';')
+      .some((c) => c.trim().startsWith('access_token='));
+    if (hasToken) router.replace('/app/dashboard');
+  }, [router]);
 
   const {
     register,
