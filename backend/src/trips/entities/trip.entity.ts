@@ -10,6 +10,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { UserVehicle } from '../../vehicles/entities/user-vehicle.entity';
 import { FuelType } from '../../vehicles/entities/vehicle-model.entity';
+import { decimalTransformer } from '../../common/column-transformers';
 
 /** Unité d'énergie consommée : litres pour les thermiques, kWh pour les électriques. */
 export enum EnergyUnit {
@@ -36,10 +37,10 @@ export class Trip {
   @Column({ name: 'origin_label' })
   originLabel!: string;
 
-  @Column({ name: 'origin_lat', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'origin_lat', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   originLat!: number;
 
-  @Column({ name: 'origin_lng', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'origin_lng', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   originLng!: number;
 
   // ── Destination ──────────────────────────────────────────────────────────
@@ -47,16 +48,16 @@ export class Trip {
   @Column({ name: 'destination_label' })
   destinationLabel!: string;
 
-  @Column({ name: 'destination_lat', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'destination_lat', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   destinationLat!: number;
 
-  @Column({ name: 'destination_lng', type: 'decimal', precision: 10, scale: 7 })
+  @Column({ name: 'destination_lng', type: 'decimal', precision: 10, scale: 7, transformer: decimalTransformer })
   destinationLng!: number;
 
   // ── Itinéraire ───────────────────────────────────────────────────────────
 
   /** Distance calculée par Mapbox, en kilomètres */
-  @Column({ name: 'distance_km', type: 'decimal', precision: 8, scale: 2 })
+  @Column({ name: 'distance_km', type: 'decimal', precision: 8, scale: 2, transformer: decimalTransformer })
   distanceKm!: number;
 
   /** Durée estimée par Mapbox, en secondes */
@@ -80,19 +81,19 @@ export class Trip {
    * Consommation aux 100 km (L/100km ou kWh/100km) issue du profil véhicule.
    * Valeur indicative — consommation réelle non mesurée.
    */
-  @Column({ name: 'consumption_per_100', type: 'decimal', precision: 5, scale: 2 })
+  @Column({ name: 'consumption_per_100', type: 'decimal', precision: 5, scale: 2, transformer: decimalTransformer })
   consumptionPer100!: number;
 
   /** Consommation totale estimée pour le trajet (litres ou kWh) */
-  @Column({ name: 'total_consumption', type: 'decimal', precision: 8, scale: 3 })
+  @Column({ name: 'total_consumption', type: 'decimal', precision: 8, scale: 3, transformer: decimalTransformer })
   totalConsumption!: number;
 
   /** Prix unitaire appliqué (€/L ou €/kWh) au moment du calcul */
-  @Column({ name: 'price_per_unit', type: 'decimal', precision: 6, scale: 4 })
+  @Column({ name: 'price_per_unit', type: 'decimal', precision: 6, scale: 4, transformer: decimalTransformer })
   pricePerUnit!: number;
 
   /** Coût total estimé du trajet en euros */
-  @Column({ name: 'total_cost', type: 'decimal', precision: 8, scale: 2 })
+  @Column({ name: 'total_cost', type: 'decimal', precision: 8, scale: 2, transformer: decimalTransformer })
   totalCost!: number;
 
   /**
@@ -124,7 +125,7 @@ export class Trip {
    * Frais de péage estimés en euros. V1 = 0 (non calculé automatiquement).
    * Réservé pour une future intégration API péages.
    */
-  @Column({ name: 'tolls_cost', type: 'decimal', precision: 8, scale: 2, default: 0 })
+  @Column({ name: 'tolls_cost', type: 'decimal', precision: 8, scale: 2, default: 0, transformer: decimalTransformer })
   tollsCost!: number;
 
   @CreateDateColumn({ name: 'created_at' })

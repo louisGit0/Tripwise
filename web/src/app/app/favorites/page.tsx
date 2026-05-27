@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { Heart, ArrowRight, Trash2 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { ArrowRight, Trash2, Navigation } from 'lucide-react';
+import { SectionCard } from '@/components/ui/SectionCard';
+import { CTAButton } from '@/components/ui/CTAButton';
+import { Eyebrow } from '@/components/ui/Eyebrow';
+import { Hairline } from '@/components/ui/Hairline';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
@@ -64,67 +66,87 @@ export default function FavoritesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">{t('title')}</h1>
+      {/* Header */}
+      <div>
+        <Eyebrow className="mb-1">{t('title')}</Eyebrow>
+        <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
+      </div>
 
       {isLoading ? (
-        <p className="text-[var(--muted)] text-sm">{tCommon('loading')}</p>
+        <p className="text-sm text-carbon-muted">{tCommon('loading')}</p>
       ) : favorites.length === 0 ? (
-        <Card>
-          <p className="text-center text-[var(--muted)] py-8">{t('empty')}</p>
-        </Card>
+        <SectionCard padding="lg">
+          <p className="text-center text-carbon-muted py-6 text-sm">{t('empty')}</p>
+        </SectionCard>
       ) : (
-        <div className="flex flex-col gap-3">
-          {favorites.map((fav) => (
-            <Card key={fav.id} padding="md">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3 min-w-0">
-                  <div className="mt-0.5 w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center shrink-0">
-                    <Heart size={14} className="text-red-500" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold truncate">{fav.name}</p>
-                    <p className="text-xs text-[var(--muted)] flex items-center gap-1 mt-0.5">
-                      <span className="truncate max-w-[120px]">{fav.originLabel}</span>
-                      <ArrowRight size={10} className="shrink-0" />
-                      <span className="truncate max-w-[120px]">{fav.destinationLabel}</span>
-                    </p>
+        <div className="flex flex-col gap-2">
+          {favorites.map((fav, index) => (
+            <SectionCard key={fav.id} padding="none">
+              <div className="flex items-center gap-4 px-4 py-3.5">
+                {/* Index badge */}
+                <span className="shrink-0 w-6 h-6 rounded-full bg-carbon-surface2 border border-carbon-hairline flex items-center justify-center text-[10px] font-mono text-carbon-muted">
+                  {index + 1}
+                </span>
+
+                {/* Route info */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-carbon-ink truncate text-sm">{fav.name}</p>
+                  <div className="flex items-center gap-1 mt-0.5 text-[11px] text-carbon-muted">
+                    <span className="truncate max-w-[110px]">{fav.originLabel}</span>
+                    <ArrowRight size={9} className="shrink-0" aria-hidden="true" />
+                    <span className="truncate max-w-[110px]">{fav.destinationLabel}</span>
                   </div>
                 </div>
-                <div className="flex gap-1 shrink-0">
-                  <Button size="sm" variant="secondary" onClick={() => handleUse(fav)}>
-                    {t('use')}
-                  </Button>
-                  <button
-                    onClick={() => setDeleteTarget(fav)}
-                    className="p-2 rounded-lg text-[var(--muted)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+
+                {/* Actions */}
+                <div className="flex items-center gap-1 shrink-0">
+                  <CTAButton
+                    variant="surface"
+                    size="sm"
+                    icon={<Navigation size={13} />}
+                    onClick={() => handleUse(fav)}
                   >
-                    <Trash2 size={15} />
+                    {t('use')}
+                  </CTAButton>
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(fav)}
+                    aria-label={tCommon('delete')}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                  >
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
-            </Card>
+              {index < favorites.length - 1 && <Hairline />}
+            </SectionCard>
           ))}
         </div>
       )}
 
+      {/* Delete confirmation modal */}
       <Modal
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
-        title={tCommon('confirm_delete')}
+        title={t('deleteConfirm')}
         footer={
           <>
-            <Button variant="secondary" onClick={() => setDeleteTarget(null)}>
+            <CTAButton variant="ghost" onClick={() => setDeleteTarget(null)}>
               {tCommon('cancel')}
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            </CTAButton>
+            <CTAButton variant="danger" onClick={handleDelete}>
               {tCommon('delete')}
-            </Button>
+            </CTAButton>
           </>
         }
       >
         {deleteTarget && (
-          <p className="text-sm">
-            {t('deleteConfirm')} <strong>{deleteTarget.name}</strong>
+          <p className="text-sm text-carbon-ink2">
+            <strong className="text-carbon-ink">{deleteTarget.name}</strong>
+            <br />
+            <span className="text-carbon-muted text-xs">
+              {deleteTarget.originLabel} → {deleteTarget.destinationLabel}
+            </span>
           </p>
         )}
       </Modal>

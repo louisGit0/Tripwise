@@ -809,6 +809,257 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 
 ## Journal des décisions & mises à jour
 
+### 2026-05-27 — Prompt 5 — V1 livrée, prête pour déploiement
+
+#### Nettoyage — code mort supprimé
+| Fichier supprimé | Raison |
+|-----------------|--------|
+| `web/src/app/design-system/page.tsx` | Page de démo, aucune valeur en production |
+| `web/src/components/AppNav.tsx` | Plus importé nulle part (remplacé par `AppLayout`) |
+| `web/src/components/LogoutButton.tsx` | Plus importé nulle part |
+| `web/src/components/ui/Button.tsx` | Importé uniquement par les fichiers supprimés ci-dessus |
+| `web/src/app/app/vehicles/page.tsx` | Remplacé par redirect HTTP 308 → `/app/garage` dans `next.config.ts` |
+
+#### UX / Polish
+- **Empty state Garage** : skeleton `animate-pulse` (3 lignes) pendant le chargement + bouton CTA "Ajouter au garage" dans l'état vide
+- **Dashboard onboarding banner** : affiché si `!statsLoading && vehicles.length === 0` — titre, description, lien vers `/app/garage/add`
+- **Favicon SVG** : `/web/public/favicon.svg` — carré arrondi bleu (`#3b82f6`, `rx="14"`) + lettermark "T" blanc
+- **Metadata OG/Twitter** : `title`, `description`, `openGraph`, `twitter` dans `web/src/app/layout.tsx`
+- **i18n** : 3 clés ajoutées — `dashboard.onboardingTitle`, `dashboard.onboardingDesc`, `dashboard.onboardingCta` — symétrique FR + EN
+
+#### Sécurité & configuration
+- `backend/src/main.ts` : bloc de commentaires `TODO (déploiement Vercel)` avant `app.enableCors()` — CORS, cookies, synchronize, JWT_SECRET
+- `.gitignore` : audit complet ✅ — `.env`, `.env.local`, `*.p8`, `*.key`, `node_modules`, `.next`, `dist` tous exclus
+- `.env.example` backend et web : complets et à jour
+- `README.md` et `ROADMAP.md` : mis à jour pour refléter l'état final V1
+
+#### État final V1
+| Vérification | Résultat |
+|-------------|----------|
+| Backend e2e (136 tests, 9 suites) | ✅ |
+| Backend `tsc --noEmit` | ✅ |
+| Web `tsc --noEmit` | ✅ |
+| Web `next build` (18 routes) | ✅ |
+| Aucun `console.log` en production | ✅ |
+| i18n FR/EN symétrique | ✅ |
+| `.env` exclu du git | ✅ |
+
+#### Routes web actives (18)
+```
+/                          Landing (public)
+/login                     Connexion
+/register                  Inscription
+/auth/callback/google      Callback OAuth Google
+/auth/callback/apple       Callback OAuth Apple
+/api/auth/set-cookie       BFF : pose le cookie JWT
+/api/auth/logout           BFF : efface le cookie JWT
+/app/dashboard             Tableau de bord
+/app/trips                 Historique des trajets
+/app/trips/[id]            Détail d'un trajet
+/app/trips/result          Résultat d'un calcul
+/app/garage                Liste des véhicules
+/app/garage/[id]           Détail / édition véhicule
+/app/garage/add            Ajout véhicule (2 étapes)
+/app/favorites             Favoris
+/app/fuel-prices           Configuration des prix
+/app/settings              Paramètres
+→ /app/vehicles            Redirect 308 → /app/garage
+```
+
+---
+
+### 2026-05-27 — Fix : TypeORM DECIMAL → string (Postgres)
+
+#### Problème
+PostgreSQL retourne les colonnes `DECIMAL` / `NUMERIC` sous forme de **chaînes JS** dans les résultats bruts TypeORM. TypeORM ne les coerce pas automatiquement en `number`. Les pages qui rechargent des données depuis la DB (ex : `/app/trips/:id`) levaient `trip.totalCost.toFixed is not a function` à la ligne 200, car `totalCost` était `"42.50"` (string) et non `42.5` (number).
+
+Les pages issues de `/trips/calculate` fonctionnaient car les calculs se font en mémoire (valeurs JS natives).
+
+#### Solution : `transformer` TypeORM sur toutes les colonnes DECIMAL
+
+**Fichier créé** : `backend/src/common/column-transformers.ts`
+```typescript
+export const decimalTransformer = {
+  to:   (value: number | null) => value,
+  from: (value: string | number | null | undefined): number | null => {
+    if (value === null || value === undefined) return null;
+    const n = parseFloat(String(value));
+    return isNaN(n) ? null : n;
+  },
+};
+```
+
+**Entités modifiées** (toutes les colonnes `type: 'decimal'`) :
+| Entité | Colonnes traitées |
+|--------|------------------|
+| `vehicle-model.entity.ts` | `consumption`, `batteryCapacityKwh`, `tankCapacityLiters` |
+| `user-vehicle.entity.ts` | `homeElectricityPrice`, `publicChargingPrice`, `homeChargingRatio` |
+| `trip.entity.ts` | `originLat`, `originLng`, `destinationLat`, `destinationLng`, `distanceKm`, `consumptionPer100`, `totalConsumption`, `pricePerUnit`, `totalCost`, `tollsCost` |
+| `favorite.entity.ts` | `originLat`, `originLng`, `destinationLat`, `destinationLng` |
+
+**Aucun `Number(x).toFixed()` workaround** trouvé dans le frontend — tous les appels `.toFixed()` sont directs, ce qui est correct maintenant.
+
+**SQLite (tests e2e)** : `parseFloat(number)` retourne le nombre tel quel — aucun impact sur les assertions existantes.
+
+#### Vérifications
+- `tsc --noEmit` backend → 0 erreur ✅
+- `npx jest --config test/jest-e2e.json --forceExit` → **136/136 tests passent** ✅
+- `tsc --noEmit` web → 0 erreur ✅
+- `npm run build` web → **20/20 routes compilées** ✅
+
+---
+
+### 2026-05-26 — Correctifs post-Prompt 4B (4 bugs)
+
+#### BUG 1 — AutocompleteInput dropdown invisible
+- **Root cause** : `AutocompleteInput.tsx` utilisait des classes CSS de l'ancien design system (`bg-[var(--card)]`, `border-[var(--border)]`, `text-[var(--foreground)]`, `hover:bg-primary-50 dark:hover:bg-primary-900/20`, `focus:ring-primary-500`). Ces variables CSS ne sont pas définies dans le thème Carbon → fond transparent, texte invisible.
+- **Fix** : Réécriture complète des classes CSS vers les équivalents Carbon (`bg-carbon-surface`, `border-carbon-hairline`, `text-carbon-ink`, `text-carbon-muted`, `hover:bg-carbon-surface2`, `focus:ring-carbon-accent`). Ajout de `rounded-xl` pour les items dropdown avec séparateurs `border-b border-carbon-hairline`.
+
+#### BUG 2 — Toast invisible (même root cause)
+- **Root cause** : `ToastProvider.tsx` utilisait `bg-[var(--card)]` (transparent dans Carbon), `text-[var(--muted)]`, `border-green-200 dark:border-green-800` (dark: prefix ignoré par Carbon).
+- **Fix** : Réécriture Carbon → `bg-carbon-surface`, `text-carbon-ink`, `text-carbon-muted`, couleurs de bordure statiques Tailwind (`border-emerald-500/40`, `border-red-500/40`, `border-blue-500/40`). Z-index monté à `z-[200]`. Ajout `pointer-events-none` sur le conteneur / `pointer-events-auto` sur chaque toast.
+
+#### BUG 3 — IntlError : garage.add résolu en objet
+- **Root cause** : `garage/page.tsx` appelle `t('add')` avec `t = useTranslations('garage')`. Le Prompt 4B a transformé `garage.add` en objet avec des sous-clés (`step1Title`, etc.) au lieu d'une chaîne simple. next-intl lève `INSUFFICIENT_PATH: Message at 'garage.add' resolved to 'object'`.
+- **Fix** : Changé `{t('add')}` → `{t('addTitle')}` (la clé `garage.addTitle = "Ajouter au garage"` est une chaîne plate existante).
+
+#### BUG 4 — Audit global des classes non-Carbon
+- **`ui/Input.tsx`** : Réécriture Carbon. Utilisé dans garage/[id], garage/add, trips/[id]. Label en `text-xs font-semibold tracking-wider uppercase text-carbon-muted`.
+- **`ui/Modal.tsx`** : Réécriture Carbon. Z-index à `z-[150]`. Fond `bg-carbon-surface`, bordures `border-carbon-hairline`, `rounded-card`.
+- **`ui/Select.tsx`** : Réécriture Carbon. Utilisé dans le dashboard (sélecteur de véhicule).
+- **`ui/Card.tsx`** : Réécriture Carbon (`bg-carbon-surface border-carbon-hairline rounded-card`).
+- **`auth/callback/google/page.tsx`** + **apple** : `text-[var(--muted)]` → `text-carbon-muted`, `text-primary-600` → `text-carbon-accent`.
+- **`components/AppNav.tsx`** et **`ui/Button.tsx`** : Laissés tels quels — dead code (non importés nulle part).
+- **`vehicles/page.tsx`** : Laissé tel quel — route 308-redirectée vers `/app/garage`, jamais rendue.
+
+#### Vérifications
+- `tsc --noEmit` → 0 erreur ✅
+- `next build` → 20/20 routes compilées, 0 erreur ESLint ✅
+
+---
+
+### 2026-05-26 — Prompt 4B — Nouveaux écrans web V2
+
+#### Contexte
+Création de 7 nouveaux écrans authentifiés dans l'app Next.js. Contraintes strictes : backend non modifié, design system Carbon non modifié, aucun nouveau package npm, TypeScript strict, 0 erreur.
+
+#### Nouveaux fichiers créés / modifiés
+
+| Fichier | Type | Description |
+|---------|------|-------------|
+| `web/src/app/app/trips/page.tsx` | REMPLACÉ | Historique complet des trajets |
+| `web/src/app/app/trips/[id]/page.tsx` | CRÉÉ | Détail d'un trajet sauvegardé |
+| `web/src/app/app/trips/result/page.tsx` | CRÉÉ | Page de résultat calcul + sauvegarde |
+| `web/src/app/app/garage/[id]/page.tsx` | CRÉÉ | Détail/édition d'un véhicule |
+| `web/src/app/app/garage/add/page.tsx` | CRÉÉ | Ajout véhicule en 2 étapes |
+| `web/src/app/app/dashboard/page.tsx` | REMPLACÉ | Dashboard enrichi (mode adresse/distance + suggestions) |
+| `web/src/app/app/fuel-prices/page.tsx` | CRÉÉ | Configuration des prix carburant |
+
+#### `/app/trips` — Historique
+- Stats strip (totalCost, totalDistance, avgCostKm) via `GET /trips/stats`
+- Chips filtre : `all | ev | gas | diesel | gpl` → param `fuelCategory`
+- Regroupement mensuel via `groupByMonth()` (`tripDate.slice(0,7)`)
+- Pagination "Charger plus" (`page < totalPages`)
+- Chaque ligne → `router.push('/app/trips/${trip.id}')`
+
+#### `/app/trips/[id]` — Détail trajet
+- `use(params)` pour resolver `Promise<{ id: string }>` (Next.js 15)
+- `GET /trips/${id}` au montage
+- Auto-save note : `useDebounce(noteValue, 1000)` + pattern `savedNoteRef` pour éviter le premier fire
+- Archive toggle : `PATCH /trips/:id { isArchived: !trip.isArchived }`
+- Refaire : construit URL avec params → `router.push('/app/dashboard?originLabel=...')`
+- Suppression : modal → `DELETE /trips/:id` → retour liste
+
+#### `/app/trips/result` — Résultat calcul
+- Lit `sessionStorage['tripwise.pendingTrip']` → type `PendingTripSession`
+- Coût hero 104px (`text-[104px] font-bold font-display`)
+- Barres de comparaison multi-énergie (triées par coût croissant)
+- Stepper passagers 1–9 (coût divisé par passagers)
+- Save → `POST /trips/save` → navigation vers `/app/trips/${savedTrip.id}`
+- Désactivé si `mode === 'distance'` (pas de coords → pas de sauvegarde)
+- "Nouveau trajet" → vide sessionStorage → `/app/dashboard`
+
+#### `/app/garage/[id]` — Détail véhicule
+- Pas d'endpoint dédié : fetch `GET /vehicles/me` + `.find((v) => v.id === id)`
+- Stats strip : tripsCount / totalDistance / totalSpent / costPerKm (si tripsCount > 0)
+- Formulaire : nickname, licensePlate, consommation (lecture seule), prix EV si électrique
+- Save → `PATCH /vehicles/me/${id}` + re-fetch pour refresh
+- Default toggle : Star si déjà défaut ; sinon CTAButton → `PATCH /vehicles/me/${id}/set-default`
+- Danger zone : `border-red-500/20`, suppression avec modal
+
+#### `/app/garage/add` — Ajout véhicule (2 étapes)
+- Étape 1 : `Input` debounced 300ms → `GET /vehicles/catalog?search=...&limit=20` → `CatalogPage`
+- Étape 2 : preview du modèle + champs (nickname, licensePlate, prix EV si électrique)
+- Validation : EV → homeElectricityPrice et publicChargingPrice requis
+- Submit → `POST /vehicles/me` → `/app/garage/${data.id}`
+
+#### `/app/dashboard` — Enrichissement
+- `SegmentedControl` Adresses / Distance en haut du calculateur
+- **Mode Adresses** : `AutocompleteInput` départ + arrivée → `POST /trips/calculate` + `POST /trips/calculate-multi` en parallèle → `PendingTripSession` dans sessionStorage → redirect `/app/trips/result`
+- **Mode Distance** : input 56px + chips rapides (50/200/465/800 km) → calcul client-side avec `localStorage['tripwise.userPrices']` → même sessionStorage + redirect
+- **Suggestions** : `GET /favorites` → 5 premiers → clic `applySuggestion(fav)` pour préremplir départ/arrivée
+- Recent trips cliquables : `router.push('/app/trips/${trip.id}')`
+- Supprimé : affichage inline des résultats, `MapboxMap`, modal favori, bouton partager
+
+#### `/app/fuel-prices` — Configuration prix
+- Charge `GET /prices/defaults` pour afficher les prix temps réel
+- Édition libre des prix par carburant (localStorage `tripwise.userPrices`)
+- Auto-save à chaque changement + toast confirmation
+- `PriceRow` composant interne réutilisable
+
+#### Décisions techniques
+- **`useSuggestion` → `applySuggestion`** : renommé pour respecter la règle `react-hooks/rules-of-hooks` (le nom `use*` déclenche la règle même sur les fonctions utilitaires)
+- **`// 404` dans JSX** : wrappé en `{"// 404"}` pour éviter `react/jsx-no-comment-textnodes`
+- **Pattern `savedNoteRef`** : `useRef<string | null>(null)`, initialisé quand le trip charge, permet au debounce de ne pas déclencher un PATCH lors du premier rendu
+- **sessionStorage `tripwise.pendingTrip`** : bridge entre dashboard et result page — évite les URL params pour les objets volumineux (GeoJSON)
+- **Distance mode** : calcul 100% client (localStorage prices), `PendingTripSession.mode = 'distance'`, sauvegarde désactivée (pas de coords)
+
+#### Types modifiés (`web/src/types/api.ts`)
+- `UserVehicle` : ajout `licensePlate: string | null`
+
+#### i18n ajouté (`messages/fr.json` + `messages/en.json`)
+- `dashboard.modeAddress`, `dashboard.modeDistance`, `dashboard.distancePlaceholder`, `dashboard.suggestionsTitle`, `dashboard.useSuggestion`, `dashboard.distanceChips`
+- `trips.history.*`, `trips.detail.*`, `trips.result.*`
+- `garage.detail.*`, `garage.add.*`
+- `prices.*`
+
+#### Vérifications
+- `tsc --noEmit` → 0 erreur ✅
+- `next build` → 20/20 routes compilées, 0 erreur ESLint ✅
+
+---
+
+### 2026-05-25 — Corrections post-Prompt 4A (4 bugs)
+
+#### BUG 1 — Sidebar manquante
+- **Root cause** : `web/src/app/app/layout.tsx` importait encore l'ancien composant `AppNav` (barre horizontale). Le nouveau `AppLayout` existait dans `layouts/AppLayout.tsx` mais n'était pas câblé.
+- **Fix** : `app/app/layout.tsx` remplacé pour importer et utiliser `AppLayout`.
+- **AppLayout** (`web/src/components/layouts/AppLayout.tsx`) : sidebar fixe 220px (desktop ≥1024px), topbar fixe, burger + drawer (mobile <1024px), 5 items nav (DASHBOARD/TRAJETS/GARAGE/CARBURANT·PRIX/PARAMÈTRES), StatusDot + version en bas, bouton "+ NOUVEAU TRAJET" dans la topbar.
+- Breakpoint : `lg` (1024px) — `hidden lg:flex` pour la sidebar, `lg:hidden` pour le burger et le drawer.
+- Item actif : fond blue-500/10 + border hairline + dot accent à droite.
+- `/app/favorites` active l'item TRAJETS (favoris = trajets sauvegardés).
+
+#### BUG 2 — NaN € dans le KPI "Économies vs Essence"
+- **Root cause** : `TripStats.savedVsGas` était typé `number` côté frontend alors que le backend retourne `{ amount: number; percent: number }`. `fmtEur.format(object)` produisait "NaN €".
+- **Fix** : type corrigé dans `web/src/types/api.ts` + rendu dashboard utilise `stats?.savedVsGas?.amount ?? 0`.
+
+#### BUG 3 — Hydration error dans /app/settings
+- **Root cause** : `useTheme()` de next-themes retourne `undefined` côté serveur → className conditionnel différent entre SSR et client.
+- **Fix** : pattern `mounted` dans `settings/page.tsx` — skeleton neutre rendu jusqu'à `useEffect(() => setMounted(true), [])`, puis UI complète côté client uniquement.
+
+#### BUG 4 — Pill landing "Open source"
+- **Fix** : `landing.badge` → `"Gratuit · Sans pub"` (FR) / `"Free · No ads"` (EN) dans `messages/fr.json` et `messages/en.json`.
+
+#### Nouvelle page créée
+- `web/src/app/app/trips/page.tsx` — placeholder "bientôt disponible" avec icône History, eyebrow "Trajets", titre "Historique".
+
+#### Vérifications
+- `tsc --noEmit` → 0 erreur ✅
+- `next build` → 17/17 routes compilées ✅
+- Tour visuel complet : dashboard (KPI 0,00 € ✅), trajets (placeholder ✅), garage (GARAGE actif ✅), favoris (TRAJETS actif ✅), settings (toggle thème sans hydration ✅)
+- Redirect `/app/vehicles` → `/app/garage` : HTTP 308 confirmé visuellement ✅
+- Responsive : structure DOM vérifiée via JS (`lg:hidden` burger + `hidden lg:flex` sidebar) ✅
+
 ### 2026-05-22 — Extension schéma DB + package shared
 
 #### Entités étendues
@@ -891,6 +1142,70 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 #### Tests e2e
 - Suite complète (9 fichiers) : **136/136 tests passent** ✅
 - `npx jest --config test/jest-e2e.json --forceExit`
+
+### 2026-05-25 — Refonte écrans web V2 — Carbon Design System
+
+#### Contexte
+Refonte complète des écrans existants Next.js avec le système de composants atomiques Carbon (Prompt 3). Aucun nouveau écran créé, backend non modifié.
+
+#### Composants atomiques Carbon créés (`web/src/components/ui/`)
+| Composant | Description |
+|-----------|-------------|
+| `TWAppIcon.tsx` | Icône app stylisée (carré arrondi bleu + T blanc) |
+| `Wordmark.tsx` | Logotype "Tripwise" en Space Grotesk, tailles sm/md/lg |
+| `Pill.tsx` | Badge coloré avec `color`, `dot`, `size` props |
+| `CTAButton.tsx` | Bouton principal `variant: accent/ghost/danger`, `size: sm/md/lg`, `icon` |
+| `SectionCard.tsx` | Carte avec title slot, `padding: none/sm/md/lg` |
+| `Eyebrow.tsx` | Label uppercase espacé (surtitre de section) |
+| `Hairline.tsx` | Séparateur `<hr>` Carbon (`border-carbon-hairline`) |
+| `KPICell.tsx` | Cellule métrique (label + valeur + delta +/- coloré) |
+| `BrandAvatar.tsx` | Avatar initiales marque véhicule (fond carbon-surface2) |
+| `FuelBadge.tsx` | Badge type carburant coloré (emerald/amber/sky/violet) |
+| `Sparkline.tsx` | Mini graphique SVG linéaire avec gradient fill |
+
+#### Tokens Carbon CSS (ajoutés dans `globals.css`)
+```css
+--c-bg, --c-surface, --c-surface2, --c-ink, --c-ink2, --c-muted,
+--c-faint, --c-hairline, --c-accent
+```
+Tailwind : classes `bg-carbon-*`, `text-carbon-*`, `border-carbon-*`
+Polices : `Space Grotesk` (display), `JetBrains Mono` (numériques)
+`darkMode: ['selector', '[data-theme="dark"]']` + `attribute="data-theme"` dans ThemeProvider
+
+#### Écrans refaits
+| Écran | Route | Changements clés |
+|-------|-------|-----------------|
+| Landing | `/` | Server component, TWAppIcon + Wordmark, Pills, SectionCard features |
+| Login | `/login` | TWAppIcon header, CTAButton accent, GoogleIcon/AppleIcon SVG inline |
+| Register | `/register` | `confirmPassword` + Zod `.refine()` pour validation match |
+| AppLayout | app layout | 5 nav items (dashboard/trips/garage/fuel-prices/settings), dot indicator actif, version `v2.4 — BUILD 0521` |
+| Dashboard | `/app/dashboard` | KPI grid (4 KPICell) depuis `/trips/stats`, Sparkline dailyExpenses, trips récents (8) depuis `/trips/history`, `Intl.NumberFormat fr-FR` |
+| Garage | `/app/garage` | Renommé depuis vehicles, stats strip (tripsCount/totalDistance/totalSpent/costPerKm), BrandAvatar + FuelBadge, Pill "Par défaut" |
+| Favorites | `/app/favorites` | SectionCard(padding="none") par row, index badge, CTAButton "Utiliser" |
+| Settings | `/app/settings` | 3 SectionCard (Appearance/Language/Account), CTAButton danger logout |
+
+#### Redirect ajouté
+```typescript
+// next.config.ts
+{ source: '/app/vehicles', destination: '/app/garage', permanent: true } // HTTP 308
+```
+
+#### Types ajoutés (`web/src/types/api.ts`)
+- `TripStats` : totalCost, totalDistance, tripCount, savedVsGas, dailyExpenses
+- `SavedTrip` : historique trajet complet avec fuelType, energyUnit, totalCost, etc.
+- `UserVehicleWithStats` : étend UserVehicle avec tripsCount, totalDistance, totalSpent, costPerKm, isDefault
+
+#### Clés i18n ajoutées (`messages/fr.json` + `messages/en.json`)
+`garage.*`, `dashboard.*`, `auth.confirmPassword`, `auth.passwordMismatch`, `settings.appearance`, `settings.accountSection`, `settings.version`, `nav.collapseMenu`, `common.noData`, `landing.*`, `favorites.from/to`
+
+#### Corrections bugs
+- `Sparkline.tsx` : `useId()` déplacé avant le `return null` anticipé (règle hooks React)
+- `FuelBadge` : utilise couleurs Tailwind concrètes (emerald/amber/sky/violet) — pas de CSS var + opacity modifier (incompatible Tailwind v3)
+- `garage/page.tsx` : type union `GarageVehicle = UserVehicle | UserVehicleWithStats` + type guards `hasStats()` / `isDefaultVehicle()`
+
+#### Vérifications finales
+- `tsc --noEmit` → 0 erreur ✅
+- `next build` → 16/16 routes compilées, 0 erreur ESLint ✅
 
 ### 2026-05-23 — Consolidation : restauration mobile + commit des changements en attente
 

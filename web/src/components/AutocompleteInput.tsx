@@ -41,12 +41,12 @@ export function AutocompleteInput({
     setIsLoading(true);
 
     apiClient
-      .get<{ features: GeocodeFeature[] }>('/trips/geocode', {
+      .get<GeocodeFeature[]>('/trips/geocode', {
         params: { q: debouncedQuery, country: 'fr', limit: 5 },
       })
       .then(({ data }) => {
         if (!cancelled) {
-          setSuggestions(data.features ?? []);
+          setSuggestions(Array.isArray(data) ? data : []);
           setIsOpen(true);
         }
       })
@@ -74,32 +74,36 @@ export function AutocompleteInput({
 
   return (
     <div ref={containerRef} className="relative flex flex-col gap-1">
-      <label className="text-sm font-medium text-[var(--foreground)]">{label}</label>
+      <label className="text-xs font-semibold tracking-wider uppercase text-carbon-muted">
+        {label}
+      </label>
       <div className="relative">
         <MapPin
           size={14}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-carbon-muted pointer-events-none"
         />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-8 pr-8 py-2 bg-[var(--card)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder:text-[var(--muted)]"
+          className="w-full pl-8 pr-8 py-2.5 bg-carbon-surface border border-carbon-hairline rounded-xl text-sm text-carbon-ink placeholder:text-carbon-muted focus:outline-none focus:ring-2 focus:ring-carbon-accent focus:border-carbon-accent transition-colors"
         />
         {isLoading && (
           <LoaderCircle
             size={14}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] animate-spin"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-carbon-muted animate-spin pointer-events-none"
           />
         )}
       </div>
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute top-full left-0 right-0 z-50 mt-1 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-xl max-h-60 overflow-auto">
-          {suggestions.map((feature) => (
+        <ul className="absolute top-full left-0 right-0 z-50 mt-1 bg-carbon-surface border border-carbon-hairline rounded-xl shadow-2xl max-h-60 overflow-auto">
+          {suggestions.map((feature, idx) => (
             <li
               key={feature.id}
-              className="px-4 py-2.5 cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-900/20 text-sm transition-colors"
+              className={`px-4 py-2.5 cursor-pointer hover:bg-carbon-surface2 text-sm text-carbon-ink transition-colors ${
+                idx === 0 ? 'rounded-t-xl' : ''
+              } ${idx === suggestions.length - 1 ? 'rounded-b-xl' : 'border-b border-carbon-hairline'}`}
               onMouseDown={(e) => {
                 e.preventDefault();
                 setQuery(feature.place_name);

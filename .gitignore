@@ -86,3 +86,7 @@ desktop.ini
 .cache/
 tmp/
 temp/
+
+# Claude Code artifacts
+.claude/
+**/.claude/

@@ -15,6 +15,15 @@ async function bootstrap() {
 
   app.setGlobalPrefix(apiPrefix);
   app.use(helmet());
+  // ── CORS ───────────────────────────────────────────────────────────────────
+  // TODO (déploiement Vercel) :
+  //   • Mettre CORS_ORIGINS = "https://tripwise.vercel.app" (ou le vrai domaine)
+  //   • Activer les cookies cross-domain dans le BFF Next.js :
+  //       secure: true, sameSite: 'none'  (nécessite HTTPS des deux côtés)
+  //   • Désactiver synchronize: true dans la config TypeORM en production
+  //       (utiliser les migrations à la place)
+  //   • Générer un JWT_SECRET fort (≥64 chars) et le stocker dans les variables
+  //       d'environnement Vercel / Railway / Render
   app.enableCors({
     origin: corsOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

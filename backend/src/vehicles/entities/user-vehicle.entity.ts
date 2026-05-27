@@ -11,6 +11,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { VehicleModel } from './vehicle-model.entity';
 import { Favorite } from '../../favorites/entities/favorite.entity';
+import { decimalTransformer } from '../../common/column-transformers';
 
 @Entity('user_vehicles')
 export class UserVehicle {
@@ -33,6 +34,7 @@ export class UserVehicle {
     precision: 5,
     scale: 4,
     nullable: true,
+    transformer: decimalTransformer,
   })
   homeElectricityPrice!: number | null;
 
@@ -43,6 +45,7 @@ export class UserVehicle {
     precision: 5,
     scale: 4,
     nullable: true,
+    transformer: decimalTransformer,
   })
   publicChargingPrice!: number | null;
 
@@ -66,6 +69,7 @@ export class UserVehicle {
     scale: 2,
     nullable: true,
     default: 0.70,
+    transformer: decimalTransformer,
   })
   homeChargingRatio!: number | null;
 

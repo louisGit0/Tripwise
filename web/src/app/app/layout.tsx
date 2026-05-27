@@ -1,10 +1,5 @@
-import { AppNav } from '@/components/AppNav';
+import { AppLayout } from '@/components/layouts/AppLayout';
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen flex flex-col bg-[var(--background)]">
-      <AppNav />
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-6">{children}</main>
-    </div>
-  );
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <AppLayout>{children}</AppLayout>;
 }

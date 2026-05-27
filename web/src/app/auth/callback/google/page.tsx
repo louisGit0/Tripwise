@@ -23,8 +23,8 @@ export default function GoogleCallbackPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3 text-[var(--muted)]">
-        <LoaderCircle size={28} className="animate-spin text-primary-600" />
+      <div className="flex flex-col items-center gap-3 text-carbon-muted">
+        <LoaderCircle size={28} className="animate-spin text-carbon-accent" />
         <p className="text-sm">Connexion en cours…</p>
       </div>
     </div>

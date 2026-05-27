@@ -34,6 +34,7 @@ export interface VehicleModel {
 export interface UserVehicle {
   id: string;
   nickname: string | null;
+  licensePlate: string | null;
   vehicleModel: VehicleModel;
   homeElectricityPrice: number | null;
   publicChargingPrice: number | null;
@@ -134,4 +135,95 @@ export interface CatalogPage {
   total: number;
   page: number;
   limit: number;
+}
+
+export interface TripStats {
+  month?: string;
+  totalCost: number;
+  totalDistance: number;
+  tripCount: number;
+  averageCostPerKm: number | null;
+  /** Backend returns { amount, percent }, not a bare number */
+  savedVsGas: { amount: number; percent: number };
+  dailyExpenses: Array<{ date: string; cost: number }>;
+}
+
+export interface SavedTrip {
+  id: string;
+  vehicleId: string | null;
+  originLabel: string;
+  originLat: number;
+  originLng: number;
+  destinationLabel: string;
+  destinationLat: number;
+  destinationLng: number;
+  distanceKm: number;
+  durationSeconds: number;
+  fuelType: FuelType;
+  energyUnit: 'L' | 'kWh';
+  consumptionPer100: number;
+  totalConsumption: number;
+  pricePerUnit: number;
+  totalCost: number;
+  chargingMode: string | null;
+  tripDate: string;
+  isArchived: boolean;
+  note: string | null;
+  passengersCount: number;
+  tollsCost: number;
+  createdAt?: string;
+}
+
+export interface TripHistoryPage {
+  items: SavedTrip[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  monthlyTotals: Record<string, { totalCost: number; tripCount: number; totalDistance: number }>;
+}
+
+export interface EnergyComparison {
+  category: 'gas' | 'diesel' | 'ev' | 'gpl';
+  label: string;
+  isCurrent: boolean;
+  consumption: number;
+  consumptionUnit: 'L' | 'kWh';
+  unitPrice: number;
+  totalCost: number;
+  costPerKm: number;
+  costPerPerson: number;
+}
+
+export interface MultiCalcResult {
+  distance: { meters: number; km: number };
+  duration: { seconds: number; formatted: string };
+  comparisons: EnergyComparison[];
+  disclaimer?: string;
+}
+
+export interface DefaultPrices {
+  gas: number;
+  diesel: number;
+  evHome: number;
+  evFast: number;
+}
+
+/** Stored in sessionStorage under 'tripwise.pendingTrip' after a calculation */
+export interface PendingTripSession {
+  origin: GeoPoint | null;
+  destination: GeoPoint | null;
+  distanceKm?: number;
+  result: TripResult;
+  multiResult: MultiCalcResult | null;
+  selectedVehicleId: string;
+  mode: 'address' | 'distance';
+}
+
+export interface UserVehicleWithStats extends UserVehicle {
+  tripsCount: number;
+  totalDistance: number;
+  totalSpent: number;
+  costPerKm: number;
+  isDefault: boolean;
 }

@@ -5,6 +5,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { UserVehicle } from './user-vehicle.entity';
+import { decimalTransformer } from '../../common/column-transformers';
 
 export enum FuelType {
   SP95 = 'SP95',
@@ -37,7 +38,7 @@ export class VehicleModel {
    * L/100km pour les thermiques, kWh/100km pour les électriques.
    * Valeurs indicatives basées sur les moyennes constructeur (WLTP).
    */
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'decimal', precision: 5, scale: 2, transformer: decimalTransformer })
   consumption!: number;
 
   /**
@@ -51,6 +52,7 @@ export class VehicleModel {
     precision: 5,
     scale: 2,
     nullable: true,
+    transformer: decimalTransformer,
   })
   batteryCapacityKwh!: number | null;
 
@@ -65,6 +67,7 @@ export class VehicleModel {
     precision: 5,
     scale: 1,
     nullable: true,
+    transformer: decimalTransformer,
   })
   tankCapacityLiters!: number | null;
 
