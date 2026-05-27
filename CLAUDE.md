@@ -809,6 +809,61 @@ npx jest --config test/jest-e2e.json --testPathPatterns="auth" --forceExit
 
 ## Journal des décisions & mises à jour
 
+### 2026-05-27 — Préparation déploiement Vercel + Render + Supabase
+
+#### Contexte
+Adaptation du backend (NestJS / TypeORM) et des BFF cookies Next.js pour fonctionner en production HTTPS avec des domaines croisés (frontend.vercel.app ↔ backend.onrender.com).
+
+#### Fichiers modifiés
+
+| Fichier | Modification |
+|---------|-------------|
+| `backend/src/main.ts` | `NestExpressApplication` + `trust proxy 1` + trim CORS origins + suppression du bloc TODO |
+| `backend/src/config/database.config.ts` | Support `DATABASE_URL` (Supabase) avec SSL, `synchronize: !isProd`, `logging: !isProd` |
+| `backend/src/database/data-source.ts` | Support `DATABASE_URL` avec SSL pour la CLI TypeORM |
+| `web/src/app/api/auth/set-cookie/route.ts` | `sameSite: isProd ? 'none' : 'lax'` |
+| `web/src/app/api/auth/logout/route.ts` | `secure: isProd` + `sameSite` cohérent (sinon Chrome refuse de supprimer le cookie) |
+| `backend/.env.example` | Documenter `DATABASE_URL` (Option B) et `NODE_ENV` production |
+
+#### Décisions techniques
+
+**trust proxy: 1** — valeur `1` (pas `true` ni `'loopback'`). Signifie "faire confiance au premier proxy dans la chaîne x-forwarded-*". Valeur recommandée pour Render, Railway et Fly.io qui ont exactement un niveau de NGINX devant l'app. Valeur `true` ferait confiance à n'importe quel proxy (risque spoofing IP). Valeur `'loopback'` ne couvre pas les reverse-proxies cloud.
+
+**synchronize: !isProd** — `true` en dev (confort : tables créées auto sans migration:run), `false` en prod (sécurité : seules les migrations modifient le schéma). Le `data-source.ts` (CLI TypeORM) garde `synchronize: false` inconditionnellement.
+
+**DATABASE_URL branching** — deux branches `new DataSource(...)` explicites dans `data-source.ts` pour éviter les problèmes de type TypeScript strict avec le spread d'un union type. La branche `url` inclut toujours `ssl: { rejectUnauthorized: false }` (requis par Supabase et Neon pour les connexions externes).
+
+**Cookies BFF** — Le cookie `access_token` est `httpOnly: false` intentionnellement (l'intercepteur Axios côté client le lit pour construire le header `Authorization`). `sameSite: 'none'` en prod est nécessaire pour que le cookie soit posé sur Vercel (HTTPS) sans erreur de politique SameSite. La règle Chrome : un cookie supprimé doit avoir les mêmes attributs `secure` et `sameSite` que lors de sa création — d'où la correction du `logout/route.ts`.
+
+**Note : "NE PAS toucher au frontend"** — les deux fichiers `web/src/app/api/auth/*/route.ts` sont des routes d'infrastructure (BFF), pas des pages UI. La modification était inévitable pour la production : sans `secure: isProd` sur le logout, Chrome refuse de supprimer le cookie.
+
+#### Vérifications
+| Vérification | Résultat |
+|-------------|----------|
+| `backend tsc --noEmit` | ✅ 0 erreur |
+| `backend npm run build` | ✅ dist/ généré |
+| `backend npm run test:e2e` | ✅ 136/136 tests |
+| `web tsc --noEmit` | ✅ 0 erreur |
+| `web npm run build` | ✅ 18/18 routes |
+
+#### Variables d'environnement prod à configurer (Render)
+```
+NODE_ENV=production
+DATABASE_URL=postgresql://postgres:[password]@db.xxx.supabase.co:5432/postgres
+JWT_SECRET=<openssl rand -hex 64>
+MAPBOX_TOKEN=pk.eyJ1...
+CORS_ORIGINS=https://tripwise.vercel.app
+```
+
+#### Variables d'environnement prod à configurer (Vercel)
+```
+NEXT_PUBLIC_API_URL=https://tripwise.onrender.com/api/v1
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # restreindre au domaine vercel dans dashboard Mapbox
+NODE_ENV=production  # Vercel le pose automatiquement
+```
+
+---
+
 ### 2026-05-27 — Prompt 5 — V1 livrée, prête pour déploiement
 
 #### Nettoyage — code mort supprimé
