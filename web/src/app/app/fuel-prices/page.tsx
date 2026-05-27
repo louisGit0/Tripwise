@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { RotateCcw, Zap, Fuel } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
@@ -114,7 +113,6 @@ function PriceRow({ label, value, onChange, unit, step = 0.001, min = 0, max = 5
 // ── Page ──────────────────────────────────────────────────────
 
 export default function FuelPricesPage() {
-  const t = useTranslations('prices');
   const { showToast } = useToast();
 
   const [defaults, setDefaults] = useState<DefaultPrices | null>(null);
@@ -154,7 +152,7 @@ export default function FuelPricesPage() {
     const updated = { ...prices, [key]: value };
     setPrices(updated);
     writeStorage(updated);
-    showToast('success', t('saved'));
+    showToast('success', 'Prix mis à jour');
   }
 
   function handleReset() {
@@ -171,7 +169,7 @@ export default function FuelPricesPage() {
       : FALLBACK_DEFAULTS;
     setPrices(base);
     writeStorage(base);
-    showToast('success', t('saved'));
+    showToast('success', 'Prix mis à jour');
   }
 
   if (!mounted) {
@@ -189,9 +187,11 @@ export default function FuelPricesPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <Eyebrow className="mb-0.5">{t('eyebrow')}</Eyebrow>
-          <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
-          <p className="text-sm text-carbon-muted mt-1 max-w-sm">{t('description')}</p>
+          <Eyebrow className="mb-0.5">Carburant · Prix</Eyebrow>
+          <h1 className="text-2xl font-bold font-display text-carbon-ink">Carburant / Prix</h1>
+          <p className="text-sm text-carbon-muted mt-1 max-w-sm">
+            Personnalisez les prix utilisés pour vos calculs en mode distance.
+          </p>
         </div>
         <CTAButton
           variant="ghost"
@@ -199,7 +199,7 @@ export default function FuelPricesPage() {
           icon={<RotateCcw size={13} />}
           onClick={handleReset}
         >
-          {t('reset')}
+          Réinitialiser
         </CTAButton>
       </div>
 
@@ -208,18 +208,18 @@ export default function FuelPricesPage() {
         <SectionCard
           title={
             <span className="flex items-center gap-1.5">
-              <Eyebrow>{t('defaultsTitle')}</Eyebrow>
+              <Eyebrow>Prix de référence</Eyebrow>
             </span>
           }
           padding="md"
         >
-          <p className="text-xs text-carbon-muted mb-3">{t('defaultsDesc')}</p>
+          <p className="text-xs text-carbon-muted mb-3">Chargés depuis l&apos;API nationale.</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: t('gas'), value: defaults.gas, unit: '€/L' },
-              { label: t('diesel'), value: defaults.diesel, unit: '€/L' },
-              { label: t('evHome'), value: defaults.evHome, unit: '€/kWh' },
-              { label: t('evFast'), value: defaults.evFast, unit: '€/kWh' },
+              { label: 'Essence (€/L)', value: defaults.gas, unit: '€/L' },
+              { label: 'Diesel (€/L)', value: defaults.diesel, unit: '€/L' },
+              { label: 'Domicile (€/kWh)', value: defaults.evHome, unit: '€/kWh' },
+              { label: 'Borne rapide (€/kWh)', value: defaults.evFast, unit: '€/kWh' },
             ].map(({ label, value, unit }) => (
               <div
                 key={label}
@@ -236,7 +236,7 @@ export default function FuelPricesPage() {
       )}
 
       {loadingDefaults && (
-        <div className="text-sm text-carbon-muted font-mono">{t('loadingDefaults')}</div>
+        <div className="text-sm text-carbon-muted font-mono">Chargement des prix...</div>
       )}
 
       {/* ── Fuel prices ───────────────────────────────────────── */}
@@ -244,17 +244,19 @@ export default function FuelPricesPage() {
         title={
           <span className="flex items-center gap-1.5">
             <Fuel size={13} className="text-carbon-accent" />
-            <Eyebrow>{t('gasTitle')}</Eyebrow>
+            <Eyebrow>Carburants</Eyebrow>
           </span>
         }
         padding="md"
       >
-        <p className="text-xs text-carbon-muted mb-1">{t('overrideDesc')}</p>
+        <p className="text-xs text-carbon-muted mb-1">
+          Ces valeurs remplacent les prix par défaut pour le calcul en mode Distance.
+        </p>
         <div className="flex flex-col divide-y divide-carbon-hairline">
-          <PriceRow label={t('gas')} value={prices.gas} onChange={(v) => updatePrice('gas', v)} unit="€/L" step={0.001} max={5} />
-          <PriceRow label={t('diesel')} value={prices.diesel} onChange={(v) => updatePrice('diesel', v)} unit="€/L" step={0.001} max={5} />
-          <PriceRow label={t('e85')} value={prices.e85} onChange={(v) => updatePrice('e85', v)} unit="€/L" step={0.001} max={5} />
-          <PriceRow label={t('gpl')} value={prices.gpl} onChange={(v) => updatePrice('gpl', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="Essence (€/L)" value={prices.gas} onChange={(v) => updatePrice('gas', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="Diesel (€/L)" value={prices.diesel} onChange={(v) => updatePrice('diesel', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="E85 (€/L)" value={prices.e85} onChange={(v) => updatePrice('e85', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="GPL (€/L)" value={prices.gpl} onChange={(v) => updatePrice('gpl', v)} unit="€/L" step={0.001} max={5} />
         </div>
       </SectionCard>
 
@@ -263,17 +265,17 @@ export default function FuelPricesPage() {
         title={
           <span className="flex items-center gap-1.5">
             <Zap size={13} className="text-carbon-accent" />
-            <Eyebrow>{t('evTitle')}</Eyebrow>
+            <Eyebrow>Électricité</Eyebrow>
           </span>
         }
         padding="md"
       >
         <div className="flex flex-col divide-y divide-carbon-hairline">
-          <PriceRow label={t('evHome')} value={prices.evHome} onChange={(v) => updatePrice('evHome', v)} unit="€/kWh" step={0.0001} max={2} />
-          <PriceRow label={t('evFast')} value={prices.evFast} onChange={(v) => updatePrice('evFast', v)} unit="€/kWh" step={0.0001} max={2} />
+          <PriceRow label="Domicile (€/kWh)" value={prices.evHome} onChange={(v) => updatePrice('evHome', v)} unit="€/kWh" step={0.0001} max={2} />
+          <PriceRow label="Borne rapide (€/kWh)" value={prices.evFast} onChange={(v) => updatePrice('evFast', v)} unit="€/kWh" step={0.0001} max={2} />
           <div className="py-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-carbon-ink2">{t('fastShare')}</span>
+              <span className="text-sm text-carbon-ink2">Part borne rapide</span>
               <span className="font-mono text-sm text-carbon-accent tabular-nums">
                 {Math.round(prices.fastShare * 100)}&thinsp;%
               </span>
@@ -298,7 +300,7 @@ export default function FuelPricesPage() {
       {/* ── Footer note ───────────────────────────────────────── */}
       <Hairline />
       <p className="text-xs font-mono text-carbon-muted text-center pb-4">
-        {t('source')}
+        Prix de référence nationaux France 2026
       </p>
     </div>
   );

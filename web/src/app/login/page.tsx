@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -46,7 +45,6 @@ function AppleIcon() {
 }
 
 export default function LoginPage() {
-  const t = useTranslations('auth');
   const router = useRouter();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +63,7 @@ export default function LoginPage() {
       router.push('/app/dashboard');
       router.refresh();
     } catch {
-      showToast('error', t('loginError'));
+      showToast('error', 'Email ou mot de passe incorrect');
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +77,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center gap-3 mb-8">
           <TWAppIcon size={44} />
           <Wordmark size="md" />
-          <p className="text-sm text-carbon-muted mt-1">{t('loginTitle')}</p>
+          <p className="text-sm text-carbon-muted mt-1">Connexion</p>
         </div>
 
         {/* Card */}
@@ -87,14 +85,14 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input
-              label={t('email')}
+              label="Adresse email"
               type="email"
               autoComplete="email"
               error={errors.email?.message}
               {...register('email')}
             />
             <Input
-              label={t('password')}
+              label="Mot de passe"
               type="password"
               autoComplete="current-password"
               error={errors.password?.message}
@@ -107,13 +105,13 @@ export default function LoginPage() {
               size="lg"
               className="w-full mt-1"
             >
-              {t('login')}
+              Se connecter
             </CTAButton>
           </form>
 
           <div className="my-5 flex items-center gap-3">
             <Hairline className="flex-1" />
-            <span className="text-xs text-carbon-muted">{t('orContinueWith')}</span>
+            <span className="text-xs text-carbon-muted">ou</span>
             <Hairline className="flex-1" />
           </div>
 
@@ -123,22 +121,22 @@ export default function LoginPage() {
               className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors"
             >
               <GoogleIcon />
-              {t('googleLogin')}
+              Continuer avec Google
             </a>
             <a
               href={`${API_URL}/auth/apple`}
               className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors"
             >
               <AppleIcon />
-              {t('appleLogin')}
+              Continuer avec Apple
             </a>
           </div>
         </div>
 
         <p className="text-center text-sm text-carbon-muted mt-6">
-          {t('noAccount')}{' '}
+          Pas encore de compte ?{' '}
           <Link href="/register" className="text-carbon-accent font-medium hover:underline">
-            {t('registerLink')}
+            S&apos;inscrire
           </Link>
         </p>
       </div>

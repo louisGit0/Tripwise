@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
@@ -29,8 +28,6 @@ function isDefaultVehicle(v: GarageVehicle): boolean {
 }
 
 export default function GaragePage() {
-  const t = useTranslations('garage');
-  const tCommon = useTranslations('common');
   const { showToast } = useToast();
 
   const [vehicles, setVehicles] = useState<GarageVehicle[]>([]);
@@ -62,11 +59,11 @@ export default function GaragePage() {
       const { data } = await apiClient.get<GarageVehicle[]>('/vehicles/me');
       setVehicles(data);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsLoading(false);
     }
-  }, [showToast, tCommon]);
+  }, [showToast]);
 
   useEffect(() => {
     loadVehicles();
@@ -99,7 +96,7 @@ export default function GaragePage() {
     if (!selectedModel) return;
     const isElectric = selectedModel.fuelType === 'ELECTRIC';
     if (isElectric && (!addHomePrice || !addPublicPrice)) {
-      showToast('error', t('electricPricesRequired'));
+      showToast('error', 'Prix de charge requis pour les véhicules électriques');
       return;
     }
     setIsSaving(true);
@@ -115,10 +112,10 @@ export default function GaragePage() {
           : {}),
       });
       setShowAddModal(false);
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
       await loadVehicles();
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsSaving(false);
     }
@@ -146,10 +143,10 @@ export default function GaragePage() {
           : {}),
       });
       setEditVehicle(null);
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
       await loadVehicles();
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsSaving(false);
     }
@@ -160,10 +157,10 @@ export default function GaragePage() {
     try {
       await apiClient.delete(`/vehicles/me/${deleteVehicle.id}`);
       setDeleteVehicle(null);
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
       await loadVehicles();
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     }
   }
 
@@ -174,8 +171,8 @@ export default function GaragePage() {
       {/* ── Page header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <Eyebrow className="mb-0.5">{t('title')}</Eyebrow>
-          <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
+          <Eyebrow className="mb-0.5">Garage</Eyebrow>
+          <h1 className="text-2xl font-bold font-display text-carbon-ink">Garage</h1>
         </div>
         <CTAButton
           variant="accent"
@@ -183,7 +180,7 @@ export default function GaragePage() {
           icon={<Plus size={13} />}
           onClick={openAddModal}
         >
-          {t('addTitle')}
+          Ajouter au garage
         </CTAButton>
       </div>
 
@@ -197,9 +194,11 @@ export default function GaragePage() {
       ) : vehicles.length === 0 ? (
         <SectionCard padding="lg">
           <div className="flex flex-col items-center gap-4 py-4 text-center">
-            <p className="text-sm text-carbon-muted">{t('empty')}</p>
+            <p className="text-sm text-carbon-muted">
+              Aucun véhicule dans le garage. Ajoutez-en un pour calculer vos trajets.
+            </p>
             <CTAButton variant="accent" size="sm" icon={<Plus size={13} />} onClick={openAddModal}>
-              {t('addTitle')}
+              Ajouter au garage
             </CTAButton>
           </div>
         </SectionCard>
@@ -222,7 +221,7 @@ export default function GaragePage() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-carbon-ink text-sm truncate">{name}</span>
                       {isDefault && (
-                        <Pill color="accent" size="sm">{t('defaultBadge')}</Pill>
+                        <Pill color="accent" size="sm">Par défaut</Pill>
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -242,7 +241,7 @@ export default function GaragePage() {
                     <button
                       type="button"
                       onClick={() => openEdit(v)}
-                      aria-label={tCommon('edit')}
+                      aria-label="Modifier"
                       className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-carbon-accent hover:bg-blue-500/10 transition-colors"
                     >
                       <Pencil size={14} />
@@ -250,7 +249,7 @@ export default function GaragePage() {
                     <button
                       type="button"
                       onClick={() => setDeleteVehicle(v)}
-                      aria-label={tCommon('delete')}
+                      aria-label="Supprimer"
                       className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
                     >
                       <Trash2 size={14} />
@@ -264,10 +263,10 @@ export default function GaragePage() {
                     <Hairline />
                     <div className="grid grid-cols-4 divide-x divide-carbon-hairline">
                       {[
-                        { value: stats.tripsCount,                   unit: t('stats.trips') },
-                        { value: fmt.format(stats.totalDistance),    unit: t('stats.distance') },
-                        { value: `${fmt.format(stats.totalSpent)} €`, unit: t('stats.spent') },
-                        { value: stats.costPerKm > 0 ? `${fmt.format(stats.costPerKm)}` : '—', unit: t('stats.perKm') },
+                        { value: stats.tripsCount,                    unit: 'trajets' },
+                        { value: fmt.format(stats.totalDistance),     unit: 'km' },
+                        { value: `${fmt.format(stats.totalSpent)} €`, unit: 'dépensé' },
+                        { value: stats.costPerKm > 0 ? `${fmt.format(stats.costPerKm)}` : '—', unit: '€/km' },
                       ].map(({ value, unit }, i) => (
                         <div key={i} className="flex flex-col items-center py-2 gap-0">
                           <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
@@ -289,15 +288,15 @@ export default function GaragePage() {
       <Modal
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
-        title={selectedModel ? t('addTitle') : t('searchCatalog')}
+        title={selectedModel ? 'Ajouter au garage' : 'Rechercher un modèle'}
         footer={
           selectedModel ? (
             <>
               <CTAButton variant="ghost" onClick={() => setSelectedModel(null)}>
-                {tCommon('back')}
+                Retour
               </CTAButton>
               <CTAButton variant="accent" onClick={handleAdd} loading={isSaving}>
-                {tCommon('add')}
+                Ajouter
               </CTAButton>
             </>
           ) : undefined
@@ -306,13 +305,13 @@ export default function GaragePage() {
         {!selectedModel ? (
           <div className="flex flex-col gap-3">
             <Input
-              placeholder={t('searchPlaceholder')}
+              placeholder="Marque ou modèle..."
               value={catalogSearch}
               onChange={(e) => setCatalogSearch(e.target.value)}
               autoFocus
             />
             {catalogResults.length === 0 && catalogSearch.length >= 2 && (
-              <p className="text-sm text-carbon-muted text-center py-4">{t('noResults')}</p>
+              <p className="text-sm text-carbon-muted text-center py-4">Aucun modèle trouvé</p>
             )}
             <div className="flex flex-col gap-1.5 max-h-72 overflow-y-auto">
               {catalogResults.map((m) => (
@@ -343,15 +342,15 @@ export default function GaragePage() {
               </div>
             </div>
             <Input
-              label={t('nickname')}
-              placeholder={t('nicknamePlaceholder')}
+              label="Surnom"
+              placeholder="Ex. La petite"
               value={addNickname}
               onChange={(e) => setAddNickname(e.target.value)}
             />
             {selectedModel.fuelType === 'ELECTRIC' && (
               <>
                 <Input
-                  label={t('homePrice')}
+                  label="Prix domicile (€/kWh)"
                   type="number"
                   step="0.0001"
                   placeholder="0.2272"
@@ -359,7 +358,7 @@ export default function GaragePage() {
                   onChange={(e) => setAddHomePrice(e.target.value)}
                 />
                 <Input
-                  label={t('publicPrice')}
+                  label="Prix borne (€/kWh)"
                   type="number"
                   step="0.0001"
                   placeholder="0.4500"
@@ -376,14 +375,14 @@ export default function GaragePage() {
       <Modal
         open={!!editVehicle}
         onClose={() => setEditVehicle(null)}
-        title={t('editTitle')}
+        title="Modifier le véhicule"
         footer={
           <>
             <CTAButton variant="ghost" onClick={() => setEditVehicle(null)}>
-              {tCommon('cancel')}
+              Annuler
             </CTAButton>
             <CTAButton variant="accent" onClick={handleEdit} loading={isSaving}>
-              {tCommon('save')}
+              Enregistrer
             </CTAButton>
           </>
         }
@@ -400,22 +399,22 @@ export default function GaragePage() {
               </div>
             </div>
             <Input
-              label={t('nickname')}
-              placeholder={t('nicknamePlaceholder')}
+              label="Surnom"
+              placeholder="Ex. La petite"
               value={editNickname}
               onChange={(e) => setEditNickname(e.target.value)}
             />
             {editVehicle.vehicleModel.fuelType === 'ELECTRIC' && (
               <>
                 <Input
-                  label={t('homePrice')}
+                  label="Prix domicile (€/kWh)"
                   type="number"
                   step="0.0001"
                   value={editHomePrice}
                   onChange={(e) => setEditHomePrice(e.target.value)}
                 />
                 <Input
-                  label={t('publicPrice')}
+                  label="Prix borne (€/kWh)"
                   type="number"
                   step="0.0001"
                   value={editPublicPrice}
@@ -431,21 +430,21 @@ export default function GaragePage() {
       <Modal
         open={!!deleteVehicle}
         onClose={() => setDeleteVehicle(null)}
-        title={tCommon('confirm_delete')}
+        title="Confirmer la suppression"
         footer={
           <>
             <CTAButton variant="ghost" onClick={() => setDeleteVehicle(null)}>
-              {tCommon('cancel')}
+              Annuler
             </CTAButton>
             <CTAButton variant="danger" onClick={handleDelete}>
-              {tCommon('delete')}
+              Supprimer
             </CTAButton>
           </>
         }
       >
         {deleteVehicle && (
           <p className="text-sm text-carbon-ink2">
-            {t('deleteConfirm')}
+            Supprimer ce véhicule définitivement ?
             <br />
             <strong className="text-carbon-ink">
               {deleteVehicle.nickname ??

@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { ArrowRight, MapPin, Plus } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
@@ -91,11 +90,19 @@ const fmtEur = new Intl.NumberFormat('fr-FR', {
 const fmtNum = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const fmtDate = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: 'short' });
 
+const CHARGING_OPTIONS: { value: ChargingMode; label: string }[] = [
+  { value: 'home', label: 'Domicile' },
+  { value: 'public', label: 'Borne publique' },
+  { value: 'mix', label: 'Mix' },
+];
+
+const MODE_SEGMENTS: { value: CalcMode; label: string }[] = [
+  { value: 'address', label: 'Adresses' },
+  { value: 'distance', label: 'Distance' },
+];
+
 // ── Inner component (needs useSearchParams) ───────────────────────
 function DashboardInner() {
-  const t = useTranslations('trips');
-  const td = useTranslations('dashboard');
-  const tCommon = useTranslations('common');
   const { showToast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -210,11 +217,11 @@ function DashboardInner() {
   // ── Calculate (address mode) ────────────────────────────────────
   async function handleCalculateAddress() {
     if (!origin || !destination) {
-      showToast('info', t('fillBothFields'));
+      showToast('info', 'Veuillez renseigner le départ et l\'arrivée');
       return;
     }
     if (!selectedVehicleId) {
-      showToast('info', t('selectVehicleFirst'));
+      showToast('info', 'Sélectionnez d\'abord un véhicule');
       return;
     }
     setIsCalculating(true);
@@ -250,7 +257,7 @@ function DashboardInner() {
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
       router.push('/app/trips/result');
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsCalculating(false);
     }
@@ -259,11 +266,11 @@ function DashboardInner() {
   // ── Calculate (distance mode) ───────────────────────────────────
   function handleCalculateDistance() {
     if (!distanceKm || distanceKm <= 0) {
-      showToast('info', t('fillBothFields'));
+      showToast('info', 'Veuillez renseigner le départ et l\'arrivée');
       return;
     }
     if (!selectedVehicleId || !selectedVehicle) {
-      showToast('info', t('selectVehicleFirst'));
+      showToast('info', 'Sélectionnez d\'abord un véhicule');
       return;
     }
 
@@ -335,40 +342,29 @@ function DashboardInner() {
     label: v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`,
   }));
 
-  const chargingOptions: { value: ChargingMode; label: string }[] = [
-    { value: 'home', label: t('home') },
-    { value: 'public', label: t('public') },
-    { value: 'mix', label: t('mix') },
-  ];
-
-  const modeSegments = [
-    { value: 'address' as CalcMode, label: td('modeAddress') },
-    { value: 'distance' as CalcMode, label: td('modeDistance') },
-  ];
-
   return (
     <div className="flex flex-col gap-6">
       {/* ── KPI grid ─────────────────────────────────────────────── */}
-      <SectionCard title={<Eyebrow>{td('statsTitle')}</Eyebrow>} padding="md">
+      <SectionCard title={<Eyebrow>Ce mois</Eyebrow>} padding="md">
         <div className="grid grid-cols-2 gap-4 pt-3">
           <KPICell
-            label={td('kpiCost')}
+            label="Dépenses du mois"
             value={statsLoading ? '—' : fmtEur.format(stats?.totalCost ?? 0)}
             size="sm"
           />
           <KPICell
-            label={td('kpiTrips')}
+            label="Trajets"
             value={statsLoading ? '—' : fmtNum.format(stats?.tripCount ?? 0)}
             size="sm"
           />
           <KPICell
-            label={td('kpiDistance')}
+            label="Distance totale"
             value={statsLoading ? '—' : fmtNum.format(stats?.totalDistance ?? 0)}
             unit="km"
             size="sm"
           />
           <KPICell
-            label={td('kpiSaved')}
+            label="Économies vs essence"
             value={statsLoading ? '—' : fmtEur.format(stats?.savedVsGas?.amount ?? 0)}
             delta={
               !statsLoading && (stats?.savedVsGas?.percent ?? 0) !== 0
@@ -382,7 +378,7 @@ function DashboardInner() {
 
       {/* ── Sparkline + active vehicle ───────────────────────────── */}
       <div className="grid grid-cols-2 gap-4">
-        <SectionCard title={td('sparklineTitle')} padding="md">
+        <SectionCard title="Dépenses 30j" padding="md">
           <div className="pt-3 h-16">
             {sparkData.length > 0 ? (
               <Sparkline
@@ -394,21 +390,21 @@ function DashboardInner() {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="text-xs text-carbon-muted">{tCommon('noData')}</span>
+                <span className="text-xs text-carbon-muted">Aucune donnée</span>
               </div>
             )}
           </div>
         </SectionCard>
 
-        <SectionCard title={td('activeVehicle')} padding="md">
+        <SectionCard title="Véhicule actif" padding="md">
           {vehicles.length === 0 ? (
             <div className="pt-3 flex flex-col gap-2">
-              <p className="text-sm text-carbon-muted">{td('noVehicle')}</p>
+              <p className="text-sm text-carbon-muted">Aucun véhicule</p>
               <Link
                 href="/app/garage/add"
                 className="text-xs text-carbon-accent font-medium hover:underline"
               >
-                {td('addVehicleLink')}
+                Ajouter un véhicule
               </Link>
             </div>
           ) : selectedVehicle ? (
@@ -432,11 +428,13 @@ function DashboardInner() {
       {!statsLoading && vehicles.length === 0 && (
         <SectionCard padding="md">
           <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <p className="text-sm font-semibold text-carbon-ink">{td('onboardingTitle')}</p>
-            <p className="text-sm text-carbon-muted max-w-xs">{td('onboardingDesc')}</p>
+            <p className="text-sm font-semibold text-carbon-ink">Bienvenue sur Tripwise</p>
+            <p className="text-sm text-carbon-muted max-w-xs">
+              Ajoutez votre premier véhicule pour calculer le coût de vos trajets.
+            </p>
             <Link href="/app/garage/add">
               <CTAButton variant="accent" size="sm" icon={<Plus size={13} />}>
-                {td('onboardingCta')}
+                Ajouter un véhicule
               </CTAButton>
             </Link>
           </div>
@@ -444,11 +442,11 @@ function DashboardInner() {
       )}
 
       {/* ── Trip calculator ──────────────────────────────────────── */}
-      <SectionCard title={<Eyebrow>{td('newTrip')}</Eyebrow>} padding="md">
+      <SectionCard title={<Eyebrow>Nouveau trajet</Eyebrow>} padding="md">
         <div className="flex flex-col gap-4 pt-3">
           {/* Mode toggle */}
           <SegmentedControl
-            segments={modeSegments}
+            segments={MODE_SEGMENTS}
             value={calcMode}
             onChange={setCalcMode}
             className="w-full"
@@ -458,8 +456,8 @@ function DashboardInner() {
           {calcMode === 'address' && (
             <>
               <AutocompleteInput
-                label={t('origin')}
-                placeholder={t('originPlaceholder')}
+                label="Départ"
+                placeholder="Adresse de départ..."
                 onSelect={(pt) => {
                   setOrigin(pt);
                   setOriginLabel(pt.label ?? '');
@@ -467,8 +465,8 @@ function DashboardInner() {
                 defaultValue={originLabel}
               />
               <AutocompleteInput
-                label={t('destination')}
-                placeholder={t('destinationPlaceholder')}
+                label="Arrivée"
+                placeholder="Adresse d'arrivée..."
                 onSelect={(pt) => {
                   setDestination(pt);
                   setDestinationLabel(pt.label ?? '');
@@ -503,7 +501,7 @@ function DashboardInner() {
                   />
                   <span className="text-xl text-carbon-muted font-mono">km</span>
                 </div>
-                <p className="text-xs text-carbon-muted">{td('distancePlaceholder')}</p>
+                <p className="text-xs text-carbon-muted">Distance en km</p>
               </div>
               {/* Quick chips */}
               <div className="flex items-center gap-2 justify-center flex-wrap">
@@ -530,14 +528,14 @@ function DashboardInner() {
 
           {/* Vehicle selector */}
           {vehicles.length === 0 ? (
-            <p className="text-sm text-amber-400">{t('noVehicle')}</p>
+            <p className="text-sm text-amber-400">Aucun véhicule. Ajoutez-en un dans le Garage.</p>
           ) : (
             <Select
-              label={t('vehicle')}
+              label="Véhicule"
               options={vehicleOptions}
               value={selectedVehicleId}
               onChange={(e) => setSelectedVehicleId(e.target.value)}
-              placeholder={t('selectVehicle')}
+              placeholder="Sélectionner un véhicule"
             />
           )}
 
@@ -545,15 +543,15 @@ function DashboardInner() {
           {isElectric && (
             <div className="flex flex-col gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
               <Select
-                label={t('chargingMode')}
-                options={chargingOptions}
+                label="Mode de charge"
+                options={CHARGING_OPTIONS}
                 value={chargingMode}
                 onChange={(e) => setChargingMode(e.target.value as ChargingMode)}
               />
               {chargingMode === 'mix' && (
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-medium text-carbon-ink2">
-                    {t('mixRatio')} : {Math.round(chargingMixRatio * 100)}%
+                    Part domicile : {Math.round(chargingMixRatio * 100)}%
                   </label>
                   <input
                     type="range"
@@ -578,7 +576,7 @@ function DashboardInner() {
             loading={isCalculating}
             disabled={vehicles.length === 0}
           >
-            {isCalculating ? t('calculating') : t('calculate')}
+            {isCalculating ? 'Calcul en cours...' : 'Calculer'}
           </CTAButton>
         </div>
       </SectionCard>
@@ -586,7 +584,7 @@ function DashboardInner() {
       {/* ── Favorite suggestions ─────────────────────────────────── */}
       {suggestions.length > 0 && (
         <SectionCard
-          title={<Eyebrow>{td('suggestionsTitle')}</Eyebrow>}
+          title={<Eyebrow>Favoris rapides</Eyebrow>}
           action={
             <Link href="/app/favorites" className="text-[11px] text-carbon-accent hover:underline">
               Tout voir
@@ -614,7 +612,7 @@ function DashboardInner() {
                   </p>
                 </div>
                 <span className="text-[11px] text-carbon-accent font-medium shrink-0">
-                  {td('useSuggestion')}
+                  Utiliser
                 </span>
               </button>
             ))}
@@ -625,11 +623,10 @@ function DashboardInner() {
       {/* ── Recent trips table ───────────────────────────────────── */}
       {recentTrips.length > 0 && (
         <SectionCard
-          title={<Eyebrow>{td('recentTrips')}</Eyebrow>}
+          title={<Eyebrow>Trajets récents</Eyebrow>}
           action={
             <Link href="/app/trips" className="text-[11px] text-carbon-accent hover:underline">
-              <Plus size={10} className="inline mr-0.5" />
-              {tCommon('noData')}
+              Tout voir
             </Link>
           }
           padding="none"

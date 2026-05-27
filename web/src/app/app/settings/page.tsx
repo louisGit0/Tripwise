@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { Sun, Moon, Globe, LogOut } from 'lucide-react';
+import { Sun, Moon, LogOut } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -14,8 +13,6 @@ import { logout } from '@/lib/auth';
 type Theme = 'light' | 'dark';
 
 export default function SettingsPage() {
-  const t = useTranslations('settings');
-  const tAuth = useTranslations('auth');
   const { theme, setTheme } = useTheme();
   const router = useRouter();
 
@@ -24,23 +21,15 @@ export default function SettingsPage() {
   // Rendering theme-conditional UI during SSR causes a mismatch.
   // Return a neutral skeleton until the component is mounted.
   const [mounted, setMounted] = useState(false);
-  const [currentLocale, setCurrentLocale] = useState('fr');
 
   useEffect(() => {
     setMounted(true);
-    const match = document.cookie.match(/locale=([^;]*)/);
-    setCurrentLocale(match?.[1] ?? 'fr');
   }, []);
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: 'dark',  label: t('themeDark'),  icon: <Moon size={15} /> },
-    { value: 'light', label: t('themeLight'), icon: <Sun size={15} /> },
+    { value: 'dark',  label: 'Sombre', icon: <Moon size={15} /> },
+    { value: 'light', label: 'Clair',  icon: <Sun size={15} /> },
   ];
-
-  function changeLocale(locale: 'fr' | 'en') {
-    document.cookie = `locale=${locale}; path=/; max-age=${365 * 24 * 60 * 60}; samesite=lax`;
-    window.location.reload();
-  }
 
   async function handleLogout() {
     await logout();
@@ -57,7 +46,6 @@ export default function SettingsPage() {
           <div className="h-8 w-32 rounded bg-carbon-surface2" />
         </div>
         <div className="h-[112px] rounded-xl bg-carbon-surface2" />
-        <div className="h-[88px] rounded-xl bg-carbon-surface2" />
         <div className="h-[76px] rounded-xl bg-carbon-surface2" />
       </div>
     );
@@ -67,12 +55,12 @@ export default function SettingsPage() {
     <div className="flex flex-col gap-6 max-w-md">
       {/* Header */}
       <div>
-        <Eyebrow className="mb-1">{t('title')}</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
+        <Eyebrow className="mb-1">Paramètres</Eyebrow>
+        <h1 className="text-2xl font-bold font-display text-carbon-ink">Paramètres</h1>
       </div>
 
       {/* ── Appearance ─────────────────────────────────────────── */}
-      <SectionCard title={t('appearance')} padding="md">
+      <SectionCard title="Apparence" padding="md">
         <Hairline className="my-3" />
         <div className="flex gap-2">
           {themes.map(({ value, label, icon }) => (
@@ -94,34 +82,8 @@ export default function SettingsPage() {
         </div>
       </SectionCard>
 
-      {/* ── Language ───────────────────────────────────────────── */}
-      <SectionCard title={t('language')} padding="md">
-        <Hairline className="my-3" />
-        <div className="flex gap-2">
-          {(['fr', 'en'] as const).map((locale) => {
-            const label = locale === 'fr' ? t('french') : t('english');
-            return (
-              <button
-                key={locale}
-                type="button"
-                onClick={() => changeLocale(locale)}
-                className={[
-                  'flex-1 flex items-center justify-center gap-2 h-9 px-4 rounded-xl border text-sm font-medium transition-all',
-                  currentLocale === locale
-                    ? 'border-carbon-accent bg-blue-500/10 text-carbon-accent'
-                    : 'border-carbon-hairline bg-carbon-surface2 text-carbon-muted hover:bg-carbon-faint',
-                ].join(' ')}
-              >
-                <Globe size={14} />
-                {label}
-              </button>
-            );
-          })}
-        </div>
-      </SectionCard>
-
       {/* ── Account ────────────────────────────────────────────── */}
-      <SectionCard title={t('accountSection')} padding="md">
+      <SectionCard title="Compte" padding="md">
         <Hairline className="my-3" />
         <CTAButton
           variant="danger"
@@ -130,13 +92,13 @@ export default function SettingsPage() {
           onClick={handleLogout}
           className="w-full"
         >
-          {tAuth('logout')}
+          Se déconnecter
         </CTAButton>
       </SectionCard>
 
       {/* Version */}
       <p className="text-[11px] text-carbon-muted font-mono text-center">
-        {t('version')} · v2.4 — BUILD 0521
+        Version · v2.4 — BUILD 0521
       </p>
     </div>
   );

@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LoaderCircle } from 'lucide-react';
 import { setAuthCookie } from '@/lib/auth';
 
-export default function AppleCallbackPage() {
+function AppleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -28,5 +28,19 @@ export default function AppleCallbackPage() {
         <p className="text-sm">Connexion Apple en cours…</p>
       </div>
     </div>
+  );
+}
+
+export default function AppleCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <LoaderCircle size={28} className="animate-spin text-carbon-accent" />
+        </div>
+      }
+    >
+      <AppleCallbackContent />
+    </Suspense>
   );
 }

@@ -3,7 +3,6 @@
 import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import {
   Navigation,
   Car,
@@ -23,6 +22,14 @@ import { StatusDot } from '@/components/ui/StatusDot';
 
 // ── Nav items definition ────────────────────────────────────────
 type NavKey = 'dashboard' | 'trips' | 'garage' | 'fuelPrices' | 'settings';
+
+const NAV_LABELS: Record<NavKey, string> = {
+  dashboard: 'Dashboard',
+  trips: 'Trajets',
+  garage: 'Garage',
+  fuelPrices: 'Carburant / Prix',
+  settings: 'Paramètres',
+};
 
 const NAV_ITEMS: Array<{
   href: string;
@@ -68,7 +75,6 @@ function isNavActive(href: string, pathname: string): boolean {
 // ── AppLayout ───────────────────────────────────────────────────
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const t = useTranslations('nav');
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
@@ -112,7 +118,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               key={href}
               href={href}
               icon={<Icon size={15} />}
-              label={t(key)}
+              label={NAV_LABELS[key]}
               active={isNavActive(href, pathname)}
               collapsed={collapsed}
             />
@@ -156,7 +162,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             ].join(' ')}
           >
             {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
-            {!collapsed && <span>{t('collapseMenu')}</span>}
+            {!collapsed && <span>Réduire</span>}
           </button>
         </div>
       </aside>
@@ -198,13 +204,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Menu size={18} />
           </button>
 
-          {/* + NEW TRIP — visible on all sizes (icon-only on xs, with label on sm+) */}
+          {/* + NOUVEAU TRAJET — visible on all sizes (icon-only on xs, with label on sm+) */}
           <Link
             href="/app/dashboard"
             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-carbon-accent text-white text-[10px] font-mono uppercase tracking-widest font-semibold hover:brightness-110 active:brightness-90 transition-all"
           >
             <Plus size={12} aria-hidden="true" />
-            <span className="hidden sm:inline">{t('newTrip')}</span>
+            <span className="hidden sm:inline">Nouveau trajet</span>
           </Link>
         </div>
       </header>
@@ -248,7 +254,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   key={href}
                   href={href}
                   icon={<Icon size={15} />}
-                  label={t(key)}
+                  label={NAV_LABELS[key]}
                   active={isNavActive(href, pathname)}
                   collapsed={false}
                   onClick={closeDrawer}

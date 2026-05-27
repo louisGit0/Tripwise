@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
 import { Providers } from '@/providers/Providers';
 import './globals.css';
 
@@ -11,7 +9,6 @@ const spaceGrotesk = Space_Grotesk({
   weight: ['400', '500', '600', '700'],
   variable: '--font-display',
   display: 'swap',
-  // Fallback if CDN is unreachable
   fallback: ['-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
 });
 
@@ -47,21 +44,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang={locale}
-      // next-themes sets data-theme attribute; suppressHydrationWarning
-      // prevents React mismatch on the server-rendered default.
-      suppressHydrationWarning
-    >
+    <html lang="fr" suppressHydrationWarning>
       <body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-display`}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers>{children}</Providers>
-        </NextIntlClientProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

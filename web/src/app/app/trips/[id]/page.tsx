@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, use } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Archive, ArchiveRestore, Trash2, RotateCcw, ChevronLeft } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -28,8 +27,6 @@ function formatDuration(seconds: number): string {
 
 export default function TripDetailPage({ params }: Props) {
   const { id } = use(params);
-  const t = useTranslations('trips.detail');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -61,11 +58,11 @@ export default function TripDetailPage({ params }: Props) {
         if (err?.response?.status === 404 || err?.response?.status === 403) {
           setNotFound(true);
         } else {
-          showToast('error', tCommon('error'));
+          showToast('error', 'Une erreur est survenue');
         }
       })
       .finally(() => setIsLoading(false));
-  }, [id, showToast, tCommon]);
+  }, [id, showToast]);
 
   // Auto-save note when debounced value changes
   useEffect(() => {
@@ -78,9 +75,9 @@ export default function TripDetailPage({ params }: Props) {
       .then(() => {
         setTrip((prev) => (prev ? { ...prev, note: debouncedNote } : prev));
       })
-      .catch(() => showToast('error', tCommon('error')))
+      .catch(() => showToast('error', 'Une erreur est survenue'))
       .finally(() => setNoteSaving(false));
-  }, [debouncedNote, id, showToast, tCommon]);
+  }, [debouncedNote, id, showToast]);
 
   async function handleArchiveToggle() {
     if (!trip) return;
@@ -90,7 +87,7 @@ export default function TripDetailPage({ params }: Props) {
       await apiClient.patch(`/trips/${id}`, { isArchived: newValue });
       setTrip((prev) => (prev ? { ...prev, isArchived: newValue } : prev));
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsArchiving(false);
     }
@@ -102,7 +99,7 @@ export default function TripDetailPage({ params }: Props) {
       await apiClient.delete(`/trips/${id}`);
       router.push('/app/trips');
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
       setIsDeleting(false);
     }
   }
@@ -138,10 +135,12 @@ export default function TripDetailPage({ params }: Props) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
         <p className="font-mono text-xs tracking-widest uppercase">{"// 404"}</p>
-        <p className="text-base font-semibold text-carbon-ink">{t('notFound')}</p>
-        <p className="text-sm text-center max-w-xs">{t('notFoundDesc')}</p>
+        <p className="text-base font-semibold text-carbon-ink">Trajet introuvable</p>
+        <p className="text-sm text-center max-w-xs">
+          Ce trajet n&apos;existe pas ou vous n&apos;y avez pas accès.
+        </p>
         <CTAButton variant="ghost" size="sm" onClick={() => router.push('/app/trips')}>
-          {tCommon('back')}
+          Retour
         </CTAButton>
       </div>
     );
@@ -164,10 +163,10 @@ export default function TripDetailPage({ params }: Props) {
           className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
         >
           <ChevronLeft size={13} />
-          {tCommon('back')}
+          Retour
         </button>
         <Eyebrow className="mb-0.5">
-          {isElectric ? t('eyebrowElectric') : t('eyebrowFuel')}
+          {isElectric ? '// ÉLECTRIQUE' : '// COMBUSTION'}
         </Eyebrow>
         <div className="flex items-center gap-2 mt-1">
           <h1 className="text-base font-semibold text-carbon-ink truncate max-w-xs">
@@ -177,7 +176,7 @@ export default function TripDetailPage({ params }: Props) {
           </h1>
           {trip.isArchived && (
             <span className="text-[10px] text-carbon-muted border border-carbon-hairline rounded px-1.5 py-px shrink-0">
-              {t('archivedBadge')}
+              Archivé
             </span>
           )}
         </div>
@@ -194,7 +193,7 @@ export default function TripDetailPage({ params }: Props) {
       {/* ── Hero cost ─────────────────────────────────────────── */}
       <SectionCard padding="md">
         <p className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted mb-1">
-          {t('cost')}
+          Coût total
         </p>
         <p className="text-[56px] font-bold font-display text-carbon-ink leading-none tabular-nums">
           {trip.totalCost.toFixed(2)}
@@ -212,15 +211,15 @@ export default function TripDetailPage({ params }: Props) {
         <div className="grid grid-cols-3 divide-x divide-carbon-hairline">
           {[
             {
-              label: t('distance'),
+              label: 'Distance',
               value: `${trip.distanceKm.toFixed(1)} km`,
             },
             {
-              label: t('duration'),
+              label: 'Durée',
               value: trip.durationSeconds > 0 ? formatDuration(trip.durationSeconds) : '—',
             },
             {
-              label: t('energy'),
+              label: 'Énergie',
               value: `${trip.totalConsumption.toFixed(isElectric ? 1 : 2)} ${trip.energyUnit}`,
             },
           ].map(({ label, value }) => (
@@ -240,7 +239,7 @@ export default function TripDetailPage({ params }: Props) {
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
-            <Eyebrow>{t('vehicle')}</Eyebrow>
+            <Eyebrow>Véhicule</Eyebrow>
           </span>
         }
         padding="md"
@@ -253,7 +252,7 @@ export default function TripDetailPage({ params }: Props) {
             </span>
           </div>
           <div className="flex flex-col items-end gap-0.5">
-            <span className="text-xs text-carbon-muted">{t('perKm')}</span>
+            <span className="text-xs text-carbon-muted">€/km</span>
             <span className="text-sm font-mono font-bold text-carbon-ink tabular-nums">
               {trip.distanceKm > 0
                 ? (trip.totalCost / trip.distanceKm).toFixed(3)
@@ -278,7 +277,7 @@ export default function TripDetailPage({ params }: Props) {
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
-            <Eyebrow>{t('note')}</Eyebrow>
+            <Eyebrow>Note personnelle</Eyebrow>
             {noteSaving && (
               <span className="text-[10px] text-carbon-muted animate-pulse">…</span>
             )}
@@ -288,7 +287,7 @@ export default function TripDetailPage({ params }: Props) {
       >
         <textarea
           className="w-full mt-2 min-h-[80px] bg-transparent text-sm text-carbon-ink placeholder:text-carbon-muted outline-none resize-none leading-relaxed"
-          placeholder={t('notePlaceholder')}
+          placeholder="Ajouter une note..."
           value={noteValue}
           onChange={(e) => setNoteValue(e.target.value)}
         />
@@ -302,7 +301,7 @@ export default function TripDetailPage({ params }: Props) {
           icon={<RotateCcw size={13} />}
           onClick={handleRedo}
         >
-          {t('redo')}
+          Refaire
         </CTAButton>
         <CTAButton
           variant="ghost"
@@ -311,7 +310,7 @@ export default function TripDetailPage({ params }: Props) {
           onClick={handleArchiveToggle}
           loading={isArchiving}
         >
-          {trip.isArchived ? t('unarchive') : t('archive')}
+          {trip.isArchived ? 'Désarchiver' : 'Archiver'}
         </CTAButton>
         <CTAButton
           variant="danger"
@@ -319,7 +318,7 @@ export default function TripDetailPage({ params }: Props) {
           icon={<Trash2 size={13} />}
           onClick={() => setShowDeleteModal(true)}
         >
-          {tCommon('delete')}
+          Supprimer
         </CTAButton>
       </div>
 
@@ -329,19 +328,19 @@ export default function TripDetailPage({ params }: Props) {
       <Modal
         open={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title={tCommon('confirm_delete')}
+        title="Confirmer la suppression"
         footer={
           <>
             <CTAButton variant="ghost" onClick={() => setShowDeleteModal(false)}>
-              {tCommon('cancel')}
+              Annuler
             </CTAButton>
             <CTAButton variant="danger" onClick={handleDelete} loading={isDeleting}>
-              {tCommon('delete')}
+              Supprimer
             </CTAButton>
           </>
         }
       >
-        <p className="text-sm text-carbon-ink2">{t('deleteConfirm')}</p>
+        <p className="text-sm text-carbon-ink2">Supprimer ce trajet définitivement ?</p>
       </Modal>
     </div>
   );

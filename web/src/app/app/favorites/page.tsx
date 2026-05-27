@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Trash2, Navigation } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -14,8 +13,6 @@ import { apiClient } from '@/lib/api';
 import type { Favorite } from '@/types/api';
 
 export default function FavoritesPage() {
-  const t = useTranslations('favorites');
-  const tCommon = useTranslations('common');
   const { showToast } = useToast();
   const router = useRouter();
 
@@ -29,11 +26,11 @@ export default function FavoritesPage() {
       const { data } = await apiClient.get<Favorite[]>('/favorites');
       setFavorites(data);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsLoading(false);
     }
-  }, [showToast, tCommon]);
+  }, [showToast]);
 
   useEffect(() => {
     loadFavorites();
@@ -57,10 +54,10 @@ export default function FavoritesPage() {
     try {
       await apiClient.delete(`/favorites/${deleteTarget.id}`);
       setDeleteTarget(null);
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
       await loadFavorites();
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     }
   }
 
@@ -68,15 +65,17 @@ export default function FavoritesPage() {
     <div className="flex flex-col gap-6">
       {/* Header */}
       <div>
-        <Eyebrow className="mb-1">{t('title')}</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">{t('title')}</h1>
+        <Eyebrow className="mb-1">Mes favoris</Eyebrow>
+        <h1 className="text-2xl font-bold font-display text-carbon-ink">Mes favoris</h1>
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-carbon-muted">{tCommon('loading')}</p>
+        <p className="text-sm text-carbon-muted">Chargement…</p>
       ) : favorites.length === 0 ? (
         <SectionCard padding="lg">
-          <p className="text-center text-carbon-muted py-6 text-sm">{t('empty')}</p>
+          <p className="text-center text-carbon-muted py-6 text-sm">
+            Aucun favori enregistré. Calculez un trajet et sauvegardez-le !
+          </p>
         </SectionCard>
       ) : (
         <div className="flex flex-col gap-2">
@@ -106,12 +105,12 @@ export default function FavoritesPage() {
                     icon={<Navigation size={13} />}
                     onClick={() => handleUse(fav)}
                   >
-                    {t('use')}
+                    Utiliser
                   </CTAButton>
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(fav)}
-                    aria-label={tCommon('delete')}
+                    aria-label="Supprimer"
                     className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
                   >
                     <Trash2 size={14} />
@@ -128,14 +127,14 @@ export default function FavoritesPage() {
       <Modal
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
-        title={t('deleteConfirm')}
+        title="Supprimer ce favori ?"
         footer={
           <>
             <CTAButton variant="ghost" onClick={() => setDeleteTarget(null)}>
-              {tCommon('cancel')}
+              Annuler
             </CTAButton>
             <CTAButton variant="danger" onClick={handleDelete}>
-              {tCommon('delete')}
+              Supprimer
             </CTAButton>
           </>
         }

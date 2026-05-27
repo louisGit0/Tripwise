@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trash2, Star } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -23,9 +22,6 @@ type Props = {
 
 export default function VehicleDetailPage({ params }: Props) {
   const { id } = use(params);
-  const t = useTranslations('garage.detail');
-  const tGarage = useTranslations('garage');
-  const tCommon = useTranslations('common');
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -66,15 +62,15 @@ export default function VehicleDetailPage({ params }: Props) {
         setHomePrice(found.homeElectricityPrice?.toString() ?? '');
         setPublicPrice(found.publicChargingPrice?.toString() ?? '');
       })
-      .catch(() => showToast('error', tCommon('error')))
+      .catch(() => showToast('error', 'Une erreur est survenue'))
       .finally(() => setIsLoading(false));
-  }, [id, showToast, tCommon]);
+  }, [id, showToast]);
 
   async function handleSave() {
     if (!vehicle) return;
     const isElectric = vehicle.vehicleModel.fuelType === 'ELECTRIC';
     if (isElectric && (!homePrice || !publicPrice)) {
-      showToast('error', tGarage('electricPricesRequired'));
+      showToast('error', 'Les prix d\'électricité sont requis pour un véhicule électrique.');
       return;
     }
     setIsSaving(true);
@@ -89,13 +85,13 @@ export default function VehicleDetailPage({ params }: Props) {
             }
           : {}),
       });
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
       // Refresh vehicle data
       const { data } = await apiClient.get<UserVehicleWithStats[]>('/vehicles/me');
       const updated = data.find((v) => v.id === id) as UserVehicleWithStats | undefined;
       if (updated) setVehicle(updated);
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsSaving(false);
     }
@@ -107,9 +103,9 @@ export default function VehicleDetailPage({ params }: Props) {
     try {
       await apiClient.patch(`/vehicles/me/${id}/set-default`);
       setVehicle((prev) => (prev ? { ...prev, isDefault: true } : prev));
-      showToast('success', tCommon('success'));
+      showToast('success', 'Enregistré !');
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
     } finally {
       setIsSettingDefault(false);
     }
@@ -121,7 +117,7 @@ export default function VehicleDetailPage({ params }: Props) {
       await apiClient.delete(`/vehicles/me/${id}`);
       router.push('/app/garage');
     } catch {
-      showToast('error', tCommon('error'));
+      showToast('error', 'Une erreur est survenue');
       setIsDeleting(false);
     }
   }
@@ -142,10 +138,10 @@ export default function VehicleDetailPage({ params }: Props) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
         <p className="font-mono text-xs tracking-widest uppercase">{"// 404"}</p>
-        <p className="text-base font-semibold text-carbon-ink">{t('notFound')}</p>
-        <p className="text-sm text-center max-w-xs">{t('notFoundDesc')}</p>
+        <p className="text-base font-semibold text-carbon-ink">Véhicule introuvable</p>
+        <p className="text-sm text-center max-w-xs">Ce véhicule n&apos;existe pas ou a été supprimé.</p>
         <CTAButton variant="ghost" size="sm" onClick={() => router.push('/app/garage')}>
-          {tCommon('back')}
+          Retour
         </CTAButton>
       </div>
     );
@@ -165,14 +161,14 @@ export default function VehicleDetailPage({ params }: Props) {
           className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
         >
           <ChevronLeft size={13} />
-          {tCommon('back')}
+          Retour
         </button>
-        <Eyebrow className="mb-0.5">{t('eyebrow')}</Eyebrow>
+        <Eyebrow className="mb-0.5">Véhicule</Eyebrow>
         <div className="flex items-center gap-2 mt-1">
           <h1 className="text-2xl font-bold font-display text-carbon-ink">{displayName}</h1>
           {vehicle.isDefault && (
             <Pill color="accent" size="sm">
-              {tGarage('defaultBadge')}
+              Par défaut
             </Pill>
           )}
         </div>
@@ -202,12 +198,12 @@ export default function VehicleDetailPage({ params }: Props) {
             <Hairline className="my-3" />
             <div className="grid grid-cols-4 divide-x divide-carbon-hairline">
               {[
-                { value: vehicle.tripsCount, unit: tGarage('stats.trips') },
-                { value: `${fmtNum.format(vehicle.totalDistance)}`, unit: tGarage('stats.distance') },
-                { value: `${fmtEur.format(vehicle.totalSpent)}`, unit: tGarage('stats.spent') },
+                { value: vehicle.tripsCount, unit: 'trajets' },
+                { value: `${fmtNum.format(vehicle.totalDistance)}`, unit: 'km' },
+                { value: `${fmtEur.format(vehicle.totalSpent)}`, unit: 'dépensé' },
                 {
                   value: vehicle.costPerKm > 0 ? vehicle.costPerKm.toFixed(3) : '—',
-                  unit: tGarage('stats.perKm'),
+                  unit: '€/km',
                 },
               ].map(({ value, unit }, i) => (
                 <div key={i} className="flex flex-col items-center py-1 px-1 gap-0">
@@ -226,26 +222,26 @@ export default function VehicleDetailPage({ params }: Props) {
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
-            <Eyebrow>{t('settingsTitle')}</Eyebrow>
+            <Eyebrow>Paramètres</Eyebrow>
           </span>
         }
         padding="md"
       >
         <div className="flex flex-col gap-4 mt-2">
           <Input
-            label={t('nickname')}
-            placeholder={t('nicknamePlaceholder')}
+            label="Surnom"
+            placeholder="Ex. La petite"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
           <Input
-            label={t('plate')}
-            placeholder={t('platePlaceholder')}
+            label="Plaque d'immatriculation"
+            placeholder="AB-123-CD"
             value={licensePlate}
             onChange={(e) => setLicensePlate(e.target.value)}
           />
           <div className="flex items-center justify-between py-2 border-t border-carbon-hairline">
-            <span className="text-sm text-carbon-ink2">{t('consumption')}</span>
+            <span className="text-sm text-carbon-ink2">Consommation</span>
             <span className="text-sm font-mono font-semibold text-carbon-ink tabular-nums">
               {vehicle.vehicleModel.consumption} {isElectric ? 'kWh' : 'L'}/100km
             </span>
@@ -253,7 +249,7 @@ export default function VehicleDetailPage({ params }: Props) {
           {isElectric && (
             <>
               <Input
-                label={t('homePrice')}
+                label="Prix domicile (€/kWh)"
                 type="number"
                 step="0.0001"
                 placeholder="0.2272"
@@ -261,7 +257,7 @@ export default function VehicleDetailPage({ params }: Props) {
                 onChange={(e) => setHomePrice(e.target.value)}
               />
               <Input
-                label={t('publicPrice')}
+                label="Prix borne (€/kWh)"
                 type="number"
                 step="0.0001"
                 placeholder="0.4500"
@@ -271,7 +267,7 @@ export default function VehicleDetailPage({ params }: Props) {
             </>
           )}
           <CTAButton variant="accent" size="md" onClick={handleSave} loading={isSaving}>
-            {tCommon('save')}
+            Enregistrer
           </CTAButton>
         </div>
       </SectionCard>
@@ -280,9 +276,11 @@ export default function VehicleDetailPage({ params }: Props) {
       <SectionCard padding="md">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-carbon-ink">{t('defaultToggle')}</p>
+            <p className="text-sm font-medium text-carbon-ink">Véhicule par défaut</p>
             <p className="text-xs text-carbon-muted mt-0.5">
-              {vehicle.isDefault ? t('alreadyDefault') : t('setDefault')}
+              {vehicle.isDefault
+                ? 'Ce véhicule est votre véhicule par défaut.'
+                : 'Définir par défaut'}
             </p>
           </div>
           {vehicle.isDefault ? (
@@ -295,7 +293,7 @@ export default function VehicleDetailPage({ params }: Props) {
               onClick={handleSetDefault}
               loading={isSettingDefault}
             >
-              {t('setDefault')}
+              Définir par défaut
             </CTAButton>
           )}
         </div>
@@ -303,11 +301,13 @@ export default function VehicleDetailPage({ params }: Props) {
 
       {/* ── Danger zone ───────────────────────────────────────── */}
       <SectionCard padding="md" className="border-red-500/20">
-        <Eyebrow className="mb-2 text-red-400">{t('dangerZone')}</Eyebrow>
+        <Eyebrow className="mb-2 text-red-400">Zone de danger</Eyebrow>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-carbon-ink">{t('deleteTitle')}</p>
-            <p className="text-xs text-carbon-muted mt-0.5 max-w-xs">{t('deleteDesc')}</p>
+            <p className="text-sm font-medium text-carbon-ink">Supprimer ce véhicule</p>
+            <p className="text-xs text-carbon-muted mt-0.5 max-w-xs">
+              Cette action est irréversible. Tous les trajets associés seront conservés.
+            </p>
           </div>
           <CTAButton
             variant="danger"
@@ -315,7 +315,7 @@ export default function VehicleDetailPage({ params }: Props) {
             icon={<Trash2 size={13} />}
             onClick={() => setShowDeleteModal(true)}
           >
-            {tCommon('delete')}
+            Supprimer
           </CTAButton>
         </div>
       </SectionCard>
@@ -326,24 +326,26 @@ export default function VehicleDetailPage({ params }: Props) {
       <Modal
         open={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title={tCommon('confirm_delete')}
+        title="Confirmer la suppression"
         footer={
           <>
             <CTAButton variant="ghost" onClick={() => setShowDeleteModal(false)}>
-              {tCommon('cancel')}
+              Annuler
             </CTAButton>
             <CTAButton variant="danger" onClick={handleDelete} loading={isDeleting}>
-              {tCommon('delete')}
+              Supprimer
             </CTAButton>
           </>
         }
       >
         <p className="text-sm text-carbon-ink2">
-          {tGarage('deleteConfirm')}
+          Supprimer ce véhicule définitivement ?
           <br />
           <strong className="text-carbon-ink">{displayName}</strong>
         </p>
-        <p className="text-xs text-carbon-muted mt-2">{t('deleteDesc')}</p>
+        <p className="text-xs text-carbon-muted mt-2">
+          Cette action est irréversible. Tous les trajets associés seront conservés.
+        </p>
       </Modal>
     </div>
   );
