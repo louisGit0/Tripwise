@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60;
+const isProd = process.env.NODE_ENV === 'production';
 
 export async function POST(request: Request) {
   let token: unknown;
@@ -17,12 +18,13 @@ export async function POST(request: Request) {
   const response = NextResponse.json({ ok: true });
 
   // Non-httpOnly : l'intercepteur Axios côté client en a besoin pour construire
-  // le header Authorization. Restreindre le token aux domaines autorisés côté Mapbox.
+  // le header Authorization. En prod, secure:true + sameSite:'none' permettent
+  // au cookie de traverser le contexte cross-site (Vercel ↔ Render via Bearer).
   response.cookies.set('access_token', token, {
     path: '/',
     maxAge: SEVEN_DAYS,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
     httpOnly: false,
   });
 
