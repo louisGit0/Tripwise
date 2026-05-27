@@ -975,6 +975,45 @@ NODE_ENV=production  # Vercel le pose automatiquement
 
 ---
 
+### 2026-05-27 — Fix : Edge Runtime __dirname crash (middleware supprimé)
+
+#### Problème
+Production Vercel crashait avec `ReferenceError: __dirname is not defined` / `MIDDLEWARE_INVOCATION_FAILED` / `Middleware Status: 500` sur toutes les routes. Le fichier `web/middleware.ts` contenait `runtime: 'nodejs'` dans l'objet `config` (syntaxe invalide — `runtime` doit être un export de premier niveau, et le middleware ne peut de toute façon pas tourner en Node.js). Cette propriété invalide causait deux effets :
+1. Localement, Next.js ignorait complètement le middleware → `middleware-manifest.json` vide
+2. Sur Vercel, le build tentait quand même de compiler le middleware en bundle Edge → webpack injectait `__dirname` (via `n.ab = __dirname + "/"` dans le runtime module) → crash à l'exécution
+
+#### Décision : Option C (suppression du middleware, guard côté serveur)
+La solution la plus robuste : supprimer entièrement `web/middleware.ts` et implémenter la protection des routes au niveau du layout Next.js via `cookies()` de `next/headers` (runtime Node.js, aucun problème `__dirname`).
+
+#### Fichiers modifiés
+| Fichier | Modification |
+|---------|-------------|
+| `web/middleware.ts` | **Supprimé** — root cause du crash Edge Runtime |
+| `web/src/app/app/layout.tsx` | Converti en Server Component async + guard `cookies()` + `export const dynamic = 'force-dynamic'` |
+| `web/src/app/login/page.tsx` | Ajout `useEffect` → redirect `/app/dashboard` si cookie `access_token` présent |
+| `web/src/app/register/page.tsx` | Même ajout `useEffect` redirect |
+
+#### Comportement après fix
+| Scénario | Comportement |
+|----------|-------------|
+| `/app/*` sans token | Server Component → `redirect('/login')` instantané côté serveur |
+| `/app/*` avec token | Rendu normal de la page |
+| `/login` ou `/register` avec token | `useEffect` côté client → `router.replace('/app/dashboard')` |
+
+#### Conséquence build
+- Toutes les routes `/app/*` passent de `○ (Static)` à `ƒ (Dynamic)` (comportement attendu : `cookies()` force le rendu à la demande)
+- `middleware-manifest.json` reste vide → aucun Edge Runtime → aucun `__dirname`
+
+#### Vérifications
+| Vérification | Résultat |
+|-------------|----------|
+| `web tsc --noEmit` | ✅ 0 erreur |
+| `web npm run build` | ✅ 18/18 routes |
+| `middleware-manifest.json` vide | ✅ |
+| Aucun chunk Edge avec `__dirname` | ✅ |
+
+---
+
 ### 2026-05-27 — Fix : TypeORM DECIMAL → string (Postgres)
 
 #### Problème
