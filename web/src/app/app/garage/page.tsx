@@ -14,7 +14,7 @@ import { Hairline } from '@/components/ui/Hairline';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import { useDebounce } from '@/hooks/useDebounce';
-import type { UserVehicle, VehicleModel, UserVehicleWithStats } from '@/types/api';
+import type { UserVehicle, VehicleModel, UserVehicleWithStats, CatalogPage } from '@/types/api';
 
 // UserVehicle may or may not carry stats — support both shapes
 type GarageVehicle = UserVehicle | UserVehicleWithStats;
@@ -75,10 +75,10 @@ export default function GaragePage() {
       return;
     }
     apiClient
-      .get<{ data: VehicleModel[] }>('/vehicles/catalog', {
+      .get<CatalogPage>('/vehicles/catalog', {
         params: { search: debouncedSearch, limit: 10 },
       })
-      .then(({ data }) => setCatalogResults(data.data ?? []))
+      .then(({ data }) => setCatalogResults(data.items ?? []))
       .catch(() => setCatalogResults([]));
   }, [debouncedSearch, showAddModal]);
 
