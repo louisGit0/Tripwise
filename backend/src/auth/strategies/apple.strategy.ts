@@ -17,11 +17,13 @@ export class AppleStrategy extends PassportStrategy(Strategy, 'apple') {
     private readonly authService: AuthService,
   ) {
     super({
-      clientID: config.get<string>('APPLE_OAUTH_CLIENT_ID')!,
-      teamID: config.get<string>('APPLE_OAUTH_TEAM_ID')!,
-      keyID: config.get<string>('APPLE_OAUTH_KEY_ID')!,
-      privateKeyString: config.get<string>('APPLE_OAUTH_PRIVATE_KEY')!,
-      callbackURL: config.get<string>('APPLE_OAUTH_CALLBACK_URL')!,
+      clientID: config.get<string>('APPLE_CLIENT_ID')!,
+      teamID: config.get<string>('APPLE_TEAM_ID')!,
+      keyID: config.get<string>('APPLE_KEY_ID')!,
+      privateKeyString: config.get<string>('APPLE_PRIVATE_KEY')!,
+      callbackURL:
+        config.get<string>('APPLE_CALLBACK_URL') ??
+        'http://localhost:3000/api/v1/auth/apple/callback',
       passReqToCallback: false,
     });
   }
@@ -33,12 +35,13 @@ export class AppleStrategy extends PassportStrategy(Strategy, 'apple') {
     profile: AppleProfile,
     done: (err: Error | null, user?: unknown) => void,
   ) {
-    // Apple envoie l'email uniquement au premier login ; ensuite on reçoit juste sub.
-    const email = idToken.email ?? profile.email;
+    // Apple envoie l'email uniquement au premier login.
+    // Les connexions suivantes contiennent uniquement sub (identifiant stable).
+    const email = idToken.email ?? profile.email ?? null;
     const providerId = idToken.sub ?? profile.id;
 
-    if (!email || !providerId) {
-      return done(new Error('Données insuffisantes dans le token Apple'));
+    if (!providerId) {
+      return done(new Error('Identifiant Apple (sub) manquant dans le token'));
     }
 
     const displayName = profile.name

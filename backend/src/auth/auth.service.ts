@@ -12,7 +12,7 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 const BCRYPT_SALT_ROUNDS = 12;
 
 interface OAuthUserData {
-  email: string;
+  email: string | null;
   provider: 'google' | 'apple';
   providerId: string;
   displayName: string | null;
@@ -57,17 +57,30 @@ export class AuthService {
   // ── OAuth ──────────────────────────────────────────────────────────────────
 
   async findOrCreateOAuthUser(data: OAuthUserData): Promise<User> {
-    const existing = await this.usersService.findByEmail(data.email);
+    // 1. Recherche par provider + providerId (gère les reconnexions Apple sans email)
+    const existingByProvider = await this.usersService.findByProviderId(
+      data.provider as AuthProvider,
+      data.providerId,
+    );
+    if (existingByProvider) return existingByProvider;
 
-    if (existing) {
-      // Lier le compte OAuth si l'utilisateur existait en local
-      if (existing.provider === AuthProvider.LOCAL) {
-        return this.usersService.linkOAuthProvider(existing.id, {
-          provider: data.provider as AuthProvider,
-          providerId: data.providerId,
-        });
+    // 2. Recherche par email (premier login OAuth pour un compte déjà existant)
+    if (data.email) {
+      const existingByEmail = await this.usersService.findByEmail(data.email);
+      if (existingByEmail) {
+        if (existingByEmail.provider === AuthProvider.LOCAL) {
+          return this.usersService.linkOAuthProvider(existingByEmail.id, {
+            provider: data.provider as AuthProvider,
+            providerId: data.providerId,
+          });
+        }
+        return existingByEmail;
       }
-      return existing;
+    }
+
+    // 3. Création (email requis — Apple l'envoie toujours au premier login)
+    if (!data.email) {
+      throw new Error('Email requis pour créer un compte');
     }
 
     return this.usersService.create({

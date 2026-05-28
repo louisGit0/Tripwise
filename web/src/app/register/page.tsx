@@ -50,6 +50,15 @@ function GoogleIcon() {
   );
 }
 
+// Apple SVG icon
+function AppleIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M11.182 0c.06.764-.218 1.527-.67 2.087-.46.576-1.2.997-1.94.94-.08-.74.257-1.504.687-2.03C9.7.42 10.48.013 11.182 0zM13.98 11.47c-.34.97-.75 1.84-1.3 2.62-.55.79-1.12 1.57-2.02 1.58-.88.01-1.17-.52-2.18-.52-1.01 0-1.33.5-2.17.53-.87.03-1.53-.8-2.09-1.59C2.83 12.2 1.87 9.6 2.7 7.43c.4-1.06 1.33-1.73 2.28-1.75.9-.02 1.74.6 2.29.6.55 0 1.58-.74 2.66-.63.45.02 1.72.18 2.54 1.37-.07.04-1.52.88-1.5 2.63.02 2.08 1.83 2.77 1.85 2.78-.02.06-.29.98-.82 1.57z"/>
+    </svg>
+  );
+}
+
 export default function RegisterPage() {
   const router = useRouter();
   const { showToast } = useToast();
@@ -148,6 +157,14 @@ export default function RegisterPage() {
           >
             <GoogleIcon />
             Continuer avec Google
+          </a>
+
+          <a
+            href={`${API_URL}/auth/apple`}
+            className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors mt-2"
+          >
+            <AppleIcon />
+            Continuer avec Apple
           </a>
         </div>
 

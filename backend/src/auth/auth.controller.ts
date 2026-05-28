@@ -7,8 +7,10 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  Redirect,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -22,7 +24,15 @@ import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private readonly frontendUrl: string;
+
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {
+    this.frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') ?? 'http://localhost:3001';
+  }
 
   // ── Local ──────────────────────────────────────────────────────────────────
 
@@ -53,8 +63,10 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  googleCallback(@Req() req: { user: User }): AuthResponseDto {
-    return this.authService.buildAuthResponseForOAuth(req.user);
+  @Redirect('', 302)
+  googleCallback(@Req() req: { user: User }): { url: string } {
+    const { accessToken } = this.authService.buildAuthResponseForOAuth(req.user);
+    return { url: `${this.frontendUrl}/auth/callback/google?token=${accessToken}` };
   }
 
   // ── Apple Sign In ──────────────────────────────────────────────────────────
@@ -65,10 +77,12 @@ export class AuthController {
     // Redirection gérée par Passport
   }
 
-  @Get('apple/callback')
+  @Post('apple/callback')
   @UseGuards(AppleAuthGuard)
-  appleCallback(@Req() req: { user: User }): AuthResponseDto {
-    return this.authService.buildAuthResponseForOAuth(req.user);
+  @Redirect('', 302)
+  appleCallback(@Req() req: { user: User }): { url: string } {
+    const { accessToken } = this.authService.buildAuthResponseForOAuth(req.user);
+    return { url: `${this.frontendUrl}/auth/callback/apple?token=${accessToken}` };
   }
 
   // ── Profil ─────────────────────────────────────────────────────────────────
