@@ -104,7 +104,8 @@ export default function TripResultPage() {
         energyUnit,
         unitPrice,
         energyCost: cost.totalCost,
-        totalCost: cost.totalCost,
+        totalCost: cost.totalCost + (result.tollCost ?? 0),
+        tollsCost: result.tollCost ?? 0,
         passengersCount: passengers,
       });
 
@@ -131,7 +132,8 @@ export default function TripResultPage() {
 
   const { result, multiResult, mode } = session;
   const cost = result.cost;
-  const totalCost = cost?.totalCost ?? 0;
+  const tollCost = result.tollCost ?? 0;
+  const totalCost = (cost?.totalCost ?? 0) + tollCost;
   const isElectric = result.vehicle.fuelType === 'ELECTRIC';
   const canSave = mode === 'address' && !!session.origin && !!session.destination && !!cost;
 
@@ -184,7 +186,9 @@ export default function TripResultPage() {
             },
             {
               label: 'PÉAGES',
-              value: 'Non calculé',
+              value: result.tollCost !== null
+                ? fmtEur.format(result.tollCost)
+                : 'Non calculé',
             },
             {
               label: '€/KM',

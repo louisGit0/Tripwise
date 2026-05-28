@@ -7,6 +7,12 @@ export interface DefaultPricesResponse {
   evHome: number;
   evFast: number;
   fastShare: number;
+  sp95: number;
+  sp98: number;
+  e10: number;
+  e85: number;
+  gpl: number;
+  gazole: number;
   source: string;
   lastUpdate: string;
   disclaimer: string;

@@ -13,21 +13,13 @@ import { Sparkline } from '@/components/ui/Sparkline';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Select } from '@/components/ui/Select';
-import { AutocompleteInput } from '@/components/AutocompleteInput';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type {
   UserVehicle,
-  TripResult,
-  MultiCalcResult,
-  GeoPoint,
-  ChargingMode,
-  FuelCostResult,
-  ElectricCostResult,
   TripStats,
   SavedTrip,
   Favorite,
-  PendingTripSession,
   FuelType,
 } from '@/types/api';
 
@@ -42,7 +34,6 @@ interface UserPrices {
   fastShare: number;
 }
 const PRICES_KEY = 'tripwise.userPrices';
-const SESSION_KEY = 'tripwise.pendingTrip';
 const FALLBACK_PRICES: UserPrices = {
   gas: 1.75,
   diesel: 1.68,
@@ -76,8 +67,6 @@ function fuelPrice(fuelType: FuelType, p: UserPrices): number {
   }
 }
 
-type CalcMode = 'address' | 'distance';
-
 // ── Formatters ────────────────────────────────────────────────────
 const fmtEur = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
@@ -86,12 +75,6 @@ const fmtEur = new Intl.NumberFormat('fr-FR', {
 });
 const fmtNum = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const fmtDate = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: 'short' });
-
-const CHARGING_OPTIONS: { value: ChargingMode; label: string }[] = [
-  { value: 'home', label: 'Domicile' },
-  { value: 'public', label: 'Borne publique' },
-  { value: 'mix', label: 'Mix' },
-];
 
 // ── Inner component (needs useSearchParams) ───────────────────────
 function DashboardInner() {
@@ -107,45 +90,13 @@ function DashboardInner() {
   const [suggestions, setSuggestions] = useState<Favorite[]>([]);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  // ── Calculator mode ─────────────────────────────────────────────
-  const [calcMode, setCalcMode] = useState<CalcMode>('address');
-  const [distanceKm] = useState<number>(100);
-
-  // ── Address mode state ──────────────────────────────────────────
-  const [origin, setOrigin] = useState<GeoPoint | null>(null);
-  const [destination, setDestination] = useState<GeoPoint | null>(null);
-  const [originLabel, setOriginLabel] = useState('');
-  const [destinationLabel, setDestinationLabel] = useState('');
-
-  // ── Vehicle + EV ────────────────────────────────────────────────
+  // ── Vehicle selector ────────────────────────────────────────────
   const [selectedVehicleId, setSelectedVehicleId] = useState('');
-  const [chargingMode, setChargingMode] = useState<ChargingMode>('home');
-  const [chargingMixRatio, setChargingMixRatio] = useState(0.5);
-  const [isCalculating, setIsCalculating] = useState(false);
 
-  // ── Prefill from URL params ─────────────────────────────────────
-  useEffect(() => {
-    const oLat = searchParams.get('originLat');
-    const oLng = searchParams.get('originLng');
-    const oLabel = searchParams.get('originLabel');
-    if (oLat && oLng) {
-      const pt = { lat: parseFloat(oLat), lng: parseFloat(oLng), label: oLabel ?? undefined };
-      setOrigin(pt);
-      setOriginLabel(oLabel ?? '');
-    }
-    const dLat = searchParams.get('destinationLat');
-    const dLng = searchParams.get('destinationLng');
-    const dLabel = searchParams.get('destinationLabel');
-    if (dLat && dLng) {
-      const pt = {
-        lat: parseFloat(dLat),
-        lng: parseFloat(dLng),
-        label: dLabel ?? undefined,
-      };
-      setDestination(pt);
-      setDestinationLabel(dLabel ?? '');
-    }
-  }, [searchParams]);
+  // ── Quick calculator ─────────────────────────────────────────────
+  const [quickCalcTab, setQuickCalcTab] = useState<'distance' | 'budget'>('distance');
+  const [quickInput, setQuickInput] = useState('');
+  const [quickResult, setQuickResult] = useState<string | null>(null);
 
   // ── Load data on mount ──────────────────────────────────────────
   const loadData = useCallback(() => {
@@ -174,7 +125,6 @@ function DashboardInner() {
       if (statsRes.status === 'fulfilled') setStats(statsRes.value.data);
       if (tripsRes.status === 'fulfilled') {
         const raw = tripsRes.value.data;
-        // history returns TripHistoryPage with items array
         const items = (raw as unknown as { items?: SavedTrip[] }).items ?? (raw as unknown as SavedTrip[]);
         setRecentTrips(Array.isArray(items) ? items.slice(0, 8) : []);
       }
@@ -190,145 +140,58 @@ function DashboardInner() {
   }, [loadData]);
 
   const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId);
-  const isElectric = selectedVehicle?.vehicleModel.fuelType === 'ELECTRIC';
   const sparkData = stats?.dailyExpenses?.map((d) => d.cost) ?? [];
 
-  // ── Apply suggestion ─────────────────────────────────────────────
+  // ── Apply suggestion (simplified) ───────────────────────────────
   function applySuggestion(fav: Favorite) {
-    setCalcMode('address');
-    setOriginLabel(fav.originLabel);
-    setDestinationLabel(fav.destinationLabel);
-    setOrigin({ lat: fav.originLat, lng: fav.originLng, label: fav.originLabel });
-    setDestination({
-      lat: fav.destinationLat,
-      lng: fav.destinationLng,
-      label: fav.destinationLabel,
-    });
     if (fav.vehicleId && vehicles.some((v) => v.id === fav.vehicleId)) {
       setSelectedVehicleId(fav.vehicleId);
     }
+    showToast('info', `${fav.name} sélectionné`);
   }
 
-  // ── Calculate (address mode) ────────────────────────────────────
-  async function handleCalculateAddress() {
-    if (!origin || !destination) {
-      showToast('info', 'Veuillez renseigner le départ et l\'arrivée');
-      return;
-    }
-    if (!selectedVehicleId) {
-      showToast('info', 'Sélectionnez d\'abord un véhicule');
-      return;
-    }
-    setIsCalculating(true);
-    try {
-      const [calcRes, multiRes] = await Promise.allSettled([
-        apiClient.post<TripResult>('/trips/calculate', {
-          origin,
-          destination,
-          userVehicleId: selectedVehicleId,
-          ...(isElectric ? { chargingMode, chargingMixRatio } : {}),
-        }),
-        apiClient.post<MultiCalcResult>('/trips/calculate-multi', {
-          origin,
-          destination,
-          userVehicleId: selectedVehicleId,
-          ...(isElectric ? { chargingMode } : {}),
-        }),
-      ]);
-
-      if (calcRes.status === 'rejected') throw new Error('Calculate failed');
-
-      const result = calcRes.value.data;
-      const multiResult = multiRes.status === 'fulfilled' ? multiRes.value.data : null;
-
-      const session: PendingTripSession = {
-        origin,
-        destination,
-        result,
-        multiResult,
-        selectedVehicleId,
-        mode: 'address',
-      };
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      router.push('/app/trips/result');
-    } catch {
-      showToast('error', 'Une erreur est survenue');
-    } finally {
-      setIsCalculating(false);
-    }
-  }
-
-  // ── Calculate (distance mode) ───────────────────────────────────
-  function handleCalculateDistance() {
-    if (!distanceKm || distanceKm <= 0) {
-      showToast('info', 'Veuillez renseigner le départ et l\'arrivée');
-      return;
-    }
+  // ── Quick calculator ─────────────────────────────────────────────
+  function handleQuickCalc() {
     if (!selectedVehicleId || !selectedVehicle) {
-      showToast('info', 'Sélectionnez d\'abord un véhicule');
+      showToast('info', 'Sélectionnez un véhicule');
+      return;
+    }
+    const inputNum = parseFloat(quickInput);
+    if (isNaN(inputNum) || inputNum <= 0) {
+      showToast('info', 'Valeur invalide');
       return;
     }
 
     const prices = readUserPrices();
     const { consumption, fuelType } = selectedVehicle.vehicleModel;
-    const totalEnergy = (distanceKm / 100) * consumption;
+    const isElectricVehicle = fuelType === 'ELECTRIC';
 
-    let cost: FuelCostResult | ElectricCostResult;
-    if (isElectric) {
-      const pricePerKwh =
-        prices.evHome * (1 - prices.fastShare) + prices.evFast * prices.fastShare;
-      cost = {
-        type: 'electric',
-        consumptionKwh: totalEnergy,
-        pricePerKwh,
-        chargingMode: 'mix',
-        totalCost: totalEnergy * pricePerKwh,
-      } satisfies ElectricCostResult;
+    if (quickCalcTab === 'distance') {
+      // km → cost
+      const totalEnergy = (inputNum / 100) * consumption;
+      let cost: number;
+      if (isElectricVehicle) {
+        const pricePerKwh =
+          prices.evHome * (1 - prices.fastShare) + prices.evFast * prices.fastShare;
+        cost = totalEnergy * pricePerKwh;
+      } else {
+        const pricePerLitre = fuelPrice(fuelType, prices);
+        cost = totalEnergy * pricePerLitre;
+      }
+      setQuickResult(`${cost.toFixed(2)} €`);
     } else {
-      const pricePerLitre = fuelPrice(fuelType, prices);
-      cost = {
-        type: 'fuel',
-        fuelType,
-        consumptionLitres: totalEnergy,
-        pricePerLitre,
-        totalCost: totalEnergy * pricePerLitre,
-      } satisfies FuelCostResult;
-    }
-
-    const syntheticResult: TripResult = {
-      distance: { meters: distanceKm * 1000, km: distanceKm },
-      duration: { seconds: 0, formatted: '' },
-      geometry: { type: 'LineString', coordinates: [] },
-      waypoints: [],
-      vehicle: {
-        id: selectedVehicle.id,
-        nickname: selectedVehicle.nickname,
-        brand: selectedVehicle.vehicleModel.brand,
-        model: selectedVehicle.vehicleModel.model,
-        fuelType,
-        consumption,
-      },
-      cost,
-    };
-
-    const session: PendingTripSession = {
-      origin: null,
-      destination: null,
-      distanceKm,
-      result: syntheticResult,
-      multiResult: null,
-      selectedVehicleId,
-      mode: 'distance',
-    };
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    router.push('/app/trips/result');
-  }
-
-  function handleCalculate() {
-    if (calcMode === 'address') {
-      void handleCalculateAddress();
-    } else {
-      handleCalculateDistance();
+      // budget € → km
+      let pricePerUnit: number;
+      if (isElectricVehicle) {
+        pricePerUnit = prices.evHome * (1 - prices.fastShare) + prices.evFast * prices.fastShare;
+      } else {
+        pricePerUnit = fuelPrice(fuelType, prices);
+      }
+      const km =
+        pricePerUnit > 0
+          ? (inputNum / ((pricePerUnit * consumption) / 100))
+          : 0;
+      setQuickResult(`${Math.round(km)} km`);
     }
   }
 
@@ -438,28 +301,71 @@ function DashboardInner() {
         </SectionCard>
       )}
 
-      {/* ── Trip calculator ──────────────────────────────────────── */}
-      <SectionCard title={<Eyebrow>Calcul</Eyebrow>} padding="md">
+      {/* ── Quick calculator ─────────────────────────────────────── */}
+      <SectionCard title={<Eyebrow>Calcul rapide</Eyebrow>} padding="md">
         <div className="flex flex-col gap-4 pt-3">
-          {/* Address inputs */}
-          <AutocompleteInput
-            label="Départ"
-            placeholder="Adresse de départ..."
-            onSelect={(pt) => {
-              setOrigin(pt);
-              setOriginLabel(pt.label ?? '');
-            }}
-            defaultValue={originLabel}
-          />
-          <AutocompleteInput
-            label="Arrivée"
-            placeholder="Adresse d'arrivée..."
-            onSelect={(pt) => {
-              setDestination(pt);
-              setDestinationLabel(pt.label ?? '');
-            }}
-            defaultValue={destinationLabel}
-          />
+          {/* Tabs */}
+          <div className="flex gap-1 p-1 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
+            {(['distance', 'budget'] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  setQuickCalcTab(tab);
+                  setQuickResult(null);
+                  setQuickInput('');
+                }}
+                className={[
+                  'flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all',
+                  quickCalcTab === tab
+                    ? 'bg-carbon-surface text-carbon-ink shadow-sm border border-carbon-hairline'
+                    : 'text-carbon-muted hover:text-carbon-ink',
+                ].join(' ')}
+              >
+                {tab === 'distance' ? 'Distance → Coût' : 'Budget → Distance'}
+              </button>
+            ))}
+          </div>
+
+          {/* Input */}
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              min={0}
+              step={quickCalcTab === 'distance' ? 10 : 0.01}
+              value={quickInput}
+              onChange={(e) => {
+                setQuickInput(e.target.value);
+                setQuickResult(null);
+              }}
+              placeholder={
+                quickCalcTab === 'distance' ? 'Distance en km...' : 'Budget en €...'
+              }
+              className="flex-1 h-10 px-3 rounded-xl border border-carbon-hairline bg-carbon-surface2 text-sm text-carbon-ink outline-none focus:border-carbon-accent font-mono"
+            />
+            <span className="text-xs font-mono text-carbon-muted shrink-0">
+              {quickCalcTab === 'distance' ? 'km' : '€'}
+            </span>
+          </div>
+
+          {/* Quick chips for distance mode */}
+          {quickCalcTab === 'distance' && (
+            <div className="flex gap-2 flex-wrap">
+              {[50, 100, 200, 500].map((km) => (
+                <button
+                  key={km}
+                  type="button"
+                  onClick={() => {
+                    setQuickInput(String(km));
+                    setQuickResult(null);
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors font-mono"
+                >
+                  {km} km
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Vehicle selector */}
           {vehiclesLoading ? (
@@ -476,31 +382,15 @@ function DashboardInner() {
             />
           )}
 
-          {/* EV charging options */}
-          {isElectric && (
-            <div className="flex flex-col gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
-              <Select
-                label="Mode de charge"
-                options={CHARGING_OPTIONS}
-                value={chargingMode}
-                onChange={(e) => setChargingMode(e.target.value as ChargingMode)}
-              />
-              {chargingMode === 'mix' && (
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-medium text-carbon-ink2">
-                    Part domicile : {Math.round(chargingMixRatio * 100)}%
-                  </label>
-                  <input
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    value={chargingMixRatio}
-                    onChange={(e) => setChargingMixRatio(parseFloat(e.target.value))}
-                    className="w-full accent-carbon-accent"
-                  />
-                </div>
-              )}
+          {/* Result */}
+          {quickResult && (
+            <div className="flex items-center justify-between p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+              <span className="text-xs font-semibold text-carbon-muted uppercase tracking-wider">
+                {quickCalcTab === 'distance' ? 'Coût estimé' : 'Distance estimée'}
+              </span>
+              <span className="text-2xl font-bold font-mono text-carbon-ink tabular-nums">
+                {quickResult}
+              </span>
             </div>
           )}
 
@@ -509,11 +399,10 @@ function DashboardInner() {
             variant="accent"
             size="lg"
             className="w-full"
-            onClick={handleCalculate}
-            loading={isCalculating}
-            disabled={vehiclesLoading || vehicles.length === 0}
+            onClick={handleQuickCalc}
+            disabled={vehiclesLoading || vehicles.length === 0 || !quickInput}
           >
-            {isCalculating ? 'Calcul en cours...' : 'Calculer'}
+            Calculer
           </CTAButton>
         </div>
       </SectionCard>
@@ -549,7 +438,7 @@ function DashboardInner() {
                   </p>
                 </div>
                 <span className="text-[11px] text-carbon-accent font-medium shrink-0">
-                  Utiliser
+                  Sélectionner
                 </span>
               </button>
             ))}
