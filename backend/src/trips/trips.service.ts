@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MapboxService, GeocodeFeature, DirectionsResult } from '../mapbox/mapbox.service';
@@ -70,6 +71,7 @@ export interface TripResult {
     consumption: number;
   };
   cost?: TripCost;
+  tollCost: number | null;
 }
 
 // ── Multi-energy comparison type ────────────────────────────────────────────
@@ -163,6 +165,7 @@ export class TripsService {
     private readonly vehicles: VehiclesService,
     private readonly fuelPrices: FuelPricesService,
     private readonly chargingStations: ChargingStationsService,
+    private readonly config: ConfigService,
   ) {}
 
   // ── Existing endpoints ─────────────────────────────────────────────────────
@@ -184,6 +187,13 @@ export class TripsService {
     const distanceKm = Math.round((directions.distanceMeters / 1000) * 10) / 10;
     const fuelType = uv.vehicleModel.fuelType as FuelType;
 
+    const [cost, tollCost] = await Promise.all([
+      fuelType === FuelType.ELECTRIC
+        ? this.computeElectricCost(dto, distanceKm, uv, directions)
+        : this.computeFuelCost(dto, distanceKm, fuelType, uv.vehicleModel.consumption),
+      this.computeTollCost(dto.origin, dto.destination),
+    ]);
+
     const result: TripResult = {
       distance: { meters: directions.distanceMeters, km: distanceKm },
       duration: {
@@ -200,13 +210,9 @@ export class TripsService {
         fuelType: uv.vehicleModel.fuelType,
         consumption: Number(uv.vehicleModel.consumption),
       },
+      cost,
+      tollCost,
     };
-
-    if (fuelType === FuelType.ELECTRIC) {
-      result.cost = await this.computeElectricCost(dto, distanceKm, uv, directions);
-    } else {
-      result.cost = await this.computeFuelCost(dto, distanceKm, fuelType, uv.vehicleModel.consumption);
-    }
 
     return result;
   }
@@ -616,6 +622,49 @@ export class TripsService {
       nearbyStations: allStations.slice(0, 20),
       disclaimer: ELECTRIC_DISCLAIMER,
     };
+  }
+
+  /**
+   * Calcule le coût des péages via l'API TollGuru.
+   * Retourne null si TOLLGURU_API_KEY n'est pas configuré ou si l'appel échoue.
+   */
+  private async computeTollCost(
+    origin: { lat: number; lng: number },
+    destination: { lat: number; lng: number },
+  ): Promise<number | null> {
+    const apiKey = this.config.get<string>('TOLLGURU_API_KEY');
+    if (!apiKey) return null;
+
+    try {
+      const response = await fetch(
+        'https://apis.tollguru.com/toll/v2/origin-destination-waypoints',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+          },
+          body: JSON.stringify({
+            vehicle: { type: '2AxlesAuto' },
+            origin: { lat: origin.lat, lng: origin.lng },
+            destination: { lat: destination.lat, lng: destination.lng },
+            currency: 'EUR',
+          }),
+          signal: AbortSignal.timeout(8000),
+        },
+      );
+
+      if (!response.ok) return null;
+
+      const data = await response.json() as {
+        summary?: { costs?: { cash?: number; tag?: number } };
+      };
+
+      const cost = data.summary?.costs?.cash ?? data.summary?.costs?.tag ?? null;
+      return cost !== null ? round2(cost) : null;
+    } catch {
+      return null;
+    }
   }
 
   private formatDuration(seconds: number): string {

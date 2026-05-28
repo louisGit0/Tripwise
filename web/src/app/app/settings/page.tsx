@@ -9,6 +9,8 @@ import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { logout } from '@/lib/auth';
+import { apiClient } from '@/lib/api';
+import type { UserProfile } from '@/types/api';
 
 type Theme = 'light' | 'dark';
 
@@ -21,9 +23,11 @@ export default function SettingsPage() {
   // Rendering theme-conditional UI during SSR causes a mismatch.
   // Return a neutral skeleton until the component is mounted.
   const [mounted, setMounted] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    apiClient.get<UserProfile>('/auth/me').then(({ data }) => setUserProfile(data)).catch(() => null);
   }, []);
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
@@ -85,6 +89,14 @@ export default function SettingsPage() {
       {/* ── Account ────────────────────────────────────────────── */}
       <SectionCard title="Compte" padding="md">
         <Hairline className="my-3" />
+        {userProfile && (
+          <div className="mb-4 space-y-1">
+            {userProfile.displayName && (
+              <p className="text-sm font-semibold text-carbon-ink">{userProfile.displayName}</p>
+            )}
+            <p className="text-xs text-carbon-muted">{userProfile.email}</p>
+          </div>
+        )}
         <CTAButton
           variant="danger"
           size="md"

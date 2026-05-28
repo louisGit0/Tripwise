@@ -117,6 +117,7 @@ export interface TripResult {
     consumption: number;
   };
   cost?: FuelCostResult | ElectricCostResult;
+  tollCost: number | null;
 }
 
 export interface GeocodeFeature {
@@ -208,6 +209,16 @@ export interface DefaultPrices {
   diesel: number;
   evHome: number;
   evFast: number;
+  fastShare: number;
+  sp95: number;
+  sp98: number;
+  e10: number;
+  e85: number;
+  gpl: number;
+  gazole: number;
+  source: string;
+  lastUpdate: string;
+  disclaimer: string;
 }
 
 /** Stored in sessionStorage under 'tripwise.pendingTrip' after a calculation */

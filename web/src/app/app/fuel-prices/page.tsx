@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RotateCcw, Zap, Fuel } from 'lucide-react';
+import { Save, Zap, Fuel, RefreshCw } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -23,12 +23,12 @@ interface UserPrices {
 }
 
 const FALLBACK_DEFAULTS: UserPrices = {
-  gas: 1.75,
-  diesel: 1.68,
+  gas: 1.85,
+  diesel: 1.65,
   e85: 0.88,
   gpl: 0.92,
-  evHome: 0.2272,
-  evFast: 0.45,
+  evHome: 0.21,
+  evFast: 0.49,
   fastShare: 0.3,
 };
 
@@ -42,9 +42,9 @@ function readStorage(): UserPrices | null {
   }
 }
 
-function writeStorage(prices: UserPrices) {
+function writeStorage(p: UserPrices) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(prices));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
 }
 
 // ── Price row ─────────────────────────────────────────────────
@@ -57,54 +57,39 @@ interface PriceRowProps {
   step?: number;
   min?: number;
   max?: number;
-  isSlider?: boolean;
-  sliderMax?: number;
 }
 
-function PriceRow({ label, value, onChange, unit, step = 0.001, min = 0, max = 5, isSlider, sliderMax = 1 }: PriceRowProps) {
-  const [inputVal, setInputVal] = useState(value.toString());
+function PriceRow({ label, value, onChange, unit, step = 0.001, min = 0, max = 5 }: PriceRowProps) {
+  const [inputVal, setInputVal] = useState(value.toFixed(4));
 
   useEffect(() => {
-    setInputVal(value.toFixed(isSlider ? 0 : 4));
-  }, [value, isSlider]);
+    setInputVal(value.toFixed(4));
+  }, [value]);
 
   function handleBlur() {
     const parsed = parseFloat(inputVal);
     if (!isNaN(parsed) && parsed >= min && parsed <= max) {
       onChange(parsed);
     } else {
-      setInputVal(value.toFixed(isSlider ? 0 : 4));
+      setInputVal(value.toFixed(4));
     }
   }
 
   return (
     <div className="flex items-center gap-3 py-3">
       <span className="flex-1 text-sm text-carbon-ink2 min-w-0">{label}</span>
-      <div className="flex items-center gap-2 shrink-0">
-        {isSlider && (
-          <input
-            type="range"
-            min={0}
-            max={sliderMax}
-            step={0.05}
-            value={value}
-            onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-24 accent-carbon-accent"
-          />
-        )}
-        <div className="flex items-center gap-1 border border-carbon-hairline rounded-lg bg-carbon-surface2 overflow-hidden">
-          <input
-            type="number"
-            step={step}
-            min={min}
-            max={max}
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            onBlur={handleBlur}
-            className="w-[84px] h-8 px-2 text-sm font-mono text-carbon-ink text-right bg-transparent outline-none border-none"
-          />
-          <span className="pr-2 text-xs font-mono text-carbon-muted shrink-0">{unit}</span>
-        </div>
+      <div className="flex items-center gap-1 border border-carbon-hairline rounded-lg bg-carbon-surface2 overflow-hidden shrink-0">
+        <input
+          type="number"
+          step={step}
+          min={min}
+          max={max}
+          value={inputVal}
+          onChange={(e) => setInputVal(e.target.value)}
+          onBlur={handleBlur}
+          className="w-[84px] h-8 px-2 text-sm font-mono text-carbon-ink text-right bg-transparent outline-none border-none"
+        />
+        <span className="pr-2 text-xs font-mono text-carbon-muted shrink-0">{unit}</span>
       </div>
     </div>
   );
@@ -120,7 +105,6 @@ export default function FuelPricesPage() {
   const [prices, setPrices] = useState<UserPrices>(FALLBACK_DEFAULTS);
   const [mounted, setMounted] = useState(false);
 
-  // Load defaults from API
   useEffect(() => {
     setLoadingDefaults(true);
     apiClient
@@ -130,46 +114,39 @@ export default function FuelPricesPage() {
       .finally(() => setLoadingDefaults(false));
   }, []);
 
-  // Load user prices from localStorage
   useEffect(() => {
     const stored = readStorage();
-    if (stored) setPrices(stored);
-    else if (defaults) {
+    if (stored) {
+      setPrices(stored);
+    } else if (defaults) {
       setPrices({
         gas: defaults.gas,
         diesel: defaults.diesel,
-        e85: FALLBACK_DEFAULTS.e85,
-        gpl: FALLBACK_DEFAULTS.gpl,
+        e85: defaults.e85 ?? FALLBACK_DEFAULTS.e85,
+        gpl: defaults.gpl ?? FALLBACK_DEFAULTS.gpl,
         evHome: defaults.evHome,
         evFast: defaults.evFast,
-        fastShare: FALLBACK_DEFAULTS.fastShare,
+        fastShare: defaults.fastShare ?? FALLBACK_DEFAULTS.fastShare,
       });
     }
     setMounted(true);
   }, [defaults]);
 
   function updatePrice(key: keyof UserPrices, value: number) {
-    const updated = { ...prices, [key]: value };
-    setPrices(updated);
-    writeStorage(updated);
-    showToast('success', 'Prix mis à jour');
+    setPrices((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleReset() {
-    const base = defaults
-      ? {
-          gas: defaults.gas,
-          diesel: defaults.diesel,
-          e85: FALLBACK_DEFAULTS.e85,
-          gpl: FALLBACK_DEFAULTS.gpl,
-          evHome: defaults.evHome,
-          evFast: defaults.evFast,
-          fastShare: FALLBACK_DEFAULTS.fastShare,
-        }
-      : FALLBACK_DEFAULTS;
-    setPrices(base);
-    writeStorage(base);
-    showToast('success', 'Prix mis à jour');
+  function handleSave() {
+    writeStorage(prices);
+    showToast('success', 'Prix personnalisés enregistrés');
+  }
+
+  function formatSyncTime(iso: string) {
+    try {
+      return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '—';
+    }
   }
 
   if (!mounted) {
@@ -185,91 +162,94 @@ export default function FuelPricesPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <Eyebrow className="mb-0.5">Carburant · Prix</Eyebrow>
-          <h1 className="text-2xl font-bold font-display text-carbon-ink">Carburant / Prix</h1>
-          <p className="text-sm text-carbon-muted mt-1 max-w-sm">
-            Personnalisez les prix utilisés pour vos calculs en mode distance.
-          </p>
-        </div>
-        <CTAButton
-          variant="ghost"
-          size="sm"
-          icon={<RotateCcw size={13} />}
-          onClick={handleReset}
-        >
-          Réinitialiser
-        </CTAButton>
+      <div>
+        <Eyebrow className="mb-0.5">Carburant · Prix</Eyebrow>
+        <h1 className="text-2xl font-bold font-display text-carbon-ink">Carburant / Prix</h1>
+        <p className="text-sm text-carbon-muted mt-1 max-w-sm">
+          Consultez les prix en temps réel et personnalisez les valeurs utilisées pour le calcul en mode Distance.
+        </p>
       </div>
 
-      {/* ── API reference prices ───────────────────────────────── */}
-      {!loadingDefaults && defaults && (
-        <SectionCard
-          title={
-            <span className="flex items-center gap-1.5">
-              <Eyebrow>Prix de référence</Eyebrow>
-            </span>
-          }
-          padding="md"
-        >
-          <p className="text-xs text-carbon-muted mb-3">Chargés depuis l&apos;API nationale.</p>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: 'Essence (€/L)', value: defaults.gas, unit: '€/L' },
-              { label: 'Diesel (€/L)', value: defaults.diesel, unit: '€/L' },
-              { label: 'Domicile (€/kWh)', value: defaults.evHome, unit: '€/kWh' },
-              { label: 'Borne rapide (€/kWh)', value: defaults.evFast, unit: '€/kWh' },
-            ].map(({ label, value, unit }) => (
-              <div
-                key={label}
-                className="flex items-center justify-between p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
-              >
-                <span className="text-xs text-carbon-muted truncate mr-2">{label}</span>
-                <span className="font-mono text-sm text-carbon-ink font-semibold tabular-nums shrink-0">
-                  {value.toFixed(4)} <span className="text-carbon-muted font-normal">{unit}</span>
+      {/* ── Section 1 : Prix en temps réel (read-only) ────────── */}
+      <SectionCard
+        title={
+          <span className="flex items-center gap-1.5">
+            <RefreshCw size={13} className="text-carbon-accent" />
+            <Eyebrow>Prix en temps réel</Eyebrow>
+          </span>
+        }
+        padding="md"
+      >
+        {loadingDefaults ? (
+          <p className="text-sm text-carbon-muted font-mono">Chargement...</p>
+        ) : defaults ? (
+          <>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs text-carbon-muted">
+                Source : données nationales France 2026
+              </p>
+              {defaults.lastUpdate && (
+                <span className="text-[10px] font-mono text-carbon-muted bg-carbon-surface2 px-2 py-0.5 rounded-full border border-carbon-hairline">
+                  Sync {formatSyncTime(defaults.lastUpdate)}
                 </span>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-      )}
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: 'SP95', value: defaults.sp95, unit: '€/L' },
+                { label: 'SP98', value: defaults.sp98, unit: '€/L' },
+                { label: 'SP95-E10', value: defaults.e10, unit: '€/L' },
+                { label: 'Gazole', value: defaults.gazole, unit: '€/L' },
+                { label: 'Recharge dom.', value: defaults.evHome, unit: '€/kWh' },
+                { label: 'Borne rapide', value: defaults.evFast, unit: '€/kWh' },
+              ].map(({ label, value, unit }) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
+                >
+                  <span className="text-xs text-carbon-muted truncate mr-2">{label}</span>
+                  <span className="font-mono text-sm text-carbon-ink font-semibold tabular-nums shrink-0">
+                    {value?.toFixed(4)} <span className="text-carbon-muted font-normal text-[10px]">{unit}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="text-sm text-carbon-muted">Impossible de charger les prix de référence.</p>
+        )}
+      </SectionCard>
 
-      {loadingDefaults && (
-        <div className="text-sm text-carbon-muted font-mono">Chargement des prix...</div>
-      )}
-
-      {/* ── Fuel prices ───────────────────────────────────────── */}
+      {/* ── Section 2 : Prix personnalisés ────────────────────── */}
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
             <Fuel size={13} className="text-carbon-accent" />
-            <Eyebrow>Carburants</Eyebrow>
+            <Eyebrow>Prix personnalisés</Eyebrow>
           </span>
         }
         padding="md"
       >
         <p className="text-xs text-carbon-muted mb-1">
-          Ces valeurs remplacent les prix par défaut pour le calcul en mode Distance.
+          Ces valeurs sont utilisées pour le calcul en mode Distance.
         </p>
+        <Hairline className="my-2" />
+
+        {/* Carburants */}
+        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-1">Carburants</p>
         <div className="flex flex-col divide-y divide-carbon-hairline">
-          <PriceRow label="Essence (€/L)" value={prices.gas} onChange={(v) => updatePrice('gas', v)} unit="€/L" step={0.001} max={5} />
-          <PriceRow label="Diesel (€/L)" value={prices.diesel} onChange={(v) => updatePrice('diesel', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="SP95 / Essence (€/L)" value={prices.gas} onChange={(v) => updatePrice('gas', v)} unit="€/L" step={0.001} max={5} />
+          <PriceRow label="Gazole / Diesel (€/L)" value={prices.diesel} onChange={(v) => updatePrice('diesel', v)} unit="€/L" step={0.001} max={5} />
           <PriceRow label="E85 (€/L)" value={prices.e85} onChange={(v) => updatePrice('e85', v)} unit="€/L" step={0.001} max={5} />
           <PriceRow label="GPL (€/L)" value={prices.gpl} onChange={(v) => updatePrice('gpl', v)} unit="€/L" step={0.001} max={5} />
         </div>
-      </SectionCard>
 
-      {/* ── Electricity prices ────────────────────────────────── */}
-      <SectionCard
-        title={
-          <span className="flex items-center gap-1.5">
-            <Zap size={13} className="text-carbon-accent" />
-            <Eyebrow>Électricité</Eyebrow>
-          </span>
-        }
-        padding="md"
-      >
+        <Hairline className="my-3" />
+
+        {/* Électricité */}
+        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-1 flex items-center gap-1">
+          <Zap size={11} /> Électricité
+        </p>
         <div className="flex flex-col divide-y divide-carbon-hairline">
           <PriceRow label="Domicile (€/kWh)" value={prices.evHome} onChange={(v) => updatePrice('evHome', v)} unit="€/kWh" step={0.0001} max={2} />
           <PriceRow label="Borne rapide (€/kWh)" value={prices.evFast} onChange={(v) => updatePrice('evFast', v)} unit="€/kWh" step={0.0001} max={2} />
@@ -295,9 +275,21 @@ export default function FuelPricesPage() {
             </div>
           </div>
         </div>
+
+        <Hairline className="my-3" />
+
+        {/* Save button */}
+        <CTAButton
+          variant="accent"
+          size="md"
+          icon={<Save size={14} />}
+          onClick={handleSave}
+          className="w-full"
+        >
+          Enregistrer
+        </CTAButton>
       </SectionCard>
 
-      {/* ── Footer note ───────────────────────────────────────── */}
       <Hairline />
       <p className="text-xs font-mono text-carbon-muted text-center pb-4">
         Prix de référence nationaux France 2026

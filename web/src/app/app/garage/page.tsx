@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Star } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Input } from '@/components/ui/Input';
@@ -52,6 +52,9 @@ export default function GaragePage() {
 
   // ── Delete modal state ──────────────────────────────────────
   const [deleteVehicle, setDeleteVehicle] = useState<GarageVehicle | null>(null);
+
+  // ── Set default state ───────────────────────────────────────
+  const [isSettingDefault, setIsSettingDefault] = useState<string | null>(null);
 
   const loadVehicles = useCallback(async () => {
     setIsLoading(true);
@@ -152,6 +155,19 @@ export default function GaragePage() {
     }
   }
 
+  async function handleSetDefault(vehicleId: string) {
+    setIsSettingDefault(vehicleId);
+    try {
+      await apiClient.patch(`/vehicles/me/${vehicleId}/set-default`);
+      showToast('success', 'Véhicule actif mis à jour');
+      await loadVehicles();
+    } catch {
+      showToast('error', 'Une erreur est survenue');
+    } finally {
+      setIsSettingDefault(null);
+    }
+  }
+
   async function handleDelete() {
     if (!deleteVehicle) return;
     try {
@@ -238,6 +254,17 @@ export default function GaragePage() {
 
                   {/* Action buttons */}
                   <div className="flex items-center gap-1 shrink-0">
+                    {!isDefault && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetDefault(v.id)}
+                        aria-label="Définir comme actif"
+                        disabled={isSettingDefault === v.id}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-40"
+                      >
+                        <Star size={14} />
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => openEdit(v)}
