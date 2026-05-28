@@ -10,7 +10,6 @@ import { KPICell } from '@/components/ui/KPICell';
 import { FuelBadge } from '@/components/ui/FuelBadge';
 import { BrandAvatar } from '@/components/ui/BrandAvatar';
 import { Sparkline } from '@/components/ui/Sparkline';
-import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Select } from '@/components/ui/Select';
@@ -79,8 +78,6 @@ function fuelPrice(fuelType: FuelType, p: UserPrices): number {
 
 type CalcMode = 'address' | 'distance';
 
-const DISTANCE_CHIPS = [50, 200, 465, 800];
-
 // ── Formatters ────────────────────────────────────────────────────
 const fmtEur = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
@@ -96,11 +93,6 @@ const CHARGING_OPTIONS: { value: ChargingMode; label: string }[] = [
   { value: 'mix', label: 'Mix' },
 ];
 
-const MODE_SEGMENTS: { value: CalcMode; label: string }[] = [
-  { value: 'address', label: 'Adresses' },
-  { value: 'distance', label: 'Distance' },
-];
-
 // ── Inner component (needs useSearchParams) ───────────────────────
 function DashboardInner() {
   const { showToast } = useToast();
@@ -109,6 +101,7 @@ function DashboardInner() {
 
   // ── Data state ──────────────────────────────────────────────────
   const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
+  const [vehiclesLoading, setVehiclesLoading] = useState(true);
   const [stats, setStats] = useState<TripStats | null>(null);
   const [recentTrips, setRecentTrips] = useState<SavedTrip[]>([]);
   const [suggestions, setSuggestions] = useState<Favorite[]>([]);
@@ -116,8 +109,7 @@ function DashboardInner() {
 
   // ── Calculator mode ─────────────────────────────────────────────
   const [calcMode, setCalcMode] = useState<CalcMode>('address');
-  const [distanceKm, setDistanceKm] = useState<number>(100);
-  const [distanceInput, setDistanceInput] = useState('100');
+  const [distanceKm] = useState<number>(100);
 
   // ── Address mode state ──────────────────────────────────────────
   const [origin, setOrigin] = useState<GeoPoint | null>(null);
@@ -157,18 +149,21 @@ function DashboardInner() {
 
   // ── Load data on mount ──────────────────────────────────────────
   const loadData = useCallback(() => {
+    setVehiclesLoading(true);
     apiClient
       .get<UserVehicle[]>('/vehicles/me')
       .then(({ data }) => {
-        setVehicles(data);
+        const list = Array.isArray(data) ? data : [];
+        setVehicles(list);
         const urlVehicleId = searchParams.get('vehicleId');
-        if (urlVehicleId && data.some((v) => v.id === urlVehicleId)) {
+        if (urlVehicleId && list.some((v) => v.id === urlVehicleId)) {
           setSelectedVehicleId(urlVehicleId);
-        } else if (data.length > 0) {
-          setSelectedVehicleId(data[0].id);
+        } else if (list.length > 0) {
+          setSelectedVehicleId(list[0].id);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setVehiclesLoading(false));
 
     setStatsLoading(true);
     Promise.allSettled([
@@ -397,7 +392,9 @@ function DashboardInner() {
         </SectionCard>
 
         <SectionCard title="Véhicule actif" padding="md">
-          {vehicles.length === 0 ? (
+          {vehiclesLoading ? (
+            <p className="text-sm text-carbon-muted pt-3">Chargement...</p>
+          ) : vehicles.length === 0 ? (
             <div className="pt-3 flex flex-col gap-2">
               <p className="text-sm text-carbon-muted">Aucun véhicule</p>
               <Link
@@ -442,92 +439,32 @@ function DashboardInner() {
       )}
 
       {/* ── Trip calculator ──────────────────────────────────────── */}
-      <SectionCard title={<Eyebrow>Nouveau trajet</Eyebrow>} padding="md">
+      <SectionCard title={<Eyebrow>Calcul</Eyebrow>} padding="md">
         <div className="flex flex-col gap-4 pt-3">
-          {/* Mode toggle */}
-          <SegmentedControl
-            segments={MODE_SEGMENTS}
-            value={calcMode}
-            onChange={setCalcMode}
-            className="w-full"
+          {/* Address inputs */}
+          <AutocompleteInput
+            label="Départ"
+            placeholder="Adresse de départ..."
+            onSelect={(pt) => {
+              setOrigin(pt);
+              setOriginLabel(pt.label ?? '');
+            }}
+            defaultValue={originLabel}
+          />
+          <AutocompleteInput
+            label="Arrivée"
+            placeholder="Adresse d'arrivée..."
+            onSelect={(pt) => {
+              setDestination(pt);
+              setDestinationLabel(pt.label ?? '');
+            }}
+            defaultValue={destinationLabel}
           />
 
-          {/* Address mode inputs */}
-          {calcMode === 'address' && (
-            <>
-              <AutocompleteInput
-                label="Départ"
-                placeholder="Adresse de départ..."
-                onSelect={(pt) => {
-                  setOrigin(pt);
-                  setOriginLabel(pt.label ?? '');
-                }}
-                defaultValue={originLabel}
-              />
-              <AutocompleteInput
-                label="Arrivée"
-                placeholder="Adresse d'arrivée..."
-                onSelect={(pt) => {
-                  setDestination(pt);
-                  setDestinationLabel(pt.label ?? '');
-                }}
-                defaultValue={destinationLabel}
-              />
-            </>
-          )}
-
-          {/* Distance mode input */}
-          {calcMode === 'distance' && (
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex items-baseline gap-2">
-                  <input
-                    type="number"
-                    min={1}
-                    max={9999}
-                    value={distanceInput}
-                    onChange={(e) => {
-                      setDistanceInput(e.target.value);
-                      const n = parseInt(e.target.value, 10);
-                      if (!isNaN(n) && n > 0) setDistanceKm(n);
-                    }}
-                    onBlur={() => {
-                      if (!distanceKm || distanceKm <= 0) {
-                        setDistanceKm(100);
-                        setDistanceInput('100');
-                      }
-                    }}
-                    className="w-36 text-[56px] font-bold font-mono text-carbon-ink tabular-nums bg-transparent outline-none text-center leading-none"
-                  />
-                  <span className="text-xl text-carbon-muted font-mono">km</span>
-                </div>
-                <p className="text-xs text-carbon-muted">Distance en km</p>
-              </div>
-              {/* Quick chips */}
-              <div className="flex items-center gap-2 justify-center flex-wrap">
-                {DISTANCE_CHIPS.map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() => {
-                      setDistanceKm(d);
-                      setDistanceInput(String(d));
-                    }}
-                    className={`px-3 py-1.5 rounded-chip text-xs font-semibold transition-colors ${
-                      distanceKm === d
-                        ? 'bg-carbon-accent text-white'
-                        : 'bg-carbon-surface2 border border-carbon-hairline text-carbon-ink2 hover:border-carbon-accent hover:text-carbon-accent'
-                    }`}
-                  >
-                    {d} km
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Vehicle selector */}
-          {vehicles.length === 0 ? (
+          {vehiclesLoading ? (
+            <p className="text-sm text-carbon-muted">Chargement des véhicules...</p>
+          ) : vehicles.length === 0 ? (
             <p className="text-sm text-amber-400">Aucun véhicule. Ajoutez-en un dans le Garage.</p>
           ) : (
             <Select
@@ -574,7 +511,7 @@ function DashboardInner() {
             className="w-full"
             onClick={handleCalculate}
             loading={isCalculating}
-            disabled={vehicles.length === 0}
+            disabled={vehiclesLoading || vehicles.length === 0}
           >
             {isCalculating ? 'Calcul en cours...' : 'Calculer'}
           </CTAButton>

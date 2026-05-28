@@ -46,7 +46,7 @@ export default function AddVehiclePage() {
       .get<CatalogPage>('/vehicles/catalog', {
         params: { search: debouncedSearch, limit: 20 },
       })
-      .then(({ data }) => setResults(data.data ?? []))
+      .then(({ data }) => setResults(data.items ?? []))
       .catch(() => setResults([]))
       .finally(() => setIsSearching(false));
   }, [debouncedSearch]);
