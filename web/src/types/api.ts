@@ -131,10 +131,11 @@ export interface GeocodeResult {
 }
 
 export interface CatalogPage {
-  data: VehicleModel[];
+  items: VehicleModel[];
   total: number;
   page: number;
   limit: number;
+  totalPages: number;
 }
 
 export interface TripStats {

@@ -19,6 +19,7 @@ import { TWAppIcon } from '@/components/ui/TWAppIcon';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { Hairline } from '@/components/ui/Hairline';
 import { StatusDot } from '@/components/ui/StatusDot';
+import { TripModal } from '@/components/TripModal';
 
 // ── Nav items definition ────────────────────────────────────────
 type NavKey = 'dashboard' | 'trips' | 'garage' | 'fuelPrices' | 'settings';
@@ -77,6 +78,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [tripModalOpen, setTripModalOpen] = useState(false);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   const breadcrumb = getBreadcrumb(pathname);
@@ -205,13 +207,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </button>
 
           {/* + NOUVEAU TRAJET — visible on all sizes (icon-only on xs, with label on sm+) */}
-          <Link
-            href="/app/dashboard"
+          <button
+            type="button"
+            onClick={() => setTripModalOpen(true)}
             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-carbon-accent text-white text-[10px] font-mono uppercase tracking-widest font-semibold hover:brightness-110 active:brightness-90 transition-all"
           >
             <Plus size={12} aria-hidden="true" />
             <span className="hidden sm:inline">Nouveau trajet</span>
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -289,6 +292,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
+
+      {/* ── Trip calculator modal ─────────────────────────── */}
+      <TripModal open={tripModalOpen} onClose={() => setTripModalOpen(false)} />
     </div>
   );
 }
