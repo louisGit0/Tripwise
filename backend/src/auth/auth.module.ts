@@ -36,10 +36,10 @@ import { AppleAuthGuard } from './guards/apple-auth.guard';
     {
       provide: GoogleStrategy,
       useFactory: (config: ConfigService, authService: AuthService) => {
-        const clientID = config.get<string>('GOOGLE_OAUTH_CLIENT_ID');
+        const clientID = config.get<string>('GOOGLE_CLIENT_ID');
         if (!clientID) {
           new Logger('AuthModule').warn(
-            'GOOGLE_OAUTH_CLIENT_ID non défini — authentification Google désactivée',
+            'GOOGLE_CLIENT_ID non défini — authentification Google désactivée',
           );
           return null;
         }
@@ -50,13 +50,13 @@ import { AppleAuthGuard } from './guards/apple-auth.guard';
     {
       provide: AppleStrategy,
       useFactory: (config: ConfigService, authService: AuthService) => {
-        const clientID = config.get<string>('APPLE_OAUTH_CLIENT_ID');
-        const teamID = config.get<string>('APPLE_OAUTH_TEAM_ID');
-        const keyID = config.get<string>('APPLE_OAUTH_KEY_ID');
-        const privateKey = config.get<string>('APPLE_OAUTH_PRIVATE_KEY');
+        const clientID = config.get<string>('APPLE_CLIENT_ID');
+        const teamID = config.get<string>('APPLE_TEAM_ID');
+        const keyID = config.get<string>('APPLE_KEY_ID');
+        const privateKey = config.get<string>('APPLE_PRIVATE_KEY');
         if (!clientID || !teamID || !keyID || !privateKey) {
           new Logger('AuthModule').warn(
-            'APPLE_OAUTH_* variables manquantes — authentification Apple désactivée',
+            'APPLE_* variables manquantes — authentification Apple désactivée',
           );
           return null;
         }

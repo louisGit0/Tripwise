@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
+import session from 'express-session';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -22,6 +23,23 @@ async function bootstrap() {
   // poser/lire les cookies secure:true. La valeur 1 signifie "faire confiance
   // au premier proxy dans la chaîne x-forwarded-*".
   app.set('trust proxy', 1);
+
+  // ── Session (OAuth state store) ────────────────────────────────────────────
+  // Requis uniquement pour le state CSRF des flows Google / Apple OAuth.
+  // La session expire après 5 min — juste le temps du handshake OAuth.
+  // L'authentification REST reste 100% JWT (stateless).
+  app.use(
+    session({
+      secret: process.env.JWT_SECRET ?? 'tw-oauth-state-secret',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 5 * 60 * 1000, // 5 minutes
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      },
+    }),
+  );
 
   app.setGlobalPrefix(apiPrefix);
   app.use(helmet());

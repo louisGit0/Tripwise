@@ -9,7 +9,7 @@ export class GoogleAuthGuard extends AuthGuard('google') implements CanActivate 
   }
 
   canActivate(context: ExecutionContext) {
-    if (!this.configService.get<string>('GOOGLE_OAUTH_CLIENT_ID')) {
+    if (!this.configService.get<string>('GOOGLE_CLIENT_ID')) {
       throw new ServiceUnavailableException(
         'Google OAuth is not configured on this server',
       );

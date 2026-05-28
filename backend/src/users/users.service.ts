@@ -31,6 +31,10 @@ export class UsersService {
     return this.userRepo.findOneBy({ email });
   }
 
+  findByProviderId(provider: AuthProvider, providerId: string): Promise<User | null> {
+    return this.userRepo.findOneBy({ provider, providerId });
+  }
+
   create(data: CreateUserData): Promise<User> {
     const user = this.userRepo.create({
       email: data.email,

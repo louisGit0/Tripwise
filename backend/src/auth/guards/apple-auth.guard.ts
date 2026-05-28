@@ -10,10 +10,10 @@ export class AppleAuthGuard extends AuthGuard('apple') implements CanActivate {
 
   canActivate(context: ExecutionContext) {
     if (
-      !this.configService.get<string>('APPLE_OAUTH_CLIENT_ID') ||
-      !this.configService.get<string>('APPLE_OAUTH_TEAM_ID') ||
-      !this.configService.get<string>('APPLE_OAUTH_KEY_ID') ||
-      !this.configService.get<string>('APPLE_OAUTH_PRIVATE_KEY')
+      !this.configService.get<string>('APPLE_CLIENT_ID') ||
+      !this.configService.get<string>('APPLE_TEAM_ID') ||
+      !this.configService.get<string>('APPLE_KEY_ID') ||
+      !this.configService.get<string>('APPLE_PRIVATE_KEY')
     ) {
       throw new ServiceUnavailableException(
         'Apple Sign In is not configured on this server',
