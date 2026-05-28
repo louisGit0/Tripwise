@@ -975,6 +975,26 @@ NODE_ENV=production  # Vercel le pose automatiquement
 
 ---
 
+### 2026-05-28 — Fix : Render build (nest not found) + Vercel monorepo config
+
+#### Render — `sh: 1: nest: not found` (exit 127)
+`@nestjs/cli`, `@nestjs/schematics`, `ts-loader` et `typescript` étaient dans `devDependencies`. Render pose `NODE_ENV=production` comme variable d'environnement — ce qui cause `npm install` à omettre les devDependencies. Le binaire `nest` n'existe donc pas dans `node_modules/.bin`.
+
+**Fix** : déplacer ces 4 packages dans `dependencies`. Ils sont nécessaires à la compilation (build-time), pas seulement au développement local.
+
+#### Vercel — `404: NOT_FOUND` au niveau infrastructure
+Sans `Root Directory` configuré sur `web/` dans le dashboard Vercel, Vercel tente de builder depuis la racine du monorepo. Le script `build` racine inclut `npm run build --prefix backend` qui échoue (`nest: not found`), et Next.js n'est jamais compilé → aucun déploiement actif → 404 CDN.
+
+**Fix** : ajout de `vercel.json` à la racine du repo avec `"builds": [{ "src": "web/package.json", "use": "@vercel/next" }]`. Cela force Vercel à utiliser le builder Next.js natif sur le sous-dossier `web/`, même si `Root Directory` n'est pas configuré dans le dashboard.
+
+#### Fichiers modifiés
+| Fichier | Modification |
+|---------|-------------|
+| `backend/package.json` | `@nestjs/cli`, `@nestjs/schematics`, `ts-loader`, `typescript` → `dependencies` |
+| `vercel.json` (nouveau) | Config monorepo Vercel : `@vercel/next` builder sur `web/package.json` |
+
+---
+
 ### 2026-05-27 — Fix : Edge Runtime __dirname crash (middleware supprimé)
 
 #### Problème
