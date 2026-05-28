@@ -118,6 +118,8 @@ export interface TripResult {
   };
   cost?: FuelCostResult | ElectricCostResult;
   tollCost: number | null;
+  /** true si le coût de péage est une estimation heuristique (pas TollGuru) */
+  tollIsEstimate: boolean;
 }
 
 export interface GeocodeFeature {
@@ -145,8 +147,11 @@ export interface TripStats {
   totalDistance: number;
   tripCount: number;
   averageCostPerKm: number | null;
-  /** Backend returns { amount, percent }, not a bare number */
-  savedVsGas: { amount: number; percent: number };
+  /**
+   * Économies vs essence — uniquement calculé quand l'utilisateur a des trajets EV.
+   * null si aucun trajet électrique ce mois-ci.
+   */
+  savedVsGas: { amount: number; percent: number } | null;
   dailyExpenses: Array<{ date: string; cost: number }>;
 }
 
@@ -219,6 +224,19 @@ export interface DefaultPrices {
   source: string;
   lastUpdate: string;
   disclaimer: string;
+  /** Prix de la snapshot précédente — disponible après 2 rafraîchissements du cache */
+  previousPrices?: {
+    gas: number;
+    diesel: number;
+    sp95: number;
+    sp98: number;
+    e10: number;
+    e85: number;
+    gpl: number;
+    evHome: number;
+    evFast: number;
+  };
+  previousFetchedAt?: string;
 }
 
 /** Stored in sessionStorage under 'tripwise.pendingTrip' after a calculation */

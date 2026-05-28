@@ -34,6 +34,8 @@ interface UserPrices {
   fastShare: number;
 }
 const PRICES_KEY = 'tripwise.userPrices';
+const API_CACHE_KEY = 'tripwise.apiPricesCache';
+const PRICE_SOURCE_KEY = 'tripwise.priceSource';
 const FALLBACK_PRICES: UserPrices = {
   gas: 1.75,
   diesel: 1.68,
@@ -47,8 +49,14 @@ const FALLBACK_PRICES: UserPrices = {
 function readUserPrices(): UserPrices {
   if (typeof window === 'undefined') return FALLBACK_PRICES;
   try {
-    const raw = localStorage.getItem(PRICES_KEY);
-    return raw ? (JSON.parse(raw) as UserPrices) : FALLBACK_PRICES;
+    const source = localStorage.getItem(PRICE_SOURCE_KEY) ?? 'api';
+    // 'api' → prix officiels mis en cache, 'custom' → prix personnalisés
+    const key = source === 'custom' ? PRICES_KEY : API_CACHE_KEY;
+    const raw = localStorage.getItem(key);
+    if (raw) return JSON.parse(raw) as UserPrices;
+    // Fallback : essayer l'autre clé
+    const fallbackRaw = localStorage.getItem(PRICES_KEY);
+    return fallbackRaw ? (JSON.parse(fallbackRaw) as UserPrices) : FALLBACK_PRICES;
   } catch {
     return FALLBACK_PRICES;
   }
@@ -223,10 +231,16 @@ function DashboardInner() {
           />
           <KPICell
             label="Économies vs essence"
-            value={statsLoading ? '—' : fmtEur.format(stats?.savedVsGas?.amount ?? 0)}
+            value={
+              statsLoading
+                ? '—'
+                : stats?.savedVsGas !== null
+                  ? fmtEur.format(stats?.savedVsGas?.amount ?? 0)
+                  : <span className="text-xs text-carbon-muted font-normal">Uniquement pour VE</span>
+            }
             delta={
               !statsLoading && (stats?.savedVsGas?.percent ?? 0) !== 0
-                ? stats!.savedVsGas.percent
+                ? stats?.savedVsGas?.percent
                 : undefined
             }
             size="sm"

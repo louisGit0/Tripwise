@@ -134,6 +134,7 @@ export default function TripResultPage() {
   const cost = result.cost;
   const tollCost = result.tollCost ?? 0;
   const totalCost = (cost?.totalCost ?? 0) + tollCost;
+  const tollIsEstimate = result.tollIsEstimate ?? false;
   const isElectric = result.vehicle.fuelType === 'ELECTRIC';
   const canSave = mode === 'address' && !!session.origin && !!session.destination && !!cost;
 
@@ -187,8 +188,9 @@ export default function TripResultPage() {
             {
               label: 'PÉAGES',
               value: result.tollCost !== null
-                ? fmtEur.format(result.tollCost)
+                ? `${tollIsEstimate ? '~' : ''}${fmtEur.format(result.tollCost)}`
                 : 'Non calculé',
+              note: tollIsEstimate && result.tollCost !== null ? 'estimation' : undefined,
             },
             {
               label: '€/KM',
@@ -201,7 +203,7 @@ export default function TripResultPage() {
               label: 'PAR PERS.',
               value: fmtEur.format(totalCost / passengers),
             },
-          ].map(({ label, value }) => (
+          ].map(({ label, value, note }) => (
             <div
               key={label}
               className="flex flex-col gap-0.5 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
@@ -212,6 +214,9 @@ export default function TripResultPage() {
               <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
                 {value}
               </span>
+              {note && (
+                <span className="text-[9px] font-mono text-amber-400 leading-none">{note}</span>
+              )}
             </div>
           ))}
         </div>

@@ -72,6 +72,8 @@ export interface TripResult {
   };
   cost?: TripCost;
   tollCost: number | null;
+  /** true si le coût de péage est une estimation heuristique (pas TollGuru) */
+  tollIsEstimate: boolean;
 }
 
 // ── Multi-energy comparison type ────────────────────────────────────────────
@@ -129,10 +131,10 @@ export interface TripStats {
   averageCostPerKm: number | null;
   /**
    * Économie estimée par rapport à un trajet équivalent en essence moyenne.
-   * AVERTISSEMENT : valeur fictive basée sur une consommation nationale
-   * moyenne de 6.5 L/100km à DEFAULT_GAS_PRICE €/L. Purement indicatif.
+   * Calculé uniquement sur les trajets avec véhicule électrique.
+   * null si aucun trajet électrique ce mois-ci (pas applicable aux utilisateurs 100% thermique).
    */
-  savedVsGas: { amount: number; percent: number };
+  savedVsGas: { amount: number; percent: number } | null;
   dailyExpenses: DailyExpense[];
 }
 
@@ -187,11 +189,16 @@ export class TripsService {
     const distanceKm = Math.round((directions.distanceMeters / 1000) * 10) / 10;
     const fuelType = uv.vehicleModel.fuelType as FuelType;
 
-    const [cost, tollCost] = await Promise.all([
+    const [cost, tollResult] = await Promise.all([
       fuelType === FuelType.ELECTRIC
         ? this.computeElectricCost(dto, distanceKm, uv, directions)
         : this.computeFuelCost(dto, distanceKm, fuelType, uv.vehicleModel.consumption),
-      this.computeTollCost(dto.origin, dto.destination),
+      this.computeTollCost(
+        dto.origin,
+        dto.destination,
+        distanceKm,
+        directions.durationSeconds,
+      ),
     ]);
 
     const result: TripResult = {
@@ -211,7 +218,8 @@ export class TripsService {
         consumption: Number(uv.vehicleModel.consumption),
       },
       cost,
-      tollCost,
+      tollCost:      tollResult?.cost ?? null,
+      tollIsEstimate: tollResult?.isEstimate ?? false,
     };
 
     return result;
@@ -381,7 +389,7 @@ export class TripsService {
         totalDistance:    0,
         tripCount:        0,
         averageCostPerKm: null,
-        savedVsGas:       { amount: 0, percent: 0 },
+        savedVsGas:       null,
         dailyExpenses:    [],
       };
     }
@@ -391,15 +399,21 @@ export class TripsService {
     const tripCount     = trips.length;
     const averageCostPerKm = totalDistance > 0 ? round2(totalCost / totalDistance) : null;
 
-    // savedVsGas : comparaison fictive vs essence moyenne (6.5 L/100km, DEFAULT_GAS_PRICE €/L)
-    let hypotheticalGasCost = 0;
-    for (const trip of trips) {
-      hypotheticalGasCost += (Number(trip.distanceKm) / 100) * DEFAULT_GAS_CONSUMPTION * DEFAULT_GAS_PRICE;
+    // savedVsGas : comparaison fictive vs essence — uniquement pour les trajets électriques
+    const evTrips = trips.filter((t) => t.fuelType === FuelType.ELECTRIC);
+    let savedVsGas: { amount: number; percent: number } | null = null;
+    if (evTrips.length > 0) {
+      const evTotalCost = evTrips.reduce((s, t) => s + Number(t.totalCost), 0);
+      let hypotheticalGasCost = 0;
+      for (const trip of evTrips) {
+        hypotheticalGasCost += (Number(trip.distanceKm) / 100) * DEFAULT_GAS_CONSUMPTION * DEFAULT_GAS_PRICE;
+      }
+      const savedAmount  = round2(hypotheticalGasCost - evTotalCost);
+      const savedPercent = hypotheticalGasCost > 0
+        ? round2((savedAmount / hypotheticalGasCost) * 100)
+        : 0;
+      savedVsGas = { amount: savedAmount, percent: savedPercent };
     }
-    const savedAmount  = round2(hypotheticalGasCost - totalCost);
-    const savedPercent = hypotheticalGasCost > 0
-      ? round2((savedAmount / hypotheticalGasCost) * 100)
-      : 0;
 
     // dailyExpenses : agrégation par jour
     const dayMap = new Map<string, { cost: number; categories: Set<FuelCategory> }>();
@@ -429,7 +443,7 @@ export class TripsService {
       totalDistance:    Math.round(totalDistance * 10) / 10,
       tripCount,
       averageCostPerKm,
-      savedVsGas:       { amount: savedAmount, percent: savedPercent },
+      savedVsGas,
       dailyExpenses,
     };
   }
@@ -625,46 +639,81 @@ export class TripsService {
   }
 
   /**
-   * Calcule le coût des péages via l'API TollGuru.
-   * Retourne null si TOLLGURU_API_KEY n'est pas configuré ou si l'appel échoue.
+   * Calcule le coût des péages.
+   * - Si TOLLGURU_API_KEY est configuré : appel TollGuru (résultat précis, isEstimate=false).
+   * - Sinon : estimation heuristique française basée sur la vitesse moyenne (isEstimate=true).
+   * Retourne null uniquement si la route est trop courte ou lente pour avoir des péages.
    */
   private async computeTollCost(
     origin: { lat: number; lng: number },
     destination: { lat: number; lng: number },
-  ): Promise<number | null> {
+    distanceKm: number,
+    durationSeconds: number,
+  ): Promise<{ cost: number; isEstimate: boolean } | null> {
     const apiKey = this.config.get<string>('TOLLGURU_API_KEY');
-    if (!apiKey) return null;
 
-    try {
-      const response = await fetch(
-        'https://apis.tollguru.com/toll/v2/origin-destination-waypoints',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
+    if (apiKey) {
+      try {
+        const response = await fetch(
+          'https://apis.tollguru.com/toll/v2/origin-destination-waypoints',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': apiKey,
+            },
+            body: JSON.stringify({
+              vehicle: { type: '2AxlesAuto' },
+              origin: { lat: origin.lat, lng: origin.lng },
+              destination: { lat: destination.lat, lng: destination.lng },
+              currency: 'EUR',
+            }),
+            signal: AbortSignal.timeout(8000),
           },
-          body: JSON.stringify({
-            vehicle: { type: '2AxlesAuto' },
-            origin: { lat: origin.lat, lng: origin.lng },
-            destination: { lat: destination.lat, lng: destination.lng },
-            currency: 'EUR',
-          }),
-          signal: AbortSignal.timeout(8000),
-        },
-      );
+        );
 
-      if (!response.ok) return null;
-
-      const data = await response.json() as {
-        summary?: { costs?: { cash?: number; tag?: number } };
-      };
-
-      const cost = data.summary?.costs?.cash ?? data.summary?.costs?.tag ?? null;
-      return cost !== null ? round2(cost) : null;
-    } catch {
-      return null;
+        if (response.ok) {
+          const data = await response.json() as {
+            summary?: { costs?: { cash?: number; tag?: number } };
+          };
+          const cost = data.summary?.costs?.cash ?? data.summary?.costs?.tag ?? null;
+          if (cost !== null) return { cost: round2(cost), isEstimate: false };
+        }
+      } catch {
+        // fall through to heuristic
+      }
     }
+
+    // Estimation heuristique France : basée sur la vitesse moyenne
+    const estimated = this.estimateFrenchTolls(distanceKm, durationSeconds);
+    if (estimated === null) return null;
+    return { cost: estimated, isEstimate: true };
+  }
+
+  /**
+   * Estimation heuristique du coût de péage pour un trajet France.
+   * Basée sur la vitesse moyenne comme proxy de l'usage de l'autoroute.
+   *
+   * Taux moyen France : ~0,09 €/km sur autoroute.
+   */
+  private estimateFrenchTolls(distanceKm: number, durationSeconds: number): number | null {
+    if (durationSeconds === 0 || distanceKm < 5) return null;
+
+    const avgSpeedKmh = distanceKm / (durationSeconds / 3600);
+
+    let tollFraction: number;
+    if (avgSpeedKmh >= 95) {
+      tollFraction = 0.70; // Itinéraire principalement autoroutier
+    } else if (avgSpeedKmh >= 80) {
+      tollFraction = 0.45; // Mix voie rapide / nationale
+    } else if (avgSpeedKmh >= 65) {
+      tollFraction = 0.20; // Trajet mixte, quelques tronçons payants
+    } else {
+      return 0; // Vitesse trop basse — route urbaine ou rurale sans péage
+    }
+
+    const TOLL_RATE_PER_KM = 0.09; // €/km moyen France
+    return round2(distanceKm * tollFraction * TOLL_RATE_PER_KM);
   }
 
   private formatDuration(seconds: number): string {
