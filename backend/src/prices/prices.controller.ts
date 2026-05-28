@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class PricesController {
   constructor(private readonly pricesService: PricesService) {}
 
-  /** GET /api/v1/prices/defaults — Prix de référence backend (constantes statiques) */
+  /** GET /api/v1/prices/defaults — Prix de référence (temps réel + fallback statique) */
   @Get('defaults')
   @UseGuards(JwtAuthGuard)
   getDefaults() {

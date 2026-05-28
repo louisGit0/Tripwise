@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Zap, Fuel, RefreshCw } from 'lucide-react';
+import { Save, Zap, Fuel, RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -11,6 +11,10 @@ import { apiClient } from '@/lib/api';
 import type { DefaultPrices } from '@/types/api';
 
 const STORAGE_KEY = 'tripwise.userPrices';
+const API_CACHE_KEY = 'tripwise.apiPricesCache';
+const SOURCE_KEY = 'tripwise.priceSource';
+
+type PriceSource = 'api' | 'custom';
 
 interface UserPrices {
   gas: number;
@@ -47,7 +51,69 @@ function writeStorage(p: UserPrices) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
 }
 
-// ── Price row ─────────────────────────────────────────────────
+function readPriceSource(): PriceSource {
+  if (typeof window === 'undefined') return 'api';
+  try {
+    const raw = localStorage.getItem(SOURCE_KEY);
+    return raw === 'custom' ? 'custom' : 'api';
+  } catch {
+    return 'api';
+  }
+}
+
+function writePriceSource(src: PriceSource) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(SOURCE_KEY, src);
+}
+
+function writeApiCache(defaults: DefaultPrices) {
+  if (typeof window === 'undefined') return;
+  try {
+    const cached: UserPrices = {
+      gas:       defaults.gas,
+      diesel:    defaults.diesel,
+      e85:       defaults.e85 ?? FALLBACK_DEFAULTS.e85,
+      gpl:       defaults.gpl ?? FALLBACK_DEFAULTS.gpl,
+      evHome:    defaults.evHome,
+      evFast:    defaults.evFast,
+      fastShare: defaults.fastShare ?? FALLBACK_DEFAULTS.fastShare,
+    };
+    localStorage.setItem(API_CACHE_KEY, JSON.stringify(cached));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+// ── Delta helpers ──────────────────────────────────────────────────────────
+
+function priceDeltaPct(current: number, previous: number | undefined): number | null {
+  if (previous === undefined || previous === 0) return null;
+  return ((current - previous) / previous) * 100;
+}
+
+interface DeltaBadgeProps {
+  current: number;
+  previous: number | undefined;
+}
+
+function DeltaBadge({ current, previous }: DeltaBadgeProps) {
+  const pct = priceDeltaPct(current, previous);
+  if (pct === null || Math.abs(pct) < 0.01) return null;
+
+  const isUp = pct > 0;
+  return (
+    <span
+      className={`flex items-center gap-0.5 text-[10px] font-mono font-semibold shrink-0 ${
+        isUp ? 'text-red-400' : 'text-emerald-400'
+      }`}
+    >
+      {isUp ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+      {isUp ? '+' : ''}{pct.toFixed(2)} %
+    </span>
+  );
+}
+
+// ── Price row ──────────────────────────────────────────────────────────────
 
 interface PriceRowProps {
   label: string;
@@ -95,7 +161,7 @@ function PriceRow({ label, value, onChange, unit, step = 0.001, min = 0, max = 5
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────
+// ── Page ───────────────────────────────────────────────────────────────────
 
 export default function FuelPricesPage() {
   const { showToast } = useToast();
@@ -104,33 +170,51 @@ export default function FuelPricesPage() {
   const [loadingDefaults, setLoadingDefaults] = useState(true);
   const [prices, setPrices] = useState<UserPrices>(FALLBACK_DEFAULTS);
   const [mounted, setMounted] = useState(false);
+  const [priceSource, setPriceSourceState] = useState<PriceSource>('api');
 
   useEffect(() => {
     setLoadingDefaults(true);
     apiClient
       .get<DefaultPrices>('/prices/defaults')
-      .then(({ data }) => setDefaults(data))
+      .then(({ data }) => {
+        setDefaults(data);
+        writeApiCache(data);
+      })
       .catch(() => {})
       .finally(() => setLoadingDefaults(false));
   }, []);
 
   useEffect(() => {
+    const storedSource = readPriceSource();
+    setPriceSourceState(storedSource);
+
     const stored = readStorage();
     if (stored) {
       setPrices(stored);
     } else if (defaults) {
       setPrices({
-        gas: defaults.gas,
-        diesel: defaults.diesel,
-        e85: defaults.e85 ?? FALLBACK_DEFAULTS.e85,
-        gpl: defaults.gpl ?? FALLBACK_DEFAULTS.gpl,
-        evHome: defaults.evHome,
-        evFast: defaults.evFast,
+        gas:       defaults.gas,
+        diesel:    defaults.diesel,
+        e85:       defaults.e85 ?? FALLBACK_DEFAULTS.e85,
+        gpl:       defaults.gpl ?? FALLBACK_DEFAULTS.gpl,
+        evHome:    defaults.evHome,
+        evFast:    defaults.evFast,
         fastShare: defaults.fastShare ?? FALLBACK_DEFAULTS.fastShare,
       });
     }
     setMounted(true);
   }, [defaults]);
+
+  function handleSourceChange(src: PriceSource) {
+    setPriceSourceState(src);
+    writePriceSource(src);
+    showToast(
+      'info',
+      src === 'api'
+        ? 'Calculs avec les prix officiels en temps réel'
+        : 'Calculs avec vos prix personnalisés',
+    );
+  }
 
   function updatePrice(key: keyof UserPrices, value: number) {
     setPrices((prev) => ({ ...prev, [key]: value }));
@@ -159,6 +243,8 @@ export default function FuelPricesPage() {
     );
   }
 
+  const prev = defaults?.previousPrices;
+
   return (
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
@@ -166,9 +252,37 @@ export default function FuelPricesPage() {
         <Eyebrow className="mb-0.5">Carburant · Prix</Eyebrow>
         <h1 className="text-2xl font-bold font-display text-carbon-ink">Carburant / Prix</h1>
         <p className="text-sm text-carbon-muted mt-1 max-w-sm">
-          Consultez les prix en temps réel et personnalisez les valeurs utilisées pour le calcul en mode Distance.
+          Consultez les prix en temps réel et choisissez la source utilisée pour vos calculs.
         </p>
       </div>
+
+      {/* ── Toggle source de prix ──────────────────────────────── */}
+      <SectionCard padding="md">
+        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-3">
+          Source des prix pour les calculs
+        </p>
+        <div className="flex rounded-xl overflow-hidden border border-carbon-hairline">
+          {(['api', 'custom'] as PriceSource[]).map((src) => (
+            <button
+              key={src}
+              type="button"
+              onClick={() => handleSourceChange(src)}
+              className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
+                priceSource === src
+                  ? 'bg-carbon-accent text-white'
+                  : 'bg-carbon-surface2 text-carbon-ink2 hover:bg-carbon-surface'
+              }`}
+            >
+              {src === 'api' ? '📡 Prix officiels' : '✏️ Mes prix'}
+            </button>
+          ))}
+        </div>
+        <p className="text-[11px] text-carbon-muted mt-2 leading-relaxed">
+          {priceSource === 'api'
+            ? 'Les calculs utilisent les prix carburants officiels en temps réel (données gouvernementales françaises).'
+            : 'Les calculs utilisent les prix que vous avez saisis ci-dessous.'}
+        </p>
+      </SectionCard>
 
       {/* ── Section 1 : Prix en temps réel (read-only) ────────── */}
       <SectionCard
@@ -194,23 +308,32 @@ export default function FuelPricesPage() {
                 </span>
               )}
             </div>
+            {prev && (
+              <p className="text-[10px] text-carbon-muted mb-2 font-mono">
+                Évolution vs veille (dernier rafraîchissement)
+              </p>
+            )}
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: 'SP95', value: defaults.sp95, unit: '€/L' },
-                { label: 'SP98', value: defaults.sp98, unit: '€/L' },
-                { label: 'SP95-E10', value: defaults.e10, unit: '€/L' },
-                { label: 'Gazole', value: defaults.gazole, unit: '€/L' },
-                { label: 'Recharge dom.', value: defaults.evHome, unit: '€/kWh' },
-                { label: 'Borne rapide', value: defaults.evFast, unit: '€/kWh' },
-              ].map(({ label, value, unit }) => (
+                { label: 'SP95',        value: defaults.sp95,    prevValue: prev?.sp95,   unit: '€/L' },
+                { label: 'SP98',        value: defaults.sp98,    prevValue: prev?.sp98,   unit: '€/L' },
+                { label: 'SP95-E10',    value: defaults.e10,     prevValue: prev?.e10,    unit: '€/L' },
+                { label: 'Gazole',      value: defaults.gazole,  prevValue: prev?.diesel, unit: '€/L' },
+                { label: 'Recharge dom.', value: defaults.evHome, prevValue: prev?.evHome, unit: '€/kWh' },
+                { label: 'Borne rapide',  value: defaults.evFast, prevValue: prev?.evFast, unit: '€/kWh' },
+              ].map(({ label, value, prevValue, unit }) => (
                 <div
                   key={label}
-                  className="flex items-center justify-between p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
+                  className="flex items-center justify-between p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline gap-2"
                 >
-                  <span className="text-xs text-carbon-muted truncate mr-2">{label}</span>
-                  <span className="font-mono text-sm text-carbon-ink font-semibold tabular-nums shrink-0">
-                    {value?.toFixed(4)} <span className="text-carbon-muted font-normal text-[10px]">{unit}</span>
-                  </span>
+                  <span className="text-xs text-carbon-muted truncate mr-1">{label}</span>
+                  <div className="flex flex-col items-end gap-0.5 shrink-0">
+                    <span className="font-mono text-sm text-carbon-ink font-semibold tabular-nums">
+                      {value?.toFixed(4)}{' '}
+                      <span className="text-carbon-muted font-normal text-[10px]">{unit}</span>
+                    </span>
+                    <DeltaBadge current={value} previous={prevValue} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -231,7 +354,7 @@ export default function FuelPricesPage() {
         padding="md"
       >
         <p className="text-xs text-carbon-muted mb-1">
-          Ces valeurs sont utilisées pour le calcul en mode Distance.
+          Ces valeurs sont utilisées quand vous avez sélectionné &ldquo;Mes prix&rdquo; ci-dessus.
         </p>
         <Hairline className="my-2" />
 
@@ -286,7 +409,7 @@ export default function FuelPricesPage() {
           onClick={handleSave}
           className="w-full"
         >
-          Enregistrer
+          Enregistrer mes prix
         </CTAButton>
       </SectionCard>
 
