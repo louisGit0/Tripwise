@@ -11,6 +11,8 @@ function getCookie(name: string): string | undefined {
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: { 'Content-Type': 'application/json' },
+  // Prevent infinite spinner when the backend is unreachable or slow to wake up
+  timeout: 30000,
 });
 
 apiClient.interceptors.request.use((config) => {
@@ -27,7 +29,11 @@ apiClient.interceptors.response.use(
     if (
       axios.isAxiosError(error) &&
       error.response?.status === 401 &&
-      typeof window !== 'undefined'
+      typeof window !== 'undefined' &&
+      // Don't redirect to /login when already on an auth page — the error must
+      // propagate to the form's catch block so the user sees the error toast.
+      !window.location.pathname.startsWith('/login') &&
+      !window.location.pathname.startsWith('/register')
     ) {
       window.location.href = '/login';
     }
