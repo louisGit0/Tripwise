@@ -13,6 +13,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
+import { VehicleSyncService } from './vehicle-sync.service';
 import { CatalogQueryDto } from './dto/catalog-query.dto';
 import { AddUserVehicleDto } from './dto/add-user-vehicle.dto';
 import { UpdateUserVehicleDto } from './dto/update-user-vehicle.dto';
@@ -22,7 +23,10 @@ import { User } from '../users/entities/user.entity';
 
 @Controller('vehicles')
 export class VehiclesController {
-  constructor(private readonly vehiclesService: VehiclesService) {}
+  constructor(
+    private readonly vehiclesService: VehiclesService,
+    private readonly vehicleSyncService: VehicleSyncService,
+  ) {}
 
   // ── Catalogue public ───────────────────────────────────────────────────────
 
@@ -34,6 +38,18 @@ export class VehiclesController {
   @Get('catalog/:id')
   getCatalogItem(@Param('id', ParseUUIDPipe) id: string) {
     return this.vehiclesService.findOneModel(id);
+  }
+
+  /**
+   * Manually triggers an ADEME catalog sync.
+   * Idempotent — only inserts models not already in the DB.
+   * Requires authentication (any valid JWT).
+   */
+  @Post('sync')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  syncCatalog() {
+    return this.vehicleSyncService.syncFromAdeme();
   }
 
   // ── Véhicules utilisateur (auth requise) ───────────────────────────────────
