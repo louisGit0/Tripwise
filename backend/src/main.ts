@@ -15,7 +15,25 @@ async function bootstrap() {
   const apiPrefix = process.env.API_PREFIX ?? 'api/v1';
   const corsOrigins = (process.env.CORS_ORIGINS ?? 'http://localhost:3001')
     .split(',')
-    .map((o) => o.trim());
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  // Vercel deployments of THIS project: production alias + every preview/branch
+  // build (verygoodtrip-black, verygoodtrip-git-…, verygoodtrip-<hash>). Scoped
+  // to the project prefix so an arbitrary attacker.vercel.app is NOT allowed.
+  const VERCEL_PREVIEW = /^verygoodtrip[a-z0-9-]*\.vercel\.app$/i;
+
+  const isAllowedOrigin = (origin: string): boolean => {
+    if (corsOrigins.includes(origin)) return true;
+    let host: string;
+    try {
+      host = new URL(origin).hostname;
+    } catch {
+      return false;
+    }
+    if (host === 'localhost' || host === '127.0.0.1') return true;
+    return VERCEL_PREVIEW.test(host);
+  };
 
   // ── Trust proxy ────────────────────────────────────────────────────────────
   // Render (et Railway, Fly.io…) font passer les requêtes par un reverse-proxy
@@ -45,7 +63,15 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors({
-    origin: corsOrigins,
+    // Requests without an Origin header (curl, server-to-server, same-origin)
+    // are allowed; browser cross-origin requests are checked against the allow-list.
+    origin: (origin, callback) => {
+      if (!origin || isAllowedOrigin(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin not allowed by CORS: ${origin}`));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
