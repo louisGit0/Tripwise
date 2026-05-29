@@ -39,6 +39,15 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 - [ ] **MOB-02**: Mobile **trip results show precise tolls** consistent with web (real-vs-estimate)
 - [ ] **MOB-03**: Design tokens are **kept consistent** between web and mobile (shared source of truth where practical)
 
+### Vehicle Catalog (CAT)
+
+- [ ] **CAT-01**: Catalog ingests vehicles from **multiple real-consumption sources** (ADEME FR + EPA US fuel economy, source set extensible) — never fabricated/defaulted consumption
+- [ ] **CAT-02**: Source records are **normalized** to canonical brand / model / fuel / consumption with units converted (e.g. US MPG → L/100km, Wh/km → kWh/100km) and a **source/provenance** field recorded
+- [ ] **CAT-03**: Records are **deduplicated and merged** across sources into canonical `brand|model|fuel` entries (no cross-source duplicates)
+- [ ] **CAT-04**: Catalog coverage is **substantially expanded** vs the ~266 ADEME-only baseline (target: thousands of real-consumption models — "nearly all common models")
+- [ ] **CAT-05**: Ingestion is **idempotent and re-runnable** (sync command/script) without creating duplicates, like the existing ADEME sync
+- [ ] **CAT-06**: The garage showroom **scales** to the larger catalog — server-side search + pagination (no client load-all), brand grouping preserved, fast on **web and mobile**
+
 ---
 
 ## Deferred (v2+)
@@ -79,6 +88,12 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 | WEB-01 | Phase 3 |
 | WEB-03 | Phase 3 |
 | WEB-04 | Phase 3 |
-| MOB-01 | Phase 4 |
-| MOB-02 | Phase 4 |
-| MOB-03 | Phase 4 |
+| CAT-01 | Phase 4 |
+| CAT-02 | Phase 4 |
+| CAT-03 | Phase 4 |
+| CAT-04 | Phase 4 |
+| CAT-05 | Phase 4 |
+| CAT-06 | Phase 4 |
+| MOB-01 | Phase 5 |
+| MOB-02 | Phase 5 |
+| MOB-03 | Phase 5 |
