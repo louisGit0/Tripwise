@@ -7,6 +7,8 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { FuelBadge } from '@/components/ui/FuelBadge';
+import { Pill } from '@/components/ui/Pill';
+import { Tooltip } from '@/components/ui/Tooltip';
 import { Hairline } from '@/components/ui/Hairline';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/providers/ToastProvider';
@@ -266,9 +268,22 @@ export default function TripDetailPage({ params }: Props) {
             <span className="text-xs text-carbon-muted uppercase tracking-widest font-semibold">
               Péages
             </span>
-            <span className="text-sm font-mono font-bold text-carbon-ink tabular-nums">
-              {fmtEur.format(trip.tollsCost)}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <Tooltip
+                content={
+                  trip.tollIsEstimate
+                    ? 'Estimation indicative (calcul français moyen)'
+                    : 'Prix réel calculé par TollGuru le long de l’itinéraire'
+                }
+              >
+                <Pill color={trip.tollIsEstimate ? 'warning' : 'success'} size="sm">
+                  {trip.tollIsEstimate ? '≈ estimé' : 'réel'}
+                </Pill>
+              </Tooltip>
+              <span className="text-sm font-mono font-bold text-carbon-ink tabular-nums">
+                {fmtEur.format(trip.tollsCost)}
+              </span>
+            </div>
           </div>
         )}
       </SectionCard>
