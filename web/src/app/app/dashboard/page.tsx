@@ -302,7 +302,7 @@ function DashboardInner() {
       {!statsLoading && vehicles.length === 0 && (
         <SectionCard padding="md">
           <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <p className="text-sm font-semibold text-carbon-ink">Bienvenue sur Tripwise</p>
+            <p className="text-sm font-semibold text-carbon-ink">Bienvenue sur verygoodtrip</p>
             <p className="text-sm text-carbon-muted max-w-xs">
               Ajoutez votre premier véhicule pour calculer le coût de vos trajets.
             </p>

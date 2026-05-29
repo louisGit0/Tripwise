@@ -1,4 +1,4 @@
-# Tripwise
+# verygoodtrip
 
 Application de calcul du coût d'un trajet voiture — essence ou électrique — entre deux points.
 Disponible en web (Next.js) et mobile (Expo React Native) avec un backend NestJS commun.
@@ -51,7 +51,7 @@ Disponible en web (Next.js) et mobile (Expo React Native) avec un backend NestJS
 ## Structure du monorepo
 
 ```
-Tripwise/
+verygoodtrip/
 ├── backend/                NestJS API REST (port 3000)
 │   ├── src/
 │   │   ├── auth/           Authentification : email, Google, Apple + JWT
@@ -95,7 +95,7 @@ Tripwise/
 
 ```bash
 git clone <repo-url>
-cd Tripwise
+cd verygoodtrip
 ```
 
 ### 2. Variables d'environnement
@@ -327,7 +327,7 @@ User → POST /auth/login → JWT (HS256, 7j)
 ### Pour la production
 
 > **TODO avant déploiement :**
-> - Définir `CORS_ORIGINS` sur le vrai domaine (ex: `https://tripwise.vercel.app`)
+> - Définir `CORS_ORIGINS` sur le vrai domaine (ex: `https://verygoodtrip.vercel.app`)
 > - Activer `secure: true, sameSite: 'none'` sur les cookies web (HTTPS requis)
 > - Désactiver `synchronize: true` dans TypeORM (utiliser les migrations)
 > - Générer un `JWT_SECRET` fort (≥ 64 chars) via `openssl rand -hex 64`

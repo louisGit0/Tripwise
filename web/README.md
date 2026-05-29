@@ -1,4 +1,4 @@
-# Tripwise — Frontend Web
+# verygoodtrip — Frontend Web
 
 Application Next.js 15 pour le calcul du coût de trajet voiture.
 

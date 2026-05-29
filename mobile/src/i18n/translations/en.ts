@@ -59,7 +59,7 @@ export default {
     noVehicle: 'Add a vehicle to calculate cost',
     addFavorite: 'Save to favorites',
     share: 'Share',
-    shareText: 'Trip calculated with Tripwise: {{distance}} — {{duration}} — {{cost}}',
+    shareText: 'Trip calculated with verygoodtrip: {{distance}} — {{duration}} — {{cost}}',
     disclaimerElectric:
       'Prices shown are from your vehicle profile. Actual cost at a public charger may differ.',
     nearbyStations: 'Nearby stations',

@@ -1,7 +1,7 @@
 import { ExpoConfig } from 'expo/config';
 
 const config: ExpoConfig = {
-  name: 'VeryGoodTrip',
+  name: 'verygoodtrip',
   slug: 'verygoodtrip',
   version: '1.0.0',
   scheme: 'verygoodtrip',
@@ -18,7 +18,8 @@ const config: ExpoConfig = {
     adaptiveIcon: {
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
-      backgroundColor: '#2563eb',
+      monochromeImage: './assets/images/android-icon-monochrome.png',
+      backgroundColor: '#181612',
     },
     package: 'com.verygoodtrip.app',
     edgeToEdgeEnabled: true,
@@ -39,8 +40,8 @@ const config: ExpoConfig = {
         image: './assets/images/splash-icon.png',
         imageWidth: 200,
         resizeMode: 'contain',
-        backgroundColor: '#ffffff',
-        dark: { backgroundColor: '#0f172a' },
+        backgroundColor: '#FAFAF7',
+        dark: { backgroundColor: '#0E0C0A' },
       },
     ],
     // @rnmapbox/maps requires a dev build — not compatible with Expo Go

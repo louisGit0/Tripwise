@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" role="img" aria-label="verygoodtrip">
+  <!-- Primary app icon — dark surface tile, hairline border, accent "V" route mark -->
+  <rect x="0.5" y="0.5" width="95" height="95" rx="21.1" fill="#181612" stroke="#3A3328"/>
+  <g transform="translate(16.32 16.32) scale(1.32)" stroke="#4D8BFF" fill="none">
+    <line x1="6" y1="38" x2="42" y2="38" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="1.5 2.5"/>
+    <path d="M10 15 L24 34 L38 15" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="10" cy="15" r="3" stroke-width="2.7"/>
+    <circle cx="38" cy="15" r="3.2" fill="#4D8BFF" stroke="none"/>
+  </g>
+</svg>

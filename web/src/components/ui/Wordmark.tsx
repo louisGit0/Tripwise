@@ -17,8 +17,10 @@ export function Wordmark({ size = 'md', showCursor = false, className = '' }: Wo
     <span
       className={`inline-flex items-baseline gap-0 font-display text-carbon-ink select-none ${sizeClasses[size]} ${className}`}
     >
-      <span className="text-carbon-ink">verygood</span>
-      <span className="text-carbon-accent">trip</span>
+      <span className="text-carbon-ink">very</span>
+      <span className="text-carbon-accent">good</span>
+      <span className="text-carbon-ink">trip</span>
+      <span className="text-carbon-accent">.</span>
       {showCursor && (
         <span
           className="inline-block ml-0.5 w-[2px] h-[1.1em] bg-carbon-accent align-middle"
