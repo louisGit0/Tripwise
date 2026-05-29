@@ -1,0 +1,68 @@
+# Requirements — verygoodtrip
+
+**Milestone:** Precise tolls + editorial premium redesign (web + mobile)
+**Defined:** 2026-05-29
+
+All requirements below are v1 for *this milestone* (hypotheses until shipped). Existing
+shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
+
+---
+
+## v1 Requirements
+
+### Tolls (TOLL)
+
+- [ ] **TOLL-01**: User sees a **precise** toll cost for a calculated trip via TollGuru when an API key is configured (real cost, not an estimate)
+- [ ] **TOLL-02**: When TollGuru is unavailable, over quota, or unconfigured, the toll cost **falls back to the heuristic estimate** and the user clearly sees it is an estimate (badge/label)
+- [ ] **TOLL-03**: Toll cost is computed for a **passenger car (class 1)** by default
+- [ ] **TOLL-04**: Toll cost is **broken out clearly** in the trip result and included in the displayed total (separate line, real-vs-estimate indicator)
+- [ ] **TOLL-05**: Toll cost is persisted on saved trips and reflected in history/stats totals
+- [ ] **TOLL-06**: TollGuru calls are **cached and rate-safe** server-side (avoid burning quota on repeated identical routes) and the key is never exposed client-side
+
+### Design System (DES)
+
+- [ ] **DES-01**: A documented **"editorial premium dark"** design language exists — typography scale, color, spacing rhythm, surfaces, data-viz primitives — as reusable tokens
+- [ ] **DES-02**: Cost / consumption / toll figures are presented as **designed data-viz** (hero number + breakdown), not plain text rows
+- [ ] **DES-03**: Components have **designed interaction states** (hover / focus / press) and **loading skeletons**
+- [ ] **DES-04**: Key results use **smooth, compositor-friendly micro-interactions** (animated cost counters, transitions) within performance budgets
+
+### Web Redesign (WEB)
+
+- [ ] **WEB-01**: All web screens (landing, dashboard, trip result, garage, showroom, trips/history, favorites, fuel-prices, settings, auth) are **restyled in the editorial dark direction** with existing flows preserved
+- [ ] **WEB-02**: The **trip result** page is redesigned around the total cost + energy/toll breakdown + multi-energy comparison
+- [ ] **WEB-03**: The **dashboard** (calc entry + KPIs) is redesigned in the new language
+- [ ] **WEB-04**: Redesign meets Core Web Vitals targets (no layout shift, animations on transform/opacity only)
+
+### Mobile Redesign (MOB)
+
+- [ ] **MOB-01**: Mobile screens (auth, dashboard, garage, favorites, settings) are **restyled to match** the editorial dark direction using RN StyleSheet tokens
+- [ ] **MOB-02**: Mobile **trip results show precise tolls** consistent with web (real-vs-estimate)
+- [ ] **MOB-03**: Design tokens are **kept consistent** between web and mobile (shared source of truth where practical)
+
+---
+
+## Deferred (v2+)
+
+- Multi-class tolls (trucks, motorcycles, towing) — class 1 only for now
+- Per-segment toll breakdown (barrier-by-barrier list) — single total for now
+- Avoid-tolls routing alternative — display only for now
+- Light theme as a premium first-class experience — dark-first this milestone
+- i18n FR/EN re-enable
+
+## Out of Scope
+
+- Mappy / ViaMichelin toll providers — TollGuru chosen
+- Glassmorphism / bento / light-first visual directions — editorial dark chosen
+- Heavy scroll/page animation & scrollytelling — measured micro-interactions chosen
+- Geolocated auto-history, multi-currency, vehicle comparator, carpooling — later milestones
+- Brand rename of repo / Render URL / `@tripwise/shared` package — separate chore
+
+---
+
+## Traceability
+
+<!-- Filled by the roadmapper: REQ-ID → Phase mapping -->
+
+| REQ-ID | Phase |
+|--------|-------|
+| _(pending roadmap)_ | |
