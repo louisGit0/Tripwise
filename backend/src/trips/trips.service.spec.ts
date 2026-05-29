@@ -7,12 +7,16 @@
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { TripsService } from './trips.service';
 import { MapboxService } from '../mapbox/mapbox.service';
 import { VehiclesService } from '../vehicles/vehicles.service';
 import { FuelPricesService } from '../fuel-prices/fuel-prices.service';
 import { ChargingStationsService } from '../charging-stations/charging-stations.service';
+import { TollService } from '../toll/toll.service';
 import { FuelType } from '../vehicles/entities/vehicle-model.entity';
+import { Trip } from './entities/trip.entity';
+import { UserVehicle } from '../vehicles/entities/user-vehicle.entity';
 
 // ── Stubs ──────────────────────────────────────────────────────────────────────
 
@@ -93,6 +97,13 @@ describe('TripsService', () => {
           provide: ChargingStationsService,
           useValue: { findStationsAlongRoute: jest.fn().mockResolvedValue([]) },
         },
+        {
+          // Toll est testé en isolation dans toll.service.spec.ts ; ici on le neutralise.
+          provide: TollService,
+          useValue: { computeTollCost: jest.fn().mockResolvedValue(null) },
+        },
+        { provide: getRepositoryToken(Trip), useValue: {} },
+        { provide: getRepositoryToken(UserVehicle), useValue: {} },
       ],
     }).compile();
 

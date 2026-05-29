@@ -7,6 +7,7 @@ import { UserVehicle } from '../vehicles/entities/user-vehicle.entity';
 import { VehiclesModule } from '../vehicles/vehicles.module';
 import { FuelPricesModule } from '../fuel-prices/fuel-prices.module';
 import { ChargingStationsModule } from '../charging-stations/charging-stations.module';
+import { TollModule } from '../toll/toll.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ChargingStationsModule } from '../charging-stations/charging-stations.m
     VehiclesModule,
     FuelPricesModule,
     ChargingStationsModule,
+    TollModule,
   ],
   controllers: [TripsController],
   providers: [TripsService],

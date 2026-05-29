@@ -25,6 +25,7 @@ import { FuelPricesModule } from '../src/fuel-prices/fuel-prices.module';
 import { FuelPricesService } from '../src/fuel-prices/fuel-prices.service';
 import { ChargingStationsModule } from '../src/charging-stations/charging-stations.module';
 import { ChargingStationsService } from '../src/charging-stations/charging-stations.service';
+import { TollService } from '../src/toll/toll.service';
 import { User } from '../src/users/entities/user.entity';
 import { UserVehicle } from '../src/vehicles/entities/user-vehicle.entity';
 import { VehicleModel, FuelType } from '../src/vehicles/entities/vehicle-model.entity';
@@ -124,6 +125,12 @@ const chargingMock = {
   findStationsAlongRoute: jest.fn().mockResolvedValue([CHARGING_STATION_STUB]),
 };
 
+// ── Mock TollService ───────────────────────────────────────────────────────
+
+const tollMock = {
+  computeTollCost: jest.fn().mockResolvedValue({ cost: 12.5, isEstimate: false }),
+};
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 async function registerAndLogin(app: INestApplication<App>, email: string) {
@@ -179,6 +186,7 @@ describe('Trips (e2e)', () => {
       .overrideProvider(MapboxService).useValue(mapboxMock)
       .overrideProvider(FuelPricesService).useValue(fuelPricesMock)
       .overrideProvider(ChargingStationsService).useValue(chargingMock)
+      .overrideProvider(TollService).useValue(tollMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -217,6 +225,7 @@ describe('Trips (e2e)', () => {
     });
     chargingMock.findStationsNearPoint.mockResolvedValue([CHARGING_STATION_STUB]);
     chargingMock.findStationsAlongRoute.mockResolvedValue([CHARGING_STATION_STUB]);
+    tollMock.computeTollCost.mockResolvedValue({ cost: 12.5, isEstimate: false });
   });
 
   // ── Auth ───────────────────────────────────────────────────────────────────
@@ -498,6 +507,66 @@ describe('Trips (e2e)', () => {
         .expect((res) => {
           expect([500, 503]).toContain(res.status);
         });
+    });
+
+    // ── Tolls (TOLL-04 + TOLL-06) ──────────────────────────────────────────
+
+    it('retourne tollCost et tollIsEstimate (réel) — TOLL-04', async () => {
+      tollMock.computeTollCost.mockResolvedValueOnce({ cost: 37.5, isEstimate: false });
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(res.body.tollCost).toBe(37.5);
+      expect(res.body.tollIsEstimate).toBe(false);
+      // La géométrie déjà calculée est transmise au TollService (D-05), pas les coords brutes.
+      expect(tollMock.computeTollCost).toHaveBeenCalledWith(
+        DIRECTIONS_STUB.geometry.coordinates,
+        expect.any(Number),
+        DIRECTIONS_STUB.durationSeconds,
+      );
+    });
+
+    it('reflète le repli heuristique (tollIsEstimate=true) — TOLL-04', async () => {
+      tollMock.computeTollCost.mockResolvedValueOnce({ cost: 28.35, isEstimate: true });
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(res.body.tollCost).toBe(28.35);
+      expect(res.body.tollIsEstimate).toBe(true);
+    });
+
+    it('tollCost null / tollIsEstimate false quand pas de péage calculable', async () => {
+      tollMock.computeTollCost.mockResolvedValueOnce(null);
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      expect(res.body.tollCost).toBeNull();
+      expect(res.body.tollIsEstimate).toBe(false);
+    });
+
+    it('ne fuite jamais la clé TollGuru dans la réponse — TOLL-06', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/trips/calculate')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...BASE_BODY, userVehicleId: thermalVehicleId })
+        .expect(201);
+
+      const raw = JSON.stringify(res.body).toLowerCase();
+      expect(raw).not.toContain('tollguru_api_key');
+      expect(raw).not.toContain('x-api-key');
+      expect(res.body).not.toHaveProperty('apiKey');
     });
   });
 
