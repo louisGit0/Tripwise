@@ -29,6 +29,8 @@ export interface VehicleModel {
   year?: number | null;
   fuelType: FuelType;
   consumption: number;
+  batteryCapacityKwh?: number | null;
+  tankCapacityLiters?: number | null;
 }
 
 export interface UserVehicle {

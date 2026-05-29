@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, Pencil, Trash2, Star } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
@@ -13,8 +14,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
-import { useDebounce } from '@/hooks/useDebounce';
-import type { UserVehicle, VehicleModel, UserVehicleWithStats, CatalogPage } from '@/types/api';
+import type { UserVehicle, UserVehicleWithStats } from '@/types/api';
 
 // UserVehicle may or may not carry stats — support both shapes
 type GarageVehicle = UserVehicle | UserVehicleWithStats;
@@ -29,20 +29,11 @@ function isDefaultVehicle(v: GarageVehicle): boolean {
 
 export default function GaragePage() {
   const { showToast } = useToast();
+  const router = useRouter();
 
   const [vehicles, setVehicles] = useState<GarageVehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // ── Add modal state ─────────────────────────────────────────
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [catalogSearch, setCatalogSearch] = useState('');
-  const [catalogResults, setCatalogResults] = useState<VehicleModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState<VehicleModel | null>(null);
-  const [addNickname, setAddNickname] = useState('');
-  const [addHomePrice, setAddHomePrice] = useState('');
-  const [addPublicPrice, setAddPublicPrice] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const debouncedSearch = useDebounce(catalogSearch, 300);
 
   // ── Edit modal state ────────────────────────────────────────
   const [editVehicle, setEditVehicle] = useState<GarageVehicle | null>(null);
@@ -71,58 +62,6 @@ export default function GaragePage() {
   useEffect(() => {
     loadVehicles();
   }, [loadVehicles]);
-
-  useEffect(() => {
-    if (!showAddModal || debouncedSearch.length < 2) {
-      setCatalogResults([]);
-      return;
-    }
-    apiClient
-      .get<CatalogPage>('/vehicles/catalog', {
-        params: { search: debouncedSearch, limit: 10 },
-      })
-      .then(({ data }) => setCatalogResults(data.items ?? []))
-      .catch(() => setCatalogResults([]));
-  }, [debouncedSearch, showAddModal]);
-
-  function openAddModal() {
-    setSelectedModel(null);
-    setCatalogSearch('');
-    setCatalogResults([]);
-    setAddNickname('');
-    setAddHomePrice('');
-    setAddPublicPrice('');
-    setShowAddModal(true);
-  }
-
-  async function handleAdd() {
-    if (!selectedModel) return;
-    const isElectric = selectedModel.fuelType === 'ELECTRIC';
-    if (isElectric && (!addHomePrice || !addPublicPrice)) {
-      showToast('error', 'Prix de charge requis pour les véhicules électriques');
-      return;
-    }
-    setIsSaving(true);
-    try {
-      await apiClient.post('/vehicles/me', {
-        vehicleModelId: selectedModel.id,
-        nickname: addNickname || undefined,
-        ...(isElectric
-          ? {
-              homeElectricityPrice: parseFloat(addHomePrice),
-              publicChargingPrice: parseFloat(addPublicPrice),
-            }
-          : {}),
-      });
-      setShowAddModal(false);
-      showToast('success', 'Enregistré !');
-      await loadVehicles();
-    } catch {
-      showToast('error', 'Une erreur est survenue');
-    } finally {
-      setIsSaving(false);
-    }
-  }
 
   function openEdit(v: GarageVehicle) {
     setEditVehicle(v);
@@ -194,7 +133,7 @@ export default function GaragePage() {
           variant="accent"
           size="sm"
           icon={<Plus size={13} />}
-          onClick={openAddModal}
+          onClick={() => router.push('/app/garage/add')}
         >
           Ajouter au garage
         </CTAButton>
@@ -213,7 +152,7 @@ export default function GaragePage() {
             <p className="text-sm text-carbon-muted">
               Aucun véhicule dans le garage. Ajoutez-en un pour calculer vos trajets.
             </p>
-            <CTAButton variant="accent" size="sm" icon={<Plus size={13} />} onClick={openAddModal}>
+            <CTAButton variant="accent" size="sm" icon={<Plus size={13} />} onClick={() => router.push('/app/garage/add')}>
               Ajouter au garage
             </CTAButton>
           </div>
@@ -310,93 +249,6 @@ export default function GaragePage() {
           })}
         </div>
       )}
-
-      {/* ── Add Modal ─────────────────────────────────────────── */}
-      <Modal
-        open={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title={selectedModel ? 'Ajouter au garage' : 'Rechercher un modèle'}
-        footer={
-          selectedModel ? (
-            <>
-              <CTAButton variant="ghost" onClick={() => setSelectedModel(null)}>
-                Retour
-              </CTAButton>
-              <CTAButton variant="accent" onClick={handleAdd} loading={isSaving}>
-                Ajouter
-              </CTAButton>
-            </>
-          ) : undefined
-        }
-      >
-        {!selectedModel ? (
-          <div className="flex flex-col gap-3">
-            <Input
-              placeholder="Marque ou modèle..."
-              value={catalogSearch}
-              onChange={(e) => setCatalogSearch(e.target.value)}
-              autoFocus
-            />
-            {catalogResults.length === 0 && catalogSearch.length >= 2 && (
-              <p className="text-sm text-carbon-muted text-center py-4">Aucun modèle trouvé</p>
-            )}
-            <div className="flex flex-col gap-1.5 max-h-72 overflow-y-auto">
-              {catalogResults.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setSelectedModel(m)}
-                  className="flex items-center justify-between px-3 py-2.5 border border-carbon-hairline rounded-xl text-sm bg-carbon-surface2 hover:border-carbon-accent hover:bg-blue-500/8 transition-colors text-left"
-                >
-                  <span className="text-carbon-ink">
-                    {m.brand} {m.model} {m.year ? `(${m.year})` : ''}
-                  </span>
-                  <FuelBadge fuelType={m.fuelType} />
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
-              <BrandAvatar brand={selectedModel.brand} size={32} />
-              <div>
-                <p className="text-sm font-medium text-carbon-ink">
-                  {selectedModel.brand} {selectedModel.model}
-                  {selectedModel.year ? ` (${selectedModel.year})` : ''}
-                </p>
-                <FuelBadge fuelType={selectedModel.fuelType} />
-              </div>
-            </div>
-            <Input
-              label="Surnom"
-              placeholder="Ex. La petite"
-              value={addNickname}
-              onChange={(e) => setAddNickname(e.target.value)}
-            />
-            {selectedModel.fuelType === 'ELECTRIC' && (
-              <>
-                <Input
-                  label="Prix domicile (€/kWh)"
-                  type="number"
-                  step="0.0001"
-                  placeholder="0.2272"
-                  value={addHomePrice}
-                  onChange={(e) => setAddHomePrice(e.target.value)}
-                />
-                <Input
-                  label="Prix borne (€/kWh)"
-                  type="number"
-                  step="0.0001"
-                  placeholder="0.4500"
-                  value={addPublicPrice}
-                  onChange={(e) => setAddPublicPrice(e.target.value)}
-                />
-              </>
-            )}
-          </div>
-        )}
-      </Modal>
 
       {/* ── Edit Modal ────────────────────────────────────────── */}
       <Modal
