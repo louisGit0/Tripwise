@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus, Save, RotateCcw } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -8,6 +9,8 @@ import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { FuelBadge } from '@/components/ui/FuelBadge';
+import { Pill } from '@/components/ui/Pill';
+import { Tooltip } from '@/components/ui/Tooltip';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type {
@@ -106,6 +109,7 @@ export default function TripResultPage() {
         energyCost: cost.totalCost,
         totalCost: cost.totalCost + (result.tollCost ?? 0),
         tollsCost: result.tollCost ?? 0,
+        tollIsEstimate: result.tollIsEstimate,
         passengersCount: passengers,
       });
 
@@ -148,6 +152,49 @@ export default function TripResultPage() {
   const comparisons = multiResult?.comparisons ?? [];
   const maxCost = comparisons.reduce((m, c) => Math.max(m, c.totalCost), 0);
 
+  // Metrics grid — péage line dropped entirely when there is no toll (D-04)
+  const hasToll = result.tollCost !== null && result.tollCost > 0;
+  const tollBadge = hasToll ? (
+    <Tooltip
+      content={
+        tollIsEstimate
+          ? 'Estimation indicative (calcul français moyen)'
+          : 'Prix réel calculé par TollGuru le long de l’itinéraire'
+      }
+    >
+      <Pill color={tollIsEstimate ? 'warning' : 'success'} size="sm">
+        {tollIsEstimate ? '≈ estimé' : 'réel'}
+      </Pill>
+    </Tooltip>
+  ) : undefined;
+
+  const metrics = [
+    {
+      label: 'ÉNERGIE',
+      value: cost
+        ? `${isFuelCost(cost) ? cost.consumptionLitres.toFixed(2) : cost.consumptionKwh.toFixed(1)} ${isFuelCost(cost) ? 'L' : 'kWh'}`
+        : 'Non calculé',
+    },
+    hasToll
+      ? {
+          label: 'PÉAGES',
+          value: fmtEur.format(result.tollCost as number),
+          badge: tollBadge,
+        }
+      : false,
+    {
+      label: '€/KM',
+      value:
+        result.distance.km > 0
+          ? `${(totalCost / result.distance.km).toFixed(3)} €`
+          : 'Non calculé',
+    },
+    {
+      label: 'PAR PERS.',
+      value: fmtEur.format(totalCost / passengers),
+    },
+  ].filter(Boolean) as Array<{ label: string; value: string; badge?: ReactNode }>;
+
   return (
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
@@ -178,32 +225,7 @@ export default function TripResultPage() {
         {/* 2×2 metrics grid */}
         <Hairline className="my-4" />
         <div className="grid grid-cols-2 gap-3">
-          {[
-            {
-              label: 'ÉNERGIE',
-              value: cost
-                ? `${isFuelCost(cost) ? cost.consumptionLitres.toFixed(2) : cost.consumptionKwh.toFixed(1)} ${isFuelCost(cost) ? 'L' : 'kWh'}`
-                : 'Non calculé',
-            },
-            {
-              label: 'PÉAGES',
-              value: result.tollCost !== null
-                ? `${tollIsEstimate ? '~' : ''}${fmtEur.format(result.tollCost)}`
-                : 'Non calculé',
-              note: tollIsEstimate && result.tollCost !== null ? 'estimation' : undefined,
-            },
-            {
-              label: '€/KM',
-              value:
-                result.distance.km > 0
-                  ? `${(totalCost / result.distance.km).toFixed(3)} €`
-                  : 'Non calculé',
-            },
-            {
-              label: 'PAR PERS.',
-              value: fmtEur.format(totalCost / passengers),
-            },
-          ].map(({ label, value, note }) => (
+          {metrics.map(({ label, value, badge }) => (
             <div
               key={label}
               className="flex flex-col gap-0.5 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
@@ -211,12 +233,10 @@ export default function TripResultPage() {
               <span className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted">
                 {label}
               </span>
-              <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
+              <span className="flex items-center gap-1.5 text-sm font-bold font-mono text-carbon-ink tabular-nums">
                 {value}
+                {badge}
               </span>
-              {note && (
-                <span className="text-[9px] font-mono text-amber-400 leading-none">{note}</span>
-              )}
             </div>
           ))}
         </div>
