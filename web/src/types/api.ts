@@ -239,7 +239,7 @@ export interface DefaultPrices {
   previousFetchedAt?: string;
 }
 
-/** Stored in sessionStorage under 'tripwise.pendingTrip' after a calculation */
+/** Stored in sessionStorage under 'verygoodtrip.pendingTrip' after a calculation */
 export interface PendingTripSession {
   origin: GeoPoint | null;
   destination: GeoPoint | null;

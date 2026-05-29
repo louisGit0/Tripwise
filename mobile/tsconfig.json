@@ -4,8 +4,8 @@
     "strict": true,
     "paths": {
       "@/*": ["./*"],
-      "@tripwise/shared": ["../shared/src/index.ts"],
-      "@tripwise/shared/*": ["../shared/src/*"]
+      "@verygoodtrip/shared": ["../shared/src/index.ts"],
+      "@verygoodtrip/shared/*": ["../shared/src/*"]
     }
   },
   "include": [

@@ -30,9 +30,9 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
     ...shared,
     host: process.env.DB_HOST ?? 'localhost',
     port: parseInt(process.env.DB_PORT ?? '5432', 10),
-    username: process.env.DB_USERNAME ?? 'tripwise',
-    password: process.env.DB_PASSWORD ?? 'tripwise',
-    database: process.env.DB_NAME ?? 'tripwise',
+    username: process.env.DB_USERNAME ?? 'verygoodtrip',
+    password: process.env.DB_PASSWORD ?? 'verygoodtrip',
+    database: process.env.DB_NAME ?? 'verygoodtrip',
     ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
   };
 });

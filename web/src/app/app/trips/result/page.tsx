@@ -18,7 +18,7 @@ import type {
   SavedTrip,
 } from '@/types/api';
 
-const SESSION_KEY = 'tripwise.pendingTrip';
+const SESSION_KEY = 'verygoodtrip.pendingTrip';
 
 function isFuelCost(cost: FuelCostResult | ElectricCostResult): cost is FuelCostResult {
   return cost.type === 'fuel';

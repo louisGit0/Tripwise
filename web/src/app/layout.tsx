@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tripwise — Calculez le coût de vos trajets',
+  title: 'VeryGoodTrip — Calculez le coût de vos trajets',
   description:
     'Estimez le coût réel de vos trajets en voiture ou en véhicule électrique. Gratuit, sans publicité.',
   icons: {
@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: 'Tripwise — Calculez le coût de vos trajets',
+    title: 'VeryGoodTrip — Calculez le coût de vos trajets',
     description:
       'Estimez le coût réel de vos trajets en voiture ou en véhicule électrique. Gratuit, sans publicité.',
-    siteName: 'Tripwise',
+    siteName: 'VeryGoodTrip',
   },
   twitter: {
     card: 'summary',
-    title: 'Tripwise — Calculez le coût de vos trajets',
+    title: 'VeryGoodTrip — Calculez le coût de vos trajets',
     description:
       'Estimez le coût réel de vos trajets en voiture ou en véhicule électrique. Gratuit, sans publicité.',
   },

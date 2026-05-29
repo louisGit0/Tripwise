@@ -17,7 +17,7 @@ import type {
   PendingTripSession,
 } from '@/types/api';
 
-const SESSION_KEY = 'tripwise.pendingTrip';
+const SESSION_KEY = 'verygoodtrip.pendingTrip';
 
 const CHARGING_OPTIONS: { value: ChargingMode; label: string }[] = [
   { value: 'home', label: 'Domicile' },
