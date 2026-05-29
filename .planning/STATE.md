@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-05-29T20:00:00.000Z"
+last_updated: "2026-05-29T20:02:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -24,12 +24,12 @@ progress:
 ## Current Position
 
 Phase: 01 (precise-tolls-end-to-end-web) — EXECUTING
-Plan: 2 of 4 (01-01 complete)
+Plan: 3 of 4 (01-01, 01-02 complete)
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web)
-- **Plan:** 01-01 complete (backend toll engine); next 01-02 (persistence)
+- **Plan:** 01-02 complete (toll-estimate persistence); next 01-03 (web display)
 - **Status:** Executing Phase 01
-- **Progress:** [██▌░░░░░░░] 1/4 plans in Phase 01
+- **Progress:** [█████░░░░░] 2/4 plans in Phase 01
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 2 of 4 (01-01 complete)
 
 - Phases complete: 0/5
 - Requirements mapped: 23/23
-- Plans executed: 1 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files)
+- Plans executed: 2 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files)
 
 ## Accumulated Context
 
@@ -66,6 +66,8 @@ Plan: 2 of 4 (01-01 complete)
 - Web token must be cached server-side to avoid burning quota on repeated routes.
 - ✅ `TollService` extracted from `TripsService` (plan 01-01): precise TollGuru polyline call, defensive parse, 30-day SHA-1 cache, silent heuristic fallback; wired via `Promise.all`. `computeTollCost`/`estimateFrenchTolls` removed from `TripsService`.
 - ⚠️ Precise TollGuru branch is unit-tested with a mocked `fetch` only — endpoint/response-shape/precision (RESEARCH A1–A6) still need a one-time live verification with a real `TOLLGURU_API_KEY` (deferred to plan 01-04 checkpoint).
+- ✅ `Trip.tollIsEstimate` persisted (plan 01-02): `toll_is_estimate` boolean column + hand-written migration `1748000000000` (applied dev, `[X] 5`); `SaveTripDto.tollIsEstimate` (optional `@IsBoolean`); `saveTrip` writes `?? false`; crud e2e proves round-trip via `GET /trips/:id` and stats-once. Plan 01-03 renders the badge on the detail page.
+- ℹ️ Global `ValidationPipe` uses `enableImplicitConversion: true` — coerces strings to booleans before `@IsBoolean` runs, so a malformed boolean is silently truthy-coerced (not 400). Project-wide; relevant if any future negative DTO test targets a boolean field.
 - Existing single-source pipeline: `backend/src/vehicles/vehicle-sync.service.ts` + import script `backend/src/scripts/import-ademe.ts` (~266 deduped ADEME entries) — Phase 4 generalizes this into a multi-source, idempotent ingestion with provenance + cross-source merge.
 - Showroom `web/src/app/app/garage/add/page.tsx` currently loads ALL models client-side — will not scale; Phase 4 moves it to server-side search + pagination and exposes an API the mobile phase reuses.
 - CAT-06 spans web + mobile server-side search; it is owned by Phase 4 (builds the API + web showroom). Phase 5 consumes that API for the mobile showroom (no client load-all).
@@ -79,6 +81,6 @@ Plan: 2 of 4 (01-01 complete)
 
 ## Session Continuity
 
-- **Last action:** Executed plan 01-01 (backend toll engine) — extracted `TollService` (TDD: RED `3fc3b00` → GREEN `ab3c3c1` → wire+e2e `c2fb916`); full backend suite green (38 unit, 140 e2e), tsc + nest build clean. TOLL-01/02/03/06 covered at the API level.
-- **Next action:** Execute plan 01-02 (persist `tollIsEstimate` column + migration + save flow + crud e2e).
+- **Last action:** Executed plan 01-02 (toll-estimate persistence) — added `Trip.tollIsEstimate` + migration `1748000000000` (applied dev), `SaveTripDto.tollIsEstimate`, save-flow write, crud e2e (commits `0a92b00` entity+migration, `ca24e67` DTO+save+e2e). Full trips e2e 66/66; tsc + nest build clean. TOLL-05 delivered at the persistence level.
+- **Next action:** Execute plan 01-03 (web display — Tooltip atom, réel/≈ estimé badge, hide-when-0 on result + saved detail).
 - **Updated:** 2026-05-29
