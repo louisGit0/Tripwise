@@ -34,7 +34,12 @@ breadth, not the foundation.
   3. The toll is computed for a passenger car (class 1) by default and shown as its own line, included in the displayed grand total.
   4. Saving a trip persists the toll cost so it appears in the trip detail, history, and monthly stats totals.
   5. Repeating an identical route does not issue a second TollGuru call (server-side cache), and the API key never appears in any client response or bundle.
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 01-01-PLAN.md — Backend toll engine: extract TollService, precise TollGuru polyline call, defensive parse, 30-day cache, silent fallback, wire into TripsService (Wave 1)
+- [ ] 01-02-PLAN.md — Persistence: tollIsEstimate entity column + hand-written migration (run dev) + save-flow + crud e2e (Wave 2)
+- [ ] 01-03-PLAN.md — Web display: Tooltip atom, réel/≈ estimé badge, hide-when-0 on result, same badge on saved detail (Wave 3)
+- [ ] 01-04-PLAN.md — Verification: live TollGuru Paris→Lyon checkpoint + web badge/tooltip visual checkpoint (Wave 4)
 
 ### Phase 2: Editorial Dark Design System + Trip Result Redesign
 **Goal**: A reusable editorial-premium-dark design language exists as documented tokens, and the highest-value screen — the trip result — is rebuilt around it with designed cost/energy/toll data-viz and micro-interactions, proving the system before rollout.
@@ -92,7 +97,7 @@ breadth, not the foundation.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Precise Tolls End-to-End (Web) | 0/0 | Not started | - |
+| 1. Precise Tolls End-to-End (Web) | 0/4 | Planned | - |
 | 2. Editorial Dark Design System + Trip Result Redesign | 0/0 | Not started | - |
 | 3. Web Redesign Rollout | 0/0 | Not started | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
