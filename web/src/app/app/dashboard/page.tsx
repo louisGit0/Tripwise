@@ -33,9 +33,9 @@ interface UserPrices {
   evFast: number;
   fastShare: number;
 }
-const PRICES_KEY = 'tripwise.userPrices';
-const API_CACHE_KEY = 'tripwise.apiPricesCache';
-const PRICE_SOURCE_KEY = 'tripwise.priceSource';
+const PRICES_KEY = 'verygoodtrip.userPrices';
+const API_CACHE_KEY = 'verygoodtrip.apiPricesCache';
+const PRICE_SOURCE_KEY = 'verygoodtrip.priceSource';
 const FALLBACK_PRICES: UserPrices = {
   gas: 1.75,
   diesel: 1.68,

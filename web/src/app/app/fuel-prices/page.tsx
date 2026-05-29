@@ -10,9 +10,9 @@ import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { DefaultPrices } from '@/types/api';
 
-const STORAGE_KEY = 'tripwise.userPrices';
-const API_CACHE_KEY = 'tripwise.apiPricesCache';
-const SOURCE_KEY = 'tripwise.priceSource';
+const STORAGE_KEY = 'verygoodtrip.userPrices';
+const API_CACHE_KEY = 'verygoodtrip.apiPricesCache';
+const SOURCE_KEY = 'verygoodtrip.priceSource';
 
 type PriceSource = 'api' | 'custom';
 

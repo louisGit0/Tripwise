@@ -1,8 +1,8 @@
 {
-  "name": "@tripwise/shared",
+  "name": "@verygoodtrip/shared",
   "version": "1.0.0",
   "private": true,
-  "description": "Types TypeScript partagés entre le backend, le web et le mobile Tripwise",
+  "description": "Types TypeScript partagés entre le backend, le web et le mobile VeryGoodTrip",
   "main": "src/index.ts",
   "types": "src/index.ts"
 }

@@ -1,17 +1,17 @@
 import { ExpoConfig } from 'expo/config';
 
 const config: ExpoConfig = {
-  name: 'Tripwise',
-  slug: 'tripwise',
+  name: 'VeryGoodTrip',
+  slug: 'verygoodtrip',
   version: '1.0.0',
-  scheme: 'tripwise',
+  scheme: 'verygoodtrip',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.tripwise.app',
+    bundleIdentifier: 'com.verygoodtrip.app',
     usesAppleSignIn: true,
   },
   android: {
@@ -20,7 +20,7 @@ const config: ExpoConfig = {
       backgroundImage: './assets/images/android-icon-background.png',
       backgroundColor: '#2563eb',
     },
-    package: 'com.tripwise.app',
+    package: 'com.verygoodtrip.app',
     edgeToEdgeEnabled: true,
   },
   web: {

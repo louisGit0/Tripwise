@@ -59,7 +59,7 @@ export default function LoginScreen() {
   const handleGoogleLogin = async () => {
     const result = await WebBrowser.openAuthSessionAsync(
       `${API_BASE}/auth/google`,
-      'tripwise://auth/callback',
+      'verygoodtrip://auth/callback',
     );
     if (result.type === 'success' && result.url) {
       const token = new URL(result.url).searchParams.get('token');
