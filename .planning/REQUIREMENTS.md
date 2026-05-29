@@ -61,8 +61,24 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 ## Traceability
 
-<!-- Filled by the roadmapper: REQ-ID → Phase mapping -->
+<!-- REQ-ID → Phase mapping (roadmapper) -->
 
 | REQ-ID | Phase |
 |--------|-------|
-| _(pending roadmap)_ | |
+| TOLL-01 | Phase 1 |
+| TOLL-02 | Phase 1 |
+| TOLL-03 | Phase 1 |
+| TOLL-04 | Phase 1 |
+| TOLL-05 | Phase 1 |
+| TOLL-06 | Phase 1 |
+| DES-01 | Phase 2 |
+| DES-02 | Phase 2 |
+| DES-03 | Phase 2 |
+| DES-04 | Phase 2 |
+| WEB-02 | Phase 2 |
+| WEB-01 | Phase 3 |
+| WEB-03 | Phase 3 |
+| WEB-04 | Phase 3 |
+| MOB-01 | Phase 4 |
+| MOB-02 | Phase 4 |
+| MOB-03 | Phase 4 |
