@@ -1,3 +1,355 @@
+# CLAUDE.md — verygoodtrip
+
+> Mémoire projet pour Claude Code.
+> Les sections GSD (entre marqueurs `<!-- GSD:* -->`) sont régénérées par les commandes GSD — ne pas les éditer à la main.
+> La « Référence détaillée & journal des décisions » plus bas est maintenue à la main (décisions historiques, specs API).
+
+<!-- GSD:project-start source:PROJECT.md -->
+## Project
+
+**verygoodtrip**
+
+verygoodtrip is a web + mobile app that calculates the real cost of a car trip (fuel or electric) between two points in France — including tolls — for a specific vehicle from the user's garage. It combines live fuel prices, EV charging modes, real route distance, and toll costs, plus trip history and savings stats. For French drivers who want a trustworthy total before they go.
+
+**Core Value:** Give an accurate, trustworthy **total trip cost** (energy + tolls) for a specific vehicle, instantly. If everything else fails, the number must be right and clearly presented.
+
+### Constraints
+
+- **Tech stack**: NestJS + TypeORM + Postgres, Next.js 15 + Tailwind, Expo SDK 54 — do not introduce conflicting frameworks; reuse existing patterns.
+- **Dependency**: precise tolls require a `TOLLGURU_API_KEY` (free tier limited, then paid) — must degrade gracefully to the heuristic when absent or over quota.
+- **Performance**: web Core Web Vitals targets; mobile must stay smooth; animate only compositor-friendly properties (transform/opacity).
+- **Mobile**: `@rnmapbox/maps` needs an EAS dev build (not Expo Go); design tokens must work in RN StyleSheet (no Tailwind).
+- **Security**: Mapbox/public tokens domain-restricted; no secrets committed; TollGuru key server-side only.
+- **Deployment**: `master` auto-deploys (Render + Vercel) — commit + push after each verified update (user preference).
+<!-- GSD:project-end -->
+
+<!-- GSD:stack-start source:codebase/STACK.md -->
+## Technology Stack
+
+## Languages
+- TypeScript 5.x — all three sub-projects (backend, web, mobile) and shared types
+- SQL (PostgreSQL 16) — database schema and migrations
+## Runtime
+- Node.js 20 LTS (pinned in `backend/Dockerfile`: `node:20-alpine`)
+- Node.js native `fetch` used in backend services (no axios on the server side)
+- npm (individual lockfiles in each sub-project)
+- Lockfiles: present in `backend/`, `web/`, `mobile/`
+- Root `package.json` uses `concurrently ^9.1.2` for running sub-projects in parallel
+## Frameworks
+- **NestJS 11** (`@nestjs/common ^11.0.1`, `@nestjs/core ^11.0.1`) — REST API backend
+- **Next.js 15.3.9** — web frontend (App Router, SSR + Server Components)
+- **Expo SDK 54** (`expo ~54.0.33`) + **React Native 0.81.5** — mobile app
+- React 19.1.0
+- Tailwind CSS 3.4.17 (`web/tailwind.config.ts`)
+- next-themes `^0.4.6` — light/dark/system theme switching
+- React Native StyleSheet API (not NativeWind — incompatible with React 19 + new arch)
+- `constants/theme.ts` — centralized palette, fonts, spacing
+- Jest 30 + ts-jest 29.2.5 — backend unit + e2e tests
+- No test framework detected in web or mobile (see TESTING.md)
+- NestJS CLI `^11.0.0` — `nest build`, `nest start --watch`
+- Webpack (via Next.js) — web build; `mapbox-gl` excluded from server bundle
+- EAS Build (Expo Application Services) — mobile builds
+## Key Dependencies
+- `typeorm ^1.0.0` + `@nestjs/typeorm ^11.0.1` — ORM; entities in `backend/src/**/*.entity.ts`
+- `pg ^8.21.0` — PostgreSQL driver
+- `@nestjs/jwt ^11.0.2` + `passport-jwt ^4.0.1` — JWT auth (7-day tokens)
+- `bcrypt ^6.0.0` — password hashing (salt rounds: 12)
+- `passport-google-oauth20 ^2.0.0` — Google OAuth 2.0
+- `passport-apple ^2.0.2` — Apple Sign In
+- `@nestjs/throttler ^6.5.0` — rate limiting (100 req/min global, 5 req/min on auth routes)
+- `nestjs-i18n ^10.8.4` — i18n (FR default, EN), JSON files in `backend/src/i18n/`
+- `helmet ^8.1.0` — HTTP security headers
+- `express-session ^1.19.0` — OAuth state store (5-min cookie, JWT-free sessions)
+- `axios ^1.16.1` — API client (`web/src/lib/api.ts`); JWT read from cookie, injected as `Authorization: Bearer`
+- `mapbox-gl ^3.24.0` — interactive route map (client-only, SSR excluded via `next.config.ts`)
+- `react-hook-form ^7.76.0` + `@hookform/resolvers ^5.2.2` + `zod ^4.4.3` — form validation
+- `lucide-react ^1.16.0` — icon set
+- `@rnmapbox/maps ^10.3.1` — Mapbox map (dev build required; shows placeholder in Expo Go)
+- `expo-secure-store ~15.0.8` — JWT storage (encrypted, outside JS sandbox)
+- `expo-apple-authentication ~8.0.8` — Apple Sign In (iOS physical device in prod)
+- `expo-web-browser ~15.0.11` — Google OAuth flow (`openAuthSessionAsync`)
+- `i18next ^26.2.0` + `react-i18next ^17.0.8` + `expo-localization ~17.0.8` — i18n FR/EN
+- `react-native-reanimated ~4.1.1` + `react-native-gesture-handler ~2.28.0` — animations
+- `react-native-toast-message ^2.3.3` — toast notifications
+- `concurrently ^9.1.2` (root) — parallel dev script
+- `@verygoodtrip/shared` — internal shared package at `shared/src/index.ts`; referenced via path alias `@verygoodtrip/shared` in `backend/tsconfig.json`; no build step
+## Configuration
+- Backend: `backend/.env` (loaded by `@nestjs/config`, `dotenv ^17.4.2`)
+- Web: `web/.env.local`
+- Mobile: `mobile/.env`
+- `backend/tsconfig.json` — target ES2023, module nodenext, strict, `emitDecoratorMetadata: true`
+- `web/next.config.ts` — `mapbox-gl` excluded from server bundle; `/app/vehicles` → `/app/garage` HTTP 308 redirect
+- `web/tailwind.config.ts` — Carbon token colors, custom font families, border radius tokens
+- `mobile/app.config.ts` — Expo config (plugins, schemes, EAS extras)
+- `mobile/eas.json` — EAS build profiles
+## Platform Requirements
+- Node.js 20+
+- Docker + Docker Compose (for local PostgreSQL 16 + pgAdmin)
+- Mapbox account + token (`MAPBOX_TOKEN`)
+- Expo Go (mobile preview without map) or EAS dev build (with map)
+- Backend: Render (or similar; `trust proxy 1` set for single NGINX hop)
+- Database: Supabase / Neon / Render Postgres (`DATABASE_URL` with SSL)
+- Frontend Web: Vercel (Next.js); configured via `vercel.json` (monorepo root) or Vercel dashboard
+- Mobile: Expo EAS Build → App Store / Google Play
+<!-- GSD:stack-end -->
+
+<!-- GSD:conventions-start source:CONVENTIONS.md -->
+## Conventions
+
+## TypeScript Configuration
+- **No implicit `any`** — enforced at compiler level (`noImplicitAny: true`)
+- **Definite assignment assertions (`!`)** on TypeORM entity properties where TypeScript cannot infer initialisation:
+- **`unknown` for external errors** — use `instanceof Error` narrowing:
+- **Type aliases over string literals** for union types:
+## Naming Conventions
+### Files and Directories
+| Item | Pattern | Examples |
+|------|---------|---------|
+| NestJS modules/services/controllers | `kebab-case.role.ts` | `auth.service.ts`, `fuel-prices.controller.ts` |
+| NestJS DTOs | `kebab-action-resource.dto.ts` | `add-user-vehicle.dto.ts`, `calculate-trip.dto.ts` |
+| NestJS entities | `kebab-name.entity.ts` | `user-vehicle.entity.ts`, `trip.entity.ts` |
+| Feature directories | `kebab-case/` | `auth/`, `fuel-prices/`, `charging-stations/` |
+| React components (web) | `PascalCase.tsx` | `CTAButton.tsx`, `KPICell.tsx`, `SectionCard.tsx` |
+| React hooks | `useKebab.ts` | `useDebounce.ts` |
+| Next.js pages | `page.tsx` | `dashboard/page.tsx`, `login/page.tsx` |
+| Next.js layouts | `layout.tsx` | `app/app/layout.tsx` |
+| E2e test files | `kebab-name.e2e-spec.ts` | `auth.e2e-spec.ts`, `trips-crud.e2e-spec.ts` |
+| Unit test files | `kebab-name.spec.ts` | `trips.service.spec.ts` |
+### Code Identifiers
+| Category | Pattern | Examples |
+|----------|---------|---------|
+| Variables / functions | `camelCase` | `findUserVehicles`, `buildAuthResponse`, `readUserPrices` |
+| Booleans | `is*` / `has*` / `can*` prefix | `isMatch`, `isDefault`, `isArchived`, `isAllowedOrigin` |
+| Classes / interfaces / types | `PascalCase` | `RegisterDto`, `TripResult`, `FuelCategory`, `VehicleStats` |
+| Enums | `PascalCase` name, `SCREAMING_SNAKE_CASE` members | `FuelType.SP95_E10`, `AuthProvider.LOCAL`, `EnergyUnit.KWH` |
+| Module-level constants | `SCREAMING_SNAKE_CASE` | `BCRYPT_SALT_ROUNDS`, `DEFAULT_GAS_CONSUMPTION`, `FALLBACK_PRICES` |
+| Test stubs | `SCREAMING_SNAKE_CASE_STUB` | `DIRECTIONS_STUB`, `GEOCODE_STUB`, `FUEL_STATION_STUB` |
+| React hooks | `use` prefix, `camelCase` | `useDebounce`, `useToast`, `useColorScheme` |
+## Code Style
+### Formatting
+- **Prettier** configured in all packages (`prettier` in devDependencies)
+- Backend: `"prettier/prettier": ["error", { endOfLine: "auto" }]` via `backend/eslint.config.mjs`
+- Web: `npm run format` runs `prettier --write .`
+- **End of line:** `auto` (cross-platform Windows/Unix)
+### Linting (Backend)
+- Uses `typescript-eslint` with `recommendedTypeChecked` ruleset
+- `prettier/recommended` enforces formatting as lint errors
+### Linting (Web)
+- `npm run lint` runs `next lint`
+- No `console.log` found in `web/src/` — enforced by project convention
+- ESLint `react-hooks/rules-of-hooks`: functions with `use*` prefix are treated as hooks — regular utility functions must NOT use `use*` prefix
+## No `console.log` in Production Code
+- `console.log` appears ONLY in `backend/src/seeds/vehicle-models.seed.ts` and `backend/src/scripts/import-ademe.ts` (CLI scripts, not production runtime code)
+- Web has zero `console.log` calls in `src/`
+## Import Organization
+### Backend (NestJS)
+### Web (Next.js)
+- `@/` → `web/src/` (in web only)
+- `@verygoodtrip/shared` → `shared/src/index.ts` (backend and tests)
+## DTO Validation Pattern
+- Required fields: definite assignment (`!`) with no `@IsOptional()`
+- Optional fields: `?` type with `@IsOptional()` first in decorator stack
+- Nested objects: `@ValidateNested()` + `@Type(() => NestedClass)` from `class-transformer`
+- UUID path params: `ParseUUIDPipe` in controller (`@Param('id', ParseUUIDPipe)`)
+- Global `ValidationPipe` config: `{ whitelist: true, forbidNonWhitelisted: true, transform: true, transformOptions: { enableImplicitConversion: true } }`
+## Error Handling
+### Backend
+| Condition | Exception class |
+|-----------|----------------|
+| Resource not found | `NotFoundException` |
+| Ownership mismatch | `ForbiddenException` |
+| Duplicate resource | `ConflictException` |
+| Invalid input logic | `BadRequestException` |
+| External service down | `ServiceUnavailableException` |
+| Unexpected condition | `InternalServerErrorException` |
+### Frontend (Web)
+- Component error handling uses `try/catch` around `apiClient` calls
+- Errors surfaced to user via `useToast()` (`showToast('error', message)`)
+## Logging
+## Immutability
+## Module Structure (NestJS)
+- `backend/src/common/column-transformers.ts` — `decimalTransformer` for DECIMAL → number coercion
+- `backend/src/common/calculation-constants.ts` — `DEFAULT_*` pricing constants
+- `backend/src/common/fuel-type-categories.ts` — `FuelCategory` type + `toCategory()` function
+## React Component Design (Web)
+### Directive placement
+### Props interface pattern
+### Variant maps
+## Carbon Design System (Web)
+### CSS Custom Properties
+| Token | CSS var | Tailwind class |
+|-------|---------|----------------|
+| Background | `--c-bg` | `bg-carbon-bg` |
+| Surface | `--c-surface` | `bg-carbon-surface` |
+| Elevated surface | `--c-surface2` | `bg-carbon-surface2` |
+| Primary text | `--c-ink` | `text-carbon-ink` |
+| Secondary text | `--c-ink2` | `text-carbon-ink2` |
+| Muted text | `--c-muted` | `text-carbon-muted` |
+| Faint fill | `--c-faint` | `bg-carbon-faint` |
+| Separator | `--c-hairline` | `border-carbon-hairline` |
+| Accent / link | `--c-accent` | `text-carbon-accent`, `bg-carbon-accent` |
+### Typography tokens
+### Eyebrow pattern
+### Border radius
+## Mobile Component Design (Expo)
+- `StyleSheet.create()` for all styles — no NativeWind
+- `useColorScheme()` for dark/light detection
+- Colors from `mobile/constants/theme.ts` → `Colors[scheme]`
+- Same component variant/size pattern as web (using `Record<Variant, ViewStyle>`)
+- Named exports only (`export function Button(...)`)
+## Comment Style
+<!-- GSD:conventions-end -->
+
+<!-- GSD:architecture-start source:ARCHITECTURE.md -->
+## Architecture
+
+## System Overview
+```text
+```
+## Component Responsibilities
+| Component | Responsibility | Key File |
+|-----------|----------------|----------|
+| `AuthModule` | JWT issuance, Passport strategies (local/google/apple), rate-limited login/register | `backend/src/auth/auth.module.ts` |
+| `VehiclesModule` | Vehicle catalog (ADEME sync), user garage CRUD, per-vehicle stats | `backend/src/vehicles/vehicles.module.ts` |
+| `TripsModule` | Route calculation, cost computation (fuel/EV), trip persistence, history, stats | `backend/src/trips/trips.module.ts` |
+| `FavoritesModule` | Saved routes CRUD, ownership enforcement | `backend/src/favorites/favorites.module.ts` |
+| `FuelPricesModule` | Nearest fuel station price lookup (Opendatasoft, in-memory cache 1h) | `backend/src/fuel-prices/fuel-prices.module.ts` |
+| `ChargingStationsModule` | IRVE station lookup by point or route geometry (Opendatasoft, in-memory cache 1h) | `backend/src/charging-stations/charging-stations.module.ts` |
+| `PricesModule` | Returns default reference prices (gas/EV) | `backend/src/prices/prices.module.ts` |
+| `MapboxModule` | Geocoding + Directions API proxy (`@Global()` — no re-import needed) | `backend/src/mapbox/mapbox.module.ts` |
+| `UsersModule` | User entity repository, findOrCreate for OAuth flows | `backend/src/users/users.module.ts` |
+| Web App Layout | Server Component route guard (reads cookie → redirect), wraps authenticated pages | `web/src/app/app/layout.tsx` |
+| Web BFF Routes | Set/clear JWT cookie for browser (non-httpOnly, cross-site in prod) | `web/src/app/api/auth/set-cookie/route.ts`, `web/src/app/api/auth/logout/route.ts` |
+| Mobile AuthContext | SecureStore token persistence, useSegments routing gate `(auth)` ↔ `(tabs)` | `mobile/src/context/AuthContext.tsx` |
+| Shared Types | Pure TypeScript enums + interfaces — no framework dependency | `shared/src/index.ts` |
+## Pattern Overview
+- Backend follows NestJS module pattern: each domain has `module.ts`, `controller.ts`, `service.ts`, `entities/`, `dto/`
+- Web uses Next.js 15 App Router with Server Components for auth gating and Client Components for interactive pages
+- Auth is stateless JWT on the backend; web stores the token in a non-httpOnly cookie via a BFF route; mobile stores in `expo-secure-store`
+- External API calls (Mapbox, Opendatasoft fuel, ODRÉ IRVE) are encapsulated in NestJS services with in-memory caching
+- `MapboxModule` is declared `@Global()` so it is available to all modules without explicit import
+## Layers
+- Purpose: HTTP routing, input validation (DTOs + class-validator), auth guard application
+- Location: `backend/src/<module>/<module>.controller.ts`
+- Contains: Route handlers, `@UseGuards(JwtAuthGuard)`, `@CurrentUser()` extraction
+- Depends on: Service layer, Guards, DTOs
+- Used by: NestJS HTTP adapter
+- Purpose: Business logic, external API calls, database queries via TypeORM repositories
+- Location: `backend/src/<module>/<module>.service.ts`
+- Contains: Cost computation, Mapbox calls, fuel/station lookups, trip persistence
+- Depends on: TypeORM `Repository<Entity>`, `MapboxService`, `FuelPricesService`, `ChargingStationsService`
+- Used by: Controllers
+- Purpose: Database schema definition via TypeORM decorators
+- Location: `backend/src/<module>/entities/*.entity.ts` and `backend/src/trips/entities/`
+- Contains: `User`, `VehicleModel`, `UserVehicle`, `Trip`, `Favorite`
+- Depends on: TypeORM, `column-transformers.ts` (DECIMAL → number coercion)
+- Purpose: Request shape validation and transformation
+- Location: `backend/src/<module>/dto/*.dto.ts`
+- Contains: class-validator decorated classes for all POST/PATCH bodies and query params
+- Pattern: `ValidationPipe` with `whitelist: true, forbidNonWhitelisted: true, transform: true`
+- Purpose: User interface — authenticated pages are Client Components, root layout and auth layout are Server Components
+- Location: `web/src/app/app/*/page.tsx` (authenticated), `web/src/app/(login|register)/page.tsx` (public)
+- Contains: React state, `apiClient` (axios) calls, Carbon Design System components
+- Depends on: `web/src/lib/api.ts`, `web/src/types/api.ts`, `web/src/components/ui/`
+- Purpose: Cookie management — browser cannot set/delete secure cross-site cookies directly
+- Location: `web/src/app/api/auth/`
+- Contains: `set-cookie/route.ts` (POST → set cookie), `logout/route.ts` (POST → delete cookie)
+- Pattern: Next.js Route Handler (Node.js runtime), never Edge Runtime
+## Data Flow
+### Trip Calculation (Fuel Vehicle)
+### Trip Calculation (Electric Vehicle)
+### Auth Flow — Email/Password (Web)
+### Auth Flow — OAuth (Google / Apple)
+### Auth Flow — Mobile
+- Backend: stateless (JWT only). Session used exclusively for OAuth CSRF state (5-minute TTL)
+- Web: React `useState` per page + `sessionStorage` for trip calculation handoff + `localStorage` for user price preferences
+- Mobile: `AuthContext` (React Context) for token state; `expo-secure-store` for persistence
+## Key Abstractions
+- Purpose: Wraps Mapbox Geocoding v5 and Directions v5 APIs with typed responses
+- File: `backend/src/mapbox/mapbox.service.ts`
+- Pattern: `@Global()` NestJS module — injected without explicit import in consuming modules
+- Purpose: Coerces TypeORM DECIMAL/NUMERIC columns from PostgreSQL strings to JS numbers
+- File: `backend/src/common/column-transformers.ts`
+- Pattern: Applied via `{ transformer: decimalTransformer }` on every `type: 'decimal'` column in all entities
+- Purpose: Route protection and authenticated user extraction
+- Files: `backend/src/auth/guards/jwt-auth.guard.ts`, `backend/src/auth/decorators/current-user.decorator.ts`
+- Pattern: Applied at controller class level with `@UseGuards(JwtAuthGuard)`, user retrieved via `@CurrentUser() user: User`
+- Purpose: Reduce external API calls — TTL 1h keyed by lat/lng/params
+- Files: `backend/src/fuel-prices/fuel-prices.service.ts`, `backend/src/charging-stations/charging-stations.service.ts`
+- Pattern: `Map<string, { data, expiresAt }>` — no Redis dependency in V1
+- Purpose: Syncs vehicle catalog from ADEME Car Labelling API on application bootstrap
+- File: `backend/src/vehicles/vehicle-sync.service.ts`
+- Pattern: `OnApplicationBootstrap` lifecycle hook, idempotent UPSERT by (brand, model, year)
+- Purpose: Passes full trip calculation result (including GeoJSON geometry) from dashboard to result page without URL params
+- Storage: `sessionStorage['verygoodtrip.pendingTrip']`
+- Consumers: `web/src/app/app/dashboard/page.tsx` (writer), `web/src/app/app/trips/result/page.tsx` (reader)
+## Entry Points
+- Location: `backend/src/main.ts`
+- Triggers: `node dist/main.js` or `nest start --watch`
+- Responsibilities: Creates `NestExpressApplication`, configures `trust proxy 1`, session middleware (OAuth CSRF), Helmet, CORS, global `ValidationPipe`, starts HTTP listener on `PORT` (default 3000)
+- Location: `web/src/app/layout.tsx`
+- Triggers: Next.js build / `next dev`
+- Responsibilities: Root HTML shell, font injection (`Space_Grotesk`, `JetBrains_Mono`), wraps all children in `<Providers>` (ThemeProvider + ToastProvider), sets OG metadata
+- Location: `web/src/app/app/layout.tsx`
+- Triggers: Any navigation under `/app/*`
+- Responsibilities: Server Component — reads `access_token` cookie, redirects to `/login` if absent, renders `<AppLayout>` (sidebar + topbar)
+- Location: `mobile/app/_layout.tsx`
+- Triggers: Expo Router on app start
+- Responsibilities: Initializes i18n, wraps stack in `<AuthProvider>`, sets up `<StatusBar>` and `<Toast>`, renders `<Stack>` navigator
+## Architectural Constraints
+- **Threading:** Node.js single-threaded event loop. All I/O (Mapbox, Opendatasoft, PostgreSQL) is async/await.
+- **Global state:** `MapboxModule` is `@Global()` singleton — one instance per process. In-memory caches in `FuelPricesService` and `ChargingStationsService` are module-scoped singletons (not shared across workers/replicas).
+- **Circular imports:** `VehiclesModule` imports `Trip` entity from `trips/entities/` for stats aggregation; `TripsModule` imports `VehiclesModule` for vehicle lookups. This is managed at module level (not circular at module graph level because `VehiclesModule` exports `VehiclesService` and `TripsModule` imports the module, not the other way).
+- **Cookie cross-origin:** `access_token` cookie must be `sameSite: 'none'` and `secure: true` in production for cross-origin Vercel ↔ Render communication. Same attributes must be set on logout to allow deletion.
+- **`synchronize: false` in production:** Schema is managed exclusively via TypeORM migrations in `backend/src/database/migrations/`. `synchronize: true` only in dev.
+- **Edge Runtime exclusion:** Next.js middleware was removed. Auth gating uses Server Components (`cookies()` from `next/headers`) which run in the Node.js runtime. No Edge Runtime code exists in this project.
+## Anti-Patterns
+### Do Not Use `synchronize: true` in Production
+### Do Not Read `access_token` Cookie as httpOnly
+### Do Not Create New Next.js Middleware
+## Error Handling
+- HTTP exceptions use NestJS built-ins (`NotFoundException`, `ForbiddenException`, etc.)
+- External API timeouts (Mapbox: no explicit timeout; Opendatasoft fuel: 8s) throw `ServiceUnavailableException`
+- Web Axios interceptor: 401 → redirect to `/login` (except on auth pages themselves)
+- Mobile Axios interceptor: 401 → `deleteToken()` (triggers AuthContext re-route)
+## Cross-Cutting Concerns
+<!-- GSD:architecture-end -->
+
+<!-- GSD:skills-start source:skills/ -->
+## Project Skills
+
+No project skills found. Add skills to any of: `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, `.github/skills/`, or `.codex/skills/` with a `SKILL.md` index file.
+<!-- GSD:skills-end -->
+
+<!-- GSD:workflow-start source:GSD defaults -->
+## GSD Workflow Enforcement
+
+Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
+
+Use these entry points:
+- `/gsd-quick` for small fixes, doc updates, and ad-hoc tasks
+- `/gsd-debug` for investigation and bug fixing
+- `/gsd-execute-phase` for planned phase work
+
+Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+<!-- GSD:workflow-end -->
+
+
+
+<!-- GSD:profile-start -->
+## Developer Profile
+
+> Profile not yet configured. Run `/gsd-profile-user` to generate your developer profile.
+> This section is managed by `generate-claude-profile` -- do not edit manually.
+<!-- GSD:profile-end -->
+
+---
+
+
+
+# Référence détaillée & journal des décisions (maintenu à la main)
+
+
 # CLAUDE.md — Mémoire persistante du projet verygoodtrip
 
 > Ce fichier est destiné à l'IA (Claude Code) pour maintenir le contexte entre les sessions.
