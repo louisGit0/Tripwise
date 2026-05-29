@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: Roadmap revised (catalog phase added), not started
+last_updated: "2026-05-29T18:02:21.529Z"
+progress:
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+---
+
 # Project State — verygoodtrip
 
 ## Project Reference
@@ -33,6 +47,7 @@
 ## Accumulated Context
 
 ### Key Decisions
+
 - Precise tolls via TollGuru (live) — only practical origin→destination toll API; partial branch already in `backend/src/trips/trips.service.ts`.
 - Editorial premium dark direction — evolves existing Carbon identity (Linear/Vercel vibe).
 - Preserve architecture, redesign visual layer only — lower risk, keeps working flows intact.
@@ -42,6 +57,7 @@
 - Consumption must stay real (source-attributed, no fabricated defaults) to protect the Core Value of accurate cost.
 
 ### Todos / Watchpoints
+
 - TollGuru must degrade gracefully to heuristic when key absent or over quota (free tier ~500 req/month).
 - TollGuru key is server-side only — never in any client response or bundle.
 - Web token must be cached server-side to avoid burning quota on repeated routes.
@@ -54,6 +70,7 @@
 - `master` auto-deploys (Render + Vercel) — commit + push after each verified update.
 
 ### Blockers
+
 - None.
 
 ## Session Continuity
