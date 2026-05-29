@@ -261,6 +261,7 @@ export class TripsService {
       pricePerUnit:     dto.unitPrice,
       totalCost:        dto.totalCost,
       tollsCost:        dto.tollsCost ?? 0,
+      tollIsEstimate:   dto.tollIsEstimate ?? false,
       passengersCount:  dto.passengersCount ?? 1,
       note:             dto.note ?? null,
       tripDate:         dto.tripDate ? new Date(dto.tripDate) : new Date(),

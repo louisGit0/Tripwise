@@ -233,6 +233,35 @@ describe('Trips CRUD (e2e)', () => {
       expect(res.body.passengersCount).toBe(3);
     });
 
+    it('persiste tollsCost + tollIsEstimate et les renvoie via GET /trips/:id', async () => {
+      const saved = await request(app.getHttpServer())
+        .post('/api/v1/trips/save')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...buildSaveDto(vehicleId), tollsCost: 12.5, tollIsEstimate: true, totalCost: 55.12 })
+        .expect(201);
+
+      expect(saved.body.tollsCost).toBeCloseTo(12.5, 2);
+      expect(saved.body.tollIsEstimate).toBe(true);
+
+      const detail = await request(app.getHttpServer())
+        .get(`/api/v1/trips/${saved.body.id as string}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(detail.body.tollsCost).toBeCloseTo(12.5, 2);
+      expect(detail.body.tollIsEstimate).toBe(true);
+    });
+
+    it('tollIsEstimate=false par défaut quand absent du payload', async () => {
+      const saved = await request(app.getHttpServer())
+        .post('/api/v1/trips/save')
+        .set('Authorization', `Bearer ${token}`)
+        .send(buildSaveDto(vehicleId))
+        .expect(201);
+
+      expect(saved.body.tollIsEstimate).toBe(false);
+    });
+
     it('retourne 403 pour un vehicleId appartenant à un autre user', async () => {
       const otherToken = await registerAndLogin(app, 'save-trip-other@test.com');
       await request(app.getHttpServer())
@@ -407,6 +436,33 @@ describe('Trips CRUD (e2e)', () => {
       expect(res.body.tripCount).toBe(0);
       expect(res.body.averageCostPerKm).toBeNull();
       expect(res.body.dailyExpenses).toHaveLength(0);
+    });
+
+    it('reflète le péage via totalCost sans double comptage', async () => {
+      // Utilisateur isolé : un seul trajet dont le totalCost (50) inclut déjà
+      // un péage breakout de 10. Le total mensuel doit valoir 50, pas 60.
+      const tollToken = await registerAndLogin(app, 'stats-toll@test.com');
+      const rv = await request(app.getHttpServer())
+        .post('/api/v1/vehicles/me')
+        .set('Authorization', `Bearer ${tollToken}`)
+        .send({ vehicleModelId: thermalModelId });
+      const tollVehicleId = rv.body.id as string;
+
+      await request(app.getHttpServer())
+        .post('/api/v1/trips/save')
+        .set('Authorization', `Bearer ${tollToken}`)
+        .send({ ...buildSaveDto(tollVehicleId), tollsCost: 10, tollIsEstimate: false, totalCost: 50 })
+        .expect(201);
+
+      const now = new Date();
+      const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const res = await request(app.getHttpServer())
+        .get(`/api/v1/trips/stats?month=${month}`)
+        .set('Authorization', `Bearer ${tollToken}`)
+        .expect(200);
+
+      expect(res.body.tripCount).toBe(1);
+      expect(res.body.totalCost).toBeCloseTo(50, 2);
     });
 
     it('retourne 401 sans token', async () => {

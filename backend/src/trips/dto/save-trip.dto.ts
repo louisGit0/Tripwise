@@ -1,6 +1,7 @@
 import {
   IsUUID,
   IsNumber,
+  IsBoolean,
   IsIn,
   IsOptional,
   IsString,
@@ -58,11 +59,16 @@ export class SaveTripDto {
   @Min(0)
   energyCost!: number;
 
-  /** Frais de péage — toujours 0 en V1 */
+  /** Coût des péages — réel (TollGuru) ou estimé, 0 si aucun péage */
   @IsOptional()
   @IsNumber()
   @Min(0)
   tollsCost?: number;
+
+  /** True si tollsCost est une estimation heuristique, false si valeur réelle TollGuru */
+  @IsOptional()
+  @IsBoolean()
+  tollIsEstimate?: boolean;
 
   @IsNumber()
   @Min(0)
