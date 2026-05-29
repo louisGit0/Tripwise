@@ -1,4 +1,4 @@
-# Tripwise — Roadmap
+# verygoodtrip — Roadmap
 
 Les fonctionnalités ci-dessous sont **hors scope V1** et prévues pour les versions suivantes.
 Elles sont classées par priorité estimée et complexité d'implémentation.

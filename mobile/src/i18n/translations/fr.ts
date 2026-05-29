@@ -59,7 +59,7 @@ export default {
     noVehicle: 'Ajoutez un véhicule pour calculer le coût',
     addFavorite: 'Ajouter aux favoris',
     share: 'Partager',
-    shareText: 'Trajet calculé avec Tripwise : {{distance}} — {{duration}} — {{cost}}',
+    shareText: 'Trajet calculé avec verygoodtrip : {{distance}} — {{duration}} — {{cost}}',
     disclaimerElectric:
       "Les tarifs affichés sont ceux configurés dans votre profil véhicule. Le coût réel sur une borne publique peut différer.",
     nearbyStations: 'Bornes à proximité',

@@ -104,7 +104,7 @@
     "distancePlaceholder": "Distance en km",
     "suggestionsTitle": "Favoris rapides",
     "useSuggestion": "Utiliser",
-    "onboardingTitle": "Bienvenue sur Tripwise",
+    "onboardingTitle": "Bienvenue sur verygoodtrip",
     "onboardingDesc": "Ajoutez votre premier véhicule pour calculer le coût de vos trajets.",
     "onboardingCta": "Ajouter un véhicule"
   },
@@ -142,7 +142,7 @@
     "perKwh": "/kWh",
     "resultTitle": "Résultat du trajet",
     "favoriteAdded": "Trajet sauvegardé !",
-    "shareText": "Tripwise — {origin} → {destination} : {distance} km, {cost} €",
+    "shareText": "verygoodtrip — {origin} → {destination} : {distance} km, {cost} €",
     "fillBothFields": "Veuillez renseigner départ et destination",
     "selectVehicleFirst": "Veuillez sélectionner un véhicule",
     "history": {

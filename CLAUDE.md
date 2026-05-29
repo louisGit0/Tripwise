@@ -1,4 +1,4 @@
-# CLAUDE.md — Mémoire persistante du projet Tripwise
+# CLAUDE.md — Mémoire persistante du projet verygoodtrip
 
 > Ce fichier est destiné à l'IA (Claude Code) pour maintenir le contexte entre les sessions.
 > Il est mis à jour à chaque décision technique ou évolution significative du projet.
@@ -7,7 +7,7 @@
 
 ## Projet
 
-**Nom :** Tripwise
+**Nom :** verygoodtrip
 **Description :** Application de calcul du coût d'un trajet voiture (essence ou électricité) entre deux points. Exposée en web et mobile, avec un backend commun.
 **Propriétaire :** louissoudy2@gmail.com
 **Démarrage :** 2026-05-19
@@ -52,7 +52,7 @@
 ## Architecture & structure des dossiers
 
 ```
-Tripwise/
+verygoodtrip/
 ├── backend/          NestJS API REST (+ WebSocket si besoin)
 ├── web/              Next.js 14 App Router
 ├── mobile/           Expo React Native
@@ -704,7 +704,7 @@ mobile/
 ### Auth mobile
 - JWT dans `expo-secure-store` (chiffré, hors sandbox JS)
 - `AuthContext` : lit le token au démarrage → useSegments pour router vers `(auth)` ou `(tabs)`
-- Google OAuth : `expo-web-browser.openAuthSessionAsync` → backend `/auth/google` → deep link `tripwise://auth/callback?token=...`
+- Google OAuth : `expo-web-browser.openAuthSessionAsync` → backend `/auth/google` → deep link `verygoodtrip://auth/callback?token=...`
 - Apple Sign In : `expo-apple-authentication` (iOS natif, physique uniquement en prod)
 
 ### Limitations connues
@@ -904,12 +904,12 @@ NODE_ENV=production
 DATABASE_URL=postgresql://postgres:[password]@db.xxx.supabase.co:5432/postgres
 JWT_SECRET=<openssl rand -hex 64>
 MAPBOX_TOKEN=pk.eyJ1...
-CORS_ORIGINS=https://tripwise.vercel.app
+CORS_ORIGINS=https://verygoodtrip.vercel.app
 ```
 
 #### Variables d'environnement prod à configurer (Vercel)
 ```
-NEXT_PUBLIC_API_URL=https://tripwise.onrender.com/api/v1
+NEXT_PUBLIC_API_URL=https://verygoodtrip.onrender.com/api/v1
 NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # restreindre au domaine vercel dans dashboard Mapbox
 NODE_ENV=production  # Vercel le pose automatiquement
 ```
@@ -1137,7 +1137,7 @@ Création de 7 nouveaux écrans authentifiés dans l'app Next.js. Contraintes st
 - Suppression : modal → `DELETE /trips/:id` → retour liste
 
 #### `/app/trips/result` — Résultat calcul
-- Lit `sessionStorage['tripwise.pendingTrip']` → type `PendingTripSession`
+- Lit `sessionStorage['verygoodtrip.pendingTrip']` → type `PendingTripSession`
 - Coût hero 104px (`text-[104px] font-bold font-display`)
 - Barres de comparaison multi-énergie (triées par coût croissant)
 - Stepper passagers 1–9 (coût divisé par passagers)
@@ -1162,14 +1162,14 @@ Création de 7 nouveaux écrans authentifiés dans l'app Next.js. Contraintes st
 #### `/app/dashboard` — Enrichissement
 - `SegmentedControl` Adresses / Distance en haut du calculateur
 - **Mode Adresses** : `AutocompleteInput` départ + arrivée → `POST /trips/calculate` + `POST /trips/calculate-multi` en parallèle → `PendingTripSession` dans sessionStorage → redirect `/app/trips/result`
-- **Mode Distance** : input 56px + chips rapides (50/200/465/800 km) → calcul client-side avec `localStorage['tripwise.userPrices']` → même sessionStorage + redirect
+- **Mode Distance** : input 56px + chips rapides (50/200/465/800 km) → calcul client-side avec `localStorage['verygoodtrip.userPrices']` → même sessionStorage + redirect
 - **Suggestions** : `GET /favorites` → 5 premiers → clic `applySuggestion(fav)` pour préremplir départ/arrivée
 - Recent trips cliquables : `router.push('/app/trips/${trip.id}')`
 - Supprimé : affichage inline des résultats, `MapboxMap`, modal favori, bouton partager
 
 #### `/app/fuel-prices` — Configuration prix
 - Charge `GET /prices/defaults` pour afficher les prix temps réel
-- Édition libre des prix par carburant (localStorage `tripwise.userPrices`)
+- Édition libre des prix par carburant (localStorage `verygoodtrip.userPrices`)
 - Auto-save à chaque changement + toast confirmation
 - `PriceRow` composant interne réutilisable
 
@@ -1177,7 +1177,7 @@ Création de 7 nouveaux écrans authentifiés dans l'app Next.js. Contraintes st
 - **`useSuggestion` → `applySuggestion`** : renommé pour respecter la règle `react-hooks/rules-of-hooks` (le nom `use*` déclenche la règle même sur les fonctions utilitaires)
 - **`// 404` dans JSX** : wrappé en `{"// 404"}` pour éviter `react/jsx-no-comment-textnodes`
 - **Pattern `savedNoteRef`** : `useRef<string | null>(null)`, initialisé quand le trip charge, permet au debounce de ne pas déclencher un PATCH lors du premier rendu
-- **sessionStorage `tripwise.pendingTrip`** : bridge entre dashboard et result page — évite les URL params pour les objets volumineux (GeoJSON)
+- **sessionStorage `verygoodtrip.pendingTrip`** : bridge entre dashboard et result page — évite les URL params pour les objets volumineux (GeoJSON)
 - **Distance mode** : calcul 100% client (localStorage prices), `PendingTripSession.mode = 'distance'`, sauvegarde désactivée (pas de coords)
 
 #### Types modifiés (`web/src/types/api.ts`)
@@ -1318,7 +1318,7 @@ Refonte complète des écrans existants Next.js avec le système de composants a
 | Composant | Description |
 |-----------|-------------|
 | `TWAppIcon.tsx` | Icône app stylisée (carré arrondi bleu + T blanc) |
-| `Wordmark.tsx` | Logotype "Tripwise" en Space Grotesk, tailles sm/md/lg |
+| `Wordmark.tsx` | Logotype "verygoodtrip" en Space Grotesk, tailles sm/md/lg |
 | `Pill.tsx` | Badge coloré avec `color`, `dot`, `size` props |
 | `CTAButton.tsx` | Bouton principal `variant: accent/ghost/danger`, `size: sm/md/lg`, `icon` |
 | `SectionCard.tsx` | Carte avec title slot, `padding: none/sm/md/lg` |
@@ -1414,7 +1414,7 @@ Polices : `Space Grotesk` (display), `JetBrains Mono` (numériques)
 - Expo SDK 54, Expo Router v6, React 19, React Native 0.81.5, new architecture activée
 - StyleSheet API (pas NativeWind) pour éviter incompatibilités React 19 / new arch
 - Auth : JWT dans expo-secure-store, AuthContext avec useSegments() pour routing (auth)↔(tabs)
-- Google OAuth : expo-web-browser.openAuthSessionAsync → backend /auth/google → deep link tripwise://
+- Google OAuth : expo-web-browser.openAuthSessionAsync → backend /auth/google → deep link verygoodtrip://
 - Apple Sign In : expo-apple-authentication (iOS natif, device physique en prod)
 - Mapbox : @rnmapbox/maps avec fallback placeholder si Expo Go (Constants.appOwnership === 'expo')
 - i18n : i18next + react-i18next + expo-localization, langues FR/EN, detectedLang via getLocales()[0]

@@ -182,7 +182,7 @@
     "distancePlaceholder": "Distance in km",
     "suggestionsTitle": "Quick favorites",
     "useSuggestion": "Use",
-    "onboardingTitle": "Welcome to Tripwise",
+    "onboardingTitle": "Welcome to verygoodtrip",
     "onboardingDesc": "Add your first vehicle to calculate trip costs.",
     "onboardingCta": "Add a vehicle"
   },
@@ -220,7 +220,7 @@
     "perKwh": "/kWh",
     "resultTitle": "Trip result",
     "favoriteAdded": "Trip saved!",
-    "shareText": "Tripwise — {origin} → {destination}: {distance} km, {cost} €",
+    "shareText": "verygoodtrip — {origin} → {destination}: {distance} km, {cost} €",
     "fillBothFields": "Please fill in departure and destination",
     "selectVehicleFirst": "Please select a vehicle",
     "history": {

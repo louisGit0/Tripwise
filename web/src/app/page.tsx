@@ -66,7 +66,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-lg text-carbon-muted mb-8 max-w-lg mx-auto leading-relaxed">
-            Tripwise calcule précisément le coût de vos trajets en voiture, que vous rouliez à l&apos;essence, au diesel ou à l&apos;électricité.
+            Verygoodtrip calcule précisément le coût de vos trajets en voiture, que vous rouliez à l&apos;essence, au diesel ou à l&apos;électricité.
           </p>
 
           {/* Feature pills */}
@@ -116,7 +116,7 @@ export default function LandingPage() {
       <footer className="py-6 px-6">
         <Hairline className="mb-4" />
         <p className="text-center text-xs text-carbon-muted">
-          © {new Date().getFullYear()} Tripwise &nbsp;·&nbsp; v2.4 — BUILD 0521
+          © {new Date().getFullYear()} verygoodtrip &nbsp;·&nbsp; v2.4 — BUILD 0521
         </p>
       </footer>
     </div>

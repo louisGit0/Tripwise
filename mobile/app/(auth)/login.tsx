@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/src/components/ui/Input';
 import { Button } from '@/src/components/ui/Button';
+import { Wordmark } from '@/src/components/ui/Wordmark';
 import { Colors, FontSizes, Spacing } from '@/constants/theme';
 import { useAuth } from '@/src/context/AuthContext';
 import client from '@/src/api/client';
@@ -77,7 +78,7 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={[styles.title, { color: c.primary }]}>Tripwise</Text>
+          <Wordmark size={32} color={c.text} />
           <Text style={[styles.subtitle, { color: c.textSecondary }]}>{t('auth.login')}</Text>
         </View>
 
