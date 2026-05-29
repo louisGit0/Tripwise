@@ -180,6 +180,8 @@ export interface SavedTrip {
   note: string | null;
   passengersCount: number;
   tollsCost: number;
+  /** true si le coût de péage est une estimation heuristique (pas TollGuru) */
+  tollIsEstimate: boolean;
   createdAt?: string;
 }
 
