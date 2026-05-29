@@ -317,20 +317,23 @@ Render the badge with the existing `Pill` primitive (`web/src/components/ui/Pill
 
 **All A1–A6 must be confirmed in a single dev session against a real `TOLLGURU_API_KEY` using a known-toll route before the precise branch is trusted.**
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Persist `tollIsEstimate` on saved trips?**
    - Known: `tollsCost` persists; the amount flows to history/stats correctly. The detail page hides 0-tolls already but shows no badge.
    - Unclear: whether the milestone wants the badge on the *saved* detail or only the live result.
    - Recommendation: persist it (one boolean column + small migration). Low risk, completes the TOLL-05 "reflected in detail" intent.
+   - RESOLVED: Yes — Plan 02 adds the `tollIsEstimate` boolean column + hand-written migration + `SaveTripDto` + save flow, so the saved-detail page shows the same badge.
 
 2. **Durable cache now or later?**
    - Known: in-memory `Map` is per-process and wiped on Render sleep/deploy; quota is small (~500/mo).
    - Recommendation: in-memory for V1 (consistent, simple); flag Postgres/Redis durable cache as V2 (matches CONCERNS).
+   - RESOLVED: In-memory `Map` for V1 (Plan 01, mirrors fuel/charging caches, 30-day TTL); durable Postgres/Redis cache deferred to V2 per CONCERNS.
 
 3. **Recompute toll server-side on save, or trust the client value?**
    - Known: save flow takes `tollsCost`/`totalCost` from the client `result`.
    - Recommendation: trust client value for V1 (it's the user's own trip; low risk). Note as a minor integrity consideration.
+   - RESOLVED: Trust the client value for V1 (Plan 02 — user's own trip, low risk); server-side recompute on save noted as a V2 integrity improvement.
 
 ## Environment Availability
 
