@@ -122,11 +122,19 @@ export class Trip {
   passengersCount!: number;
 
   /**
-   * Frais de péage estimés en euros. V1 = 0 (non calculé automatiquement).
-   * Réservé pour une future intégration API péages.
+   * Coût des péages en euros pour le trajet — réel (TollGuru) ou estimé (heuristique).
+   * 0 lorsque le trajet ne comporte pas de péage. Voir tollIsEstimate pour la source.
    */
   @Column({ name: 'tolls_cost', type: 'decimal', precision: 8, scale: 2, default: 0, transformer: decimalTransformer })
   tollsCost!: number;
+
+  /**
+   * Indique si tollsCost est une estimation heuristique (true) ou une valeur réelle
+   * issue de l'API TollGuru (false). Défaut false ; les lignes antérieures à la
+   * migration sont considérées comme estimées par défaut côté affichage.
+   */
+  @Column({ name: 'toll_is_estimate', type: 'boolean', default: false })
+  tollIsEstimate!: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
