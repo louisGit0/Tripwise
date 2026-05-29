@@ -15,7 +15,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 - [ ] **TOLL-01**: User sees a **precise** toll cost for a calculated trip via TollGuru when an API key is configured (real cost, not an estimate)
 - [ ] **TOLL-02**: When TollGuru is unavailable, over quota, or unconfigured, the toll cost **falls back to the heuristic estimate** and the user clearly sees it is an estimate (badge/label)
 - [ ] **TOLL-03**: Toll cost is computed for a **passenger car (class 1)** by default
-- [ ] **TOLL-04**: Toll cost is **broken out clearly** in the trip result and included in the displayed total (separate line, real-vs-estimate indicator)
+- [x] **TOLL-04**: Toll cost is **broken out clearly** in the trip result and included in the displayed total (separate line, real-vs-estimate indicator)
 - [ ] **TOLL-05**: Toll cost is persisted on saved trips and reflected in history/stats totals
 - [ ] **TOLL-06**: TollGuru calls are **cached and rate-safe** server-side (avoid burning quota on repeated identical routes) and the key is never exposed client-side
 

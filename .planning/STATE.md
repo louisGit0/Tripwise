@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-05-29T20:02:00.000Z"
+last_updated: "2026-05-29T19:57:33.782Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State — verygoodtrip
@@ -24,12 +24,12 @@ progress:
 ## Current Position
 
 Phase: 01 (precise-tolls-end-to-end-web) — EXECUTING
-Plan: 3 of 4 (01-01, 01-02 complete)
+Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web)
-- **Plan:** 01-02 complete (toll-estimate persistence); next 01-03 (web display)
+- **Plan:** 01-03 complete (web toll display); next 01-04 (live + visual verification)
 - **Status:** Executing Phase 01
-- **Progress:** [█████░░░░░] 2/4 plans in Phase 01
+- **Progress:** [████████░░] 75%
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 3 of 4 (01-01, 01-02 complete)
 
 - Phases complete: 0/5
 - Requirements mapped: 23/23
-- Plans executed: 2 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files)
+- Plans executed: 3 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files)
 
 ## Accumulated Context
 
@@ -81,6 +81,6 @@ Plan: 3 of 4 (01-01, 01-02 complete)
 
 ## Session Continuity
 
-- **Last action:** Executed plan 01-02 (toll-estimate persistence) — added `Trip.tollIsEstimate` + migration `1748000000000` (applied dev), `SaveTripDto.tollIsEstimate`, save-flow write, crud e2e (commits `0a92b00` entity+migration, `ca24e67` DTO+save+e2e). Full trips e2e 66/66; tsc + nest build clean. TOLL-05 delivered at the persistence level.
-- **Next action:** Execute plan 01-03 (web display — Tooltip atom, réel/≈ estimé badge, hide-when-0 on result + saved detail).
+- **Last action:** Executed plan 01-03 (web toll display) — new `Tooltip` atom (hover+focus+tap, Carbon tokens), `SavedTrip.tollIsEstimate` type, result page hide-when-0 péages line + réel/≈ estimé `Pill`+`Tooltip` (total-inclusive), same badge on saved-trip detail from persisted flag, save payload now sends `tollIsEstimate` (commits `ba1f4e9` Tooltip+type, `a579291` result page, `3e423e0` detail page). tsc clean; next build 18/18 routes. TOLL-04 delivered; TOLL-05 now rendered on detail.
+- **Next action:** Execute plan 01-04 (verification — live TollGuru Paris→Lyon checkpoint + web badge/tooltip visual checkpoint).
 - **Updated:** 2026-05-29
