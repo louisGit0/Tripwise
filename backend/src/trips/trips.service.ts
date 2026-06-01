@@ -243,6 +243,12 @@ export class TripsService {
       ? round2((dto.energyAmount / distanceKm) * 100)
       : 0;
 
+    const tollsCost = dto.tollsCost ?? 0;
+    // "réel" (tollIsEstimate=false) uniquement si un péage existe ET que le client
+    // l'affirme explicitement. Sans péage → false (pas de badge). Avec péage mais
+    // sans flag → estimation par défaut (D-07 : pas de clé TollGuru).
+    const tollIsEstimate = tollsCost > 0 ? (dto.tollIsEstimate ?? true) : false;
+
     const trip = this.tripRepo.create({
       userId,
       vehicleId:        dto.userVehicleId,
@@ -260,8 +266,8 @@ export class TripsService {
       totalConsumption: dto.energyAmount,
       pricePerUnit:     dto.unitPrice,
       totalCost:        dto.totalCost,
-      tollsCost:        dto.tollsCost ?? 0,
-      tollIsEstimate:   dto.tollIsEstimate ?? false,
+      tollsCost,
+      tollIsEstimate,
       passengersCount:  dto.passengersCount ?? 1,
       note:             dto.note ?? null,
       tripDate:         dto.tripDate ? new Date(dto.tripDate) : new Date(),

@@ -107,9 +107,9 @@ export default function TripResultPage() {
         energyUnit,
         unitPrice,
         energyCost: cost.totalCost,
-        totalCost: cost.totalCost + (result.tollCost ?? 0),
-        tollsCost: result.tollCost ?? 0,
-        tollIsEstimate: result.tollIsEstimate,
+        totalCost: cost.totalCost + (session.result.tollCost ?? 0),
+        tollsCost: session.result.tollCost ?? 0,
+        tollIsEstimate: session.result.tollIsEstimate,
         passengersCount: passengers,
       });
 

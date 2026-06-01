@@ -130,10 +130,11 @@ export class Trip {
 
   /**
    * Indique si tollsCost est une estimation heuristique (true) ou une valeur réelle
-   * issue de l'API TollGuru (false). Défaut false ; les lignes antérieures à la
-   * migration sont considérées comme estimées par défaut côté affichage.
+   * issue de l'API TollGuru (false). Défaut true : sous D-07 (pas de clé TollGuru),
+   * tout péage est une estimation ; les lignes antérieures à la migration sont donc
+   * traitées comme estimées.
    */
-  @Column({ name: 'toll_is_estimate', type: 'boolean', default: false })
+  @Column({ name: 'toll_is_estimate', type: 'boolean', default: true })
   tollIsEstimate!: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
