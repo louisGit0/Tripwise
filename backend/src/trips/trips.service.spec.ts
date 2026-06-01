@@ -34,6 +34,7 @@ const DIRECTIONS_STUB = {
     { name: 'Paris', location: [2.3522, 48.8566] as [number, number] },
     { name: 'Marseille', location: [5.3698, 43.2965] as [number, number] },
   ],
+  steps: [],
 };
 
 const FUEL_STATION_STUB = {

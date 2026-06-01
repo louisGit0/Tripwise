@@ -17,6 +17,19 @@ export interface GeocodeFeature {
   properties: Record<string, unknown>;
 }
 
+/**
+ * Un pas (« step ») d'itinéraire Mapbox, réduit aux champs utiles à l'estimation
+ * de péage route-aware : la distance du tronçon et la désignation routière.
+ */
+export interface RouteStep {
+  /** Distance du tronçon en mètres (`step.distance`). */
+  distanceMeters: number;
+  /** Désignation routière, ex. "A 6", "A6;E 15", ou null si absente. */
+  ref: string | null;
+  /** Nom de la voie (repli rarement utile). */
+  name: string | null;
+}
+
 export interface DirectionsResult {
   distanceMeters: number;
   durationSeconds: number;
@@ -26,6 +39,11 @@ export interface DirectionsResult {
     coordinates: [number, number][];
   };
   waypoints: Array<{ name: string; location: [number, number] }>;
+  /**
+   * Pas de l'itinéraire (aplatis depuis `legs[].steps[]`), porteurs de `ref` +
+   * distance. Toujours présent ; `[]` si Mapbox omet `legs`/`steps`.
+   */
+  steps: RouteStep[];
 }
 
 // ── Réponses brutes Mapbox ────────────────────────────────────────────────────
@@ -130,6 +148,9 @@ export class MapboxService {
         coordinates: route.geometry.coordinates as [number, number][],
       },
       waypoints: data.waypoints,
+      // Placeholder temporaire (RED) — remplacé par l'aplatissement réel des
+      // legs[].steps[] en Task 3, une fois `steps=true` activé côté requête.
+      steps: [],
     };
   }
 

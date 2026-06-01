@@ -11,6 +11,7 @@
  */
 import { ConfigService } from '@nestjs/config';
 import { TollService, TollResult } from './toll.service';
+import type { RouteStep } from '../mapbox/mapbox.service';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -18,6 +19,55 @@ const COORDS: [number, number][] = [
   [2.3522, 48.8566], // Paris
   [4.8357, 45.764], // Lyon
   [5.3698, 43.2965], // Marseille
+];
+
+/** Construit un RouteStep compact (le `name` est rarement pertinent ici). */
+const step = (
+  distanceMeters: number,
+  ref: string | null,
+  name: string | null = null,
+): RouteStep => ({ distanceMeters, ref, name });
+
+// ── Fixtures route-aware (steps) ───────────────────────────────────────────
+
+/** Paris→Lyon : ~450 km de A6/A7 → ancrage de calibration (€30–45). */
+const PARIS_LYON_STEPS: RouteStep[] = [step(250_000, 'A 6'), step(200_000, 'A 7')];
+
+/** Aucune autoroute : départementales / nationales / refs nulles → 0. */
+const NO_AUTOROUTE_STEPS: RouteStep[] = [
+  step(120_000, 'D 7'),
+  step(80_000, 'N 104'),
+  step(30_000, null, 'Rue de la Paix'),
+];
+
+/** Autoroutes gratuites uniquement (A75 / A84) → 0. */
+const FREE_STEPS: RouteStep[] = [step(180_000, 'A 75'), step(150_000, 'A 84')];
+
+/** Mixte : A6 payante (200 km) + A75 gratuite (100 km) + N7 (50 km). */
+const MIXED_STEPS: RouteStep[] = [
+  step(200_000, 'A 6'),
+  step(100_000, 'A 75'),
+  step(50_000, 'N 7'),
+];
+
+/** Variantes d'orthographe Mapbox d'une même autoroute payante (100 km chacune). */
+const REF_VARIANT_STEPS: RouteStep[] = [
+  step(100_000, 'A 6'),
+  step(100_000, 'A6'),
+  step(100_000, 'A-6'),
+  step(100_000, 'A 6;E 15'),
+];
+
+/**
+ * Steps malformés — ne doivent jamais lever ni contribuer :
+ *  - ref null + distanceMeters manquant ;
+ *  - ref vide ;
+ *  - ref autoroute valide MAIS distanceMeters manquant (→ 0 km).
+ */
+const MALFORMED_STEPS: RouteStep[] = [
+  { ref: null } as unknown as RouteStep,
+  step(0, ''),
+  { ref: 'A 6' } as unknown as RouteStep,
 ];
 
 /** Construit un TollService avec un ConfigService stub. */
@@ -263,6 +313,55 @@ describe('TollService', () => {
     it('durationSeconds === 0 → null', async () => {
       const r = await service.computeTollCost(COORDS, 100, 0);
       expect(r).toBeNull();
+    });
+  });
+
+  // ── Estimation route-aware (steps) — TOLL-07 ───────────────────────────────
+
+  describe('route-aware estimate (steps)', () => {
+    const service = makeService(undefined);
+
+    it('Paris→Lyon anchor: A6+A7 (~450 km) → cost in €30–45 band, isEstimate true', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, PARIS_LYON_STEPS);
+      expect(r).not.toBeNull();
+      expect(r!.cost).toBeGreaterThanOrEqual(30);
+      expect(r!.cost).toBeLessThanOrEqual(45);
+      expect(r!.isEstimate).toBe(true);
+    });
+
+    it('no autoroute (D/N roads, null ref) → cost 0, isEstimate true', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, NO_AUTOROUTE_STEPS);
+      expect(r).toEqual<TollResult>({ cost: 0, isEstimate: true });
+    });
+
+    it('free autoroute only (A75 / A84) → cost 0, isEstimate true', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, FREE_STEPS);
+      expect(r).toEqual<TollResult>({ cost: 0, isEstimate: true });
+    });
+
+    it('mixed: only A6 (200 km) counts; A75 free + N7 ignored → 18.0', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, MIXED_STEPS);
+      expect(r).toEqual<TollResult>({ cost: 18.0, isEstimate: true });
+    });
+
+    it('ref format variants "A 6"/"A6"/"A-6"/"A 6;E 15" (100 km each) → 36.0', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, REF_VARIANT_STEPS);
+      expect(r).toEqual<TollResult>({ cost: 36.0, isEstimate: true });
+    });
+
+    it('never throw on malformed steps (missing ref/distance, empty string) → 0', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, MALFORMED_STEPS);
+      expect(r).toEqual<TollResult>({ cost: 0, isEstimate: true });
+    });
+
+    it('empty steps array → graceful speed-heuristic fallback (28.35)', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400, []);
+      expect(r).toEqual<TollResult>({ cost: 28.35, isEstimate: true });
+    });
+
+    it('fallback no steps (no 4th arg) → speed heuristic preserved (28.35)', async () => {
+      const r = await service.computeTollCost(COORDS, 450, 14_400);
+      expect(r).toEqual<TollResult>({ cost: 28.35, isEstimate: true });
     });
   });
 });

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHash } from 'node:crypto';
+import type { RouteStep } from '../mapbox/mapbox.service';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -120,6 +121,7 @@ export class TollService {
     coordinates: [number, number][],
     distanceKm: number,
     durationSeconds: number,
+    steps?: RouteStep[],
   ): Promise<TollResult | null> {
     const apiKey = this.config.get<string>('TOLLGURU_API_KEY');
 
@@ -178,7 +180,7 @@ export class TollService {
     }
 
     // (f) Repli heuristique français.
-    const estimated = this.estimateFrenchTolls(distanceKm, durationSeconds);
+    const estimated = this.estimateFrenchTolls(distanceKm, durationSeconds, steps);
     if (estimated === null) return null;
     return { cost: estimated, isEstimate: true };
   }
@@ -194,7 +196,13 @@ export class TollService {
    * Basée sur la vitesse moyenne comme proxy de l'usage de l'autoroute.
    * Taux moyen France : ~0,09 €/km sur autoroute.
    */
-  private estimateFrenchTolls(distanceKm: number, durationSeconds: number): number | null {
+  private estimateFrenchTolls(
+    distanceKm: number,
+    durationSeconds: number,
+    _steps?: RouteStep[],
+  ): number | null {
+    // NOTE (RED) : la branche route-aware (steps) est ajoutée en Task 2 ; ici on
+    // n'exécute encore que l'heuristique de vitesse — d'où l'échec attendu.
     if (durationSeconds === 0 || distanceKm < 5) return null;
 
     const avgSpeedKmh = distanceKm / (durationSeconds / 3600);
