@@ -32,8 +32,38 @@ const VEHICLE_TYPE_CLASS1 = '2AxlesAuto';
 /** Précision de la polyline encodée pour `source:"mapbox"` (RESEARCH Pitfall 2). */
 const POLYLINE_PRECISION = 6;
 
-/** Taux moyen de péage France (€/km autoroute) — heuristique de repli. */
-const TOLL_RATE_PER_KM = 0.09;
+/**
+ * Taux moyen national de péage France, classe 1, €/km d'autoroute payante.
+ * Source : moyenne nationale ~0,09–0,12 €/km (ASFA / agrégateurs, tarifs révisés
+ * au 1er février chaque année : +3 % 2024, +0,92 % 2025, +0,86 % 2026).
+ * Calibré sur Paris→Lyon (A6/A7, ~450 km marqués) = 40,90 € réel (1er fév. 2025) :
+ * 450 × 0,09 = 40,50 € — dans la bande de succès €30–45 par construction.
+ * Réf : ASFA autoroutes.fr ; Service-Public A16201 ; Ulys prix-du-peage/paris-lyon.
+ */
+const NATIONAL_AVG_RATE_PER_KM = 0.09;
+
+/**
+ * Autoroutes (numéro A) gratuites ou majoritairement gratuites — exclues du calcul.
+ * Réf : guides « autoroutes gratuites France 2025 » (bipandgo, evolvie, sovab) ;
+ * ~25 % du réseau (~5 000 km) est sans péage.
+ * Sous-comptages acceptés (estimation, LD-6) : A75 ignore le viaduc de Millau
+ * (~13,70 € 2025) ; A20 traitée comme gratuite sur sa section dominante
+ * Vierzon→Montauban (payante vers Toulouse).
+ */
+const FREE_AUTOROUTES = new Set<number>([
+  75, // A75 La Méridienne (Clermont-Ferrand→Béziers) — sauf viaduc de Millau
+  84, // A84 Caen↔Rennes (Estuaires) — entièrement gratuite
+  20, // A20 L'Occitane Vierzon→Montauban — gratuite sur la section dominante
+  35, // A35 Alsace (Bâle→Strasbourg→frontière DE)
+  31, // A31 Lorraine — majoritairement gratuite
+  33, // A33 (Nancy) — gratuite
+  34, // A34 (Ardennes) — gratuite
+  88, // A88 (Normandie) — gratuite
+  16, // A16 — section nord/Paris gratuite (approximation)
+  630, // A630 rocade de Bordeaux
+  620, // A620 rocade de Toulouse
+  621, // A621 (Toulouse)
+]);
 
 /** Délai max d'attente de TollGuru avant repli silencieux (D-05). */
 const TOLLGURU_TIMEOUT_MS = 8000;
@@ -42,6 +72,22 @@ const TOLLGURU_TIMEOUT_MS = 8000;
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
+}
+
+/**
+ * Extrait tous les numéros d'autoroute d'un `ref` de step Mapbox.
+ * Gère les variantes "A6" / "A 6" / "A-6" et la forme jointe par `;` ("A 6;E 15" → [6]).
+ * Renvoie [] pour un ref null/vide. Regex ancrée + linéaire sur des tokens courts
+ * (ref généré par Mapbox, pas par l'utilisateur) — aucune surface ReDoS.
+ */
+function parseAutorouteNumbers(ref: string | null): number[] {
+  if (!ref) return [];
+  const out: number[] = [];
+  for (const token of ref.split(';')) {
+    const m = /^\s*A\s?-?\s?(\d+)/i.exec(token.trim());
+    if (m) out.push(Number(m[1]));
+  }
+  return out;
 }
 
 /**
@@ -192,17 +238,41 @@ export class TollService {
   }
 
   /**
-   * Estimation heuristique du coût de péage pour un trajet France.
-   * Basée sur la vitesse moyenne comme proxy de l'usage de l'autoroute.
-   * Taux moyen France : ~0,09 €/km sur autoroute.
+   * Somme les kilomètres d'autoroute PAYANTE réellement sur l'itinéraire.
+   * Pour chaque step : si son `ref` porte au moins un numéro d'autoroute ET qu'au
+   * moins un de ces numéros n'est PAS dans FREE_AUTOROUTES, on compte sa distance.
+   * Tout champ manquant (`ref`/`distanceMeters`) contribue 0 — ne lève jamais (LD-2).
+   */
+  private classifyTolledKm(steps: RouteStep[]): number {
+    let metres = 0;
+    for (const step of steps) {
+      const aNumbers = parseAutorouteNumbers(step.ref);
+      if (aNumbers.length === 0) continue; // pas un step autoroute
+      const isTolled = aNumbers.some((n) => !FREE_AUTOROUTES.has(n));
+      if (isTolled) metres += step.distanceMeters ?? 0;
+    }
+    return metres / 1000;
+  }
+
+  /**
+   * Estimation française du coût de péage pour un trajet.
+   *
+   * - Avec des steps : route-aware → (km d'autoroute payante détectés) ×
+   *   NATIONAL_AVG_RATE_PER_KM (0 km → 0 €). Toujours `isEstimate: true` en amont.
+   * - Sans steps : repli heuristique basé sur la vitesse moyenne comme proxy de
+   *   l'usage de l'autoroute (comportement Phase 1 inchangé).
    */
   private estimateFrenchTolls(
     distanceKm: number,
     durationSeconds: number,
-    _steps?: RouteStep[],
+    steps?: RouteStep[],
   ): number | null {
-    // NOTE (RED) : la branche route-aware (steps) est ajoutée en Task 2 ; ici on
-    // n'exécute encore que l'heuristique de vitesse — d'où l'échec attendu.
+    // ── Chemin route-aware (LD-3/LD-4) ──
+    if (steps?.length) {
+      return round2(this.classifyTolledKm(steps) * NATIONAL_AVG_RATE_PER_KM);
+    }
+
+    // ── Repli heuristique vitesse (inchangé — graceful degradation) ──
     if (durationSeconds === 0 || distanceKm < 5) return null;
 
     const avgSpeedKmh = distanceKm / (durationSeconds / 3600);
@@ -218,6 +288,6 @@ export class TollService {
       return 0; // Vitesse trop basse — route urbaine ou rurale sans péage
     }
 
-    return round2(distanceKm * tollFraction * TOLL_RATE_PER_KM);
+    return round2(distanceKm * tollFraction * NATIONAL_AVG_RATE_PER_KM);
   }
 }
