@@ -57,7 +57,7 @@ Plans:
 **UI hint**: no
 
 Plans:
-- [ ] 01.1-01-PLAN.md — Route-aware free toll estimator: RouteStep contract + failing route-aware spec (RED), classifier + FREE_AUTOROUTES + NATIONAL_AVG_RATE_PER_KM (GREEN), Mapbox steps=true + call-site threading + trips e2e (Wave 1)
+- [x] 01.1-01-PLAN.md — Route-aware free toll estimator: RouteStep contract + failing route-aware spec (RED), classifier + FREE_AUTOROUTES + NATIONAL_AVG_RATE_PER_KM (GREEN), Mapbox steps=true + call-site threading + trips e2e (Wave 1)
 
 ### Phase 2: Editorial Dark Design System + Trip Result Redesign
 **Goal**: A reusable editorial-premium-dark design language exists as documented tokens, and the highest-value screen — the trip result — is rebuilt around it with designed cost/energy/toll data-viz and micro-interactions, proving the system before rollout.
@@ -116,6 +116,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
+| 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 0/0 | Not started | - |
 | 3. Web Redesign Rollout | 0/0 | Not started | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |

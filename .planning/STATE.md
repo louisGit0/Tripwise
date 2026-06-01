@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-last_updated: "2026-06-01T20:17:14.047Z"
+status: executing
+last_updated: "2026-06-01T20:45:10Z"
 progress:
   total_phases: 6
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
-  percent: 17
+  completed_phases: 2
+  total_plans: 6
+  completed_plans: 5
+  percent: 33
 ---
 
 # Project State — verygoodtrip
@@ -19,17 +19,17 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 01 COMPLETE (re-scoped to estimate-primary) → next Phase 02
+- **Current focus:** Phase 01.1 — route-aware-free-toll-estimator
 
 ## Current Position
 
-Phase: 01 (precise-tolls-end-to-end-web) — COMPLETE (re-scoped, D-07)
-Plan: 4 of 4 complete (01-01, 01-02, 01-03 done; 01-04 checkpoint re-scoped)
+Phase: 01.1 (route-aware-free-toll-estimator) — ✅ COMPLETE
+Plan: 1 of 1 done
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
-- **Plan:** all 4 done; 01-04 checkpoint released by decision D-07 (no paid TollGuru key)
-- **Status:** Phase 01 complete — TOLL-02/04/05/06 delivered; TOLL-01/03 (precise live) deferred
-- **Progress:** [██████████] phase 1/5 complete
+- **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
+- **Status:** Phase 01.1 complete; ready to plan Phase 2
+- **Progress:** [████████░░] phases 1 + 01.1 complete
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 4 of 4 complete (01-01, 01-02, 01-03 done; 01-04 checkpoint re-scoped)
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 4 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07)
+- Plans executed: 5 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files)
 
 ## Accumulated Context
 
@@ -63,6 +63,7 @@ Plan: 4 of 4 complete (01-01, 01-02, 01-03 done; 01-04 checkpoint re-scoped)
 - Multi-source catalog (ADEME + EPA, extensible) placed AFTER web redesign rollout so the showroom is scaled in its final editorial design, not reworked; placed BEFORE mobile so mobile inherits both the redesign and the server-side catalog search.
 - Consumption must stay real (source-attributed, no fabricated defaults) to protect the Core Value of accurate cost.
 - **D-07 (2026-06-01) — estimate-primary re-scope:** TollGuru is paid and a key cannot be obtained. The heuristic French-toll **estimate is adopted as the primary production mode**. The precise TollGuru code path stays built and dormant; it activates automatically if a `TOLLGURU_API_KEY` is ever configured. TOLL-01 (precise live) and TOLL-03 (class-1 live) are **deferred** to a future gap-closure plan.
+- **D-09 (2026-06-01) — route-aware estimator shipped (Phase 01.1):** The flat speed-fraction heuristic is replaced by a route-aware estimate — `classifyTolledKm(steps)` sums Mapbox `steps[].ref` autoroute km minus a `FREE_AUTOROUTES` set, × `NATIONAL_AVG_RATE_PER_KM = 0.09`. National average only (no per-operator overrides — `ref` yields the A-number, not the operator; YAGNI). Added via an **additive optional `steps?` 4th arg** on `computeTollCost` (cache + never-throw + dormant TollGuru branch untouched, LD-2). Mapbox `getDirections` now requests `steps=true`; `TripsService` threads `directions.steps`. Speed heuristic retained as the no-steps fallback. Always `isEstimate: true`; no UI/schema change (LD-6/LD-7). Paris→Lyon → €40.50 (in €30–45 band).
 - **D-08 (2026-06-01) — free route-aware toll estimator (chosen alternative to TollGuru):** Research confirmed no permanently-free precise toll API for FR without a card (TollGuru = 14-day trial then $80+/mo; Google Routes = card + paid SKU beyond cap; FR open data has toll GATES but no tariff grid). Decision: **improve the estimate** to be route-aware — detect tolled autoroute km on the route and apply a per-network average €/km — fully free, no card, behind the same provider-agnostic `TollService.computeTollCost(coordinates,...)` interface. Stays labelled "≈ estimé". Likely implementation: Mapbox Directions `steps=true` road `ref` (A-roads) minus a free-autoroute exclusion list × per-operator €/km (Vinci/APRR/Sanef ~0.08–0.11 €/km); Overpass `toll=yes` is the fallback technique. Precise providers (Google Routes / open-data tariff engine) remain a later option behind the same interface.
 
 ### Todos / Watchpoints
@@ -87,7 +88,7 @@ Plan: 4 of 4 complete (01-01, 01-02, 01-03 done; 01-04 checkpoint re-scoped)
 
 ## Session Continuity
 
-- **Last action:** Phase 01 complete + **pushed to `master` (cfdb828)** → Render + Vercel auto-deploying. Re-scoped to estimate-primary (D-07, no paid TollGuru key); precise path built + dormant. Code review run: CR-01 (estimates mislabeled "réel") + IN-04 + WR-01 fixed (commit 925236c), rest deferred. Deploy made auto-migrant via TypeORM `migrationsRun: isProd` (commit on master) since Render has no migration hook — the `1748000000000` toll migration applies automatically on prod boot. Backend 38 unit/140 e2e + web 18/18 build green.
-- **Post-deploy check (one-time):** Watch the Render boot log — the toll migration should apply cleanly. If prod migration history were ever out of sync (it should not be), `migrationsRun` would error on boot; fallback: run `npm run migration:show` / `migration:run` against prod `DATABASE_URL`. Then spot-check a saved trip shows "≈ estimé" (never "réel" without a key).
-- **Next action:** `/gsd:plan-phase 2` — Editorial Dark Design System + Trip Result Redesign (DES-01..04, WEB-02). Re-open precise tolls (TOLL-01/03) as a gap-closure plan only if a TollGuru key is ever obtained.
+- **Last action:** Phase 01.1 complete (plan 01.1-01) — route-aware free toll estimator shipped behind the unchanged `TollService` (D-09). 3 atomic commits (d699031 RED, f523620 GREEN, 70be240 wire). Backend `tsc`/`nest build` clean; toll unit 26/26, trips e2e 66/66, full unit 46/46, full e2e 143/143 green. Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant (auto-activates on key). `migrationsRun: isProd` applies the `1748000000000` toll migration on prod boot.
+- **Next action:** `/gsd:verify-work` on Phase 01.1, then `/gsd:plan-phase 2` — Editorial Dark Design System + Trip Result Redesign (DES-01..04, WEB-02). Re-open precise tolls (TOLL-01/03) as a gap-closure plan only if a TollGuru key is ever obtained.
 - **Updated:** 2026-06-01
