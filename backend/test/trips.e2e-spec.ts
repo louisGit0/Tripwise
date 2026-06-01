@@ -68,6 +68,7 @@ const DIRECTIONS_STUB = {
     { name: 'Paris', location: [2.3522, 48.8566] as [number, number] },
     { name: 'Marseille', location: [5.3698, 43.2965] as [number, number] },
   ],
+  steps: [],
 };
 
 const mapboxMock = {
@@ -523,10 +524,12 @@ describe('Trips (e2e)', () => {
       expect(res.body.tollCost).toBe(37.5);
       expect(res.body.tollIsEstimate).toBe(false);
       // La géométrie déjà calculée est transmise au TollService (D-05), pas les coords brutes.
+      // Les steps Mapbox sont aussi threadés (4e arg) pour l'estimation route-aware (TOLL-07).
       expect(tollMock.computeTollCost).toHaveBeenCalledWith(
         DIRECTIONS_STUB.geometry.coordinates,
         expect.any(Number),
         DIRECTIONS_STUB.durationSeconds,
+        DIRECTIONS_STUB.steps,
       );
     });
 

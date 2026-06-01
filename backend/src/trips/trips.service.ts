@@ -197,6 +197,7 @@ export class TripsService {
         directions.geometry.coordinates,
         distanceKm,
         directions.durationSeconds,
+        directions.steps,
       ),
     ]);
 

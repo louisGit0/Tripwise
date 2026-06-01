@@ -60,6 +60,9 @@ interface MapboxDirectionsResponse {
     distance: number;
     duration: number;
     geometry: { type: string; coordinates: [number, number][] };
+    legs: Array<{
+      steps: Array<{ distance: number; ref?: string; name?: string }>;
+    }>;
   }>;
   waypoints: Array<{ name: string; location: [number, number] }>;
 }
@@ -126,7 +129,9 @@ export class MapboxService {
       access_token: this.token,
       geometries: 'geojson',
       overview: 'full',
-      steps: 'false',
+      // steps=true expose le `ref` + la distance par tronçon, requis par
+      // l'estimateur de péage route-aware (TollService). Une seule requête.
+      steps: 'true',
     });
 
     const url = `${this.baseDirections}/${coordinates}?${params}`;
@@ -140,6 +145,16 @@ export class MapboxService {
     }
 
     const route = data.routes[0];
+    // Aplatit tous les legs[].steps[] en RouteStep[] ; `?? []` garantit qu'une
+    // route sans legs/steps renvoie [] (jamais d'exception — contrat LD-2).
+    const steps: RouteStep[] = (route.legs ?? []).flatMap((leg) =>
+      (leg.steps ?? []).map((s) => ({
+        distanceMeters: s.distance ?? 0,
+        ref: s.ref ?? null,
+        name: s.name ?? null,
+      })),
+    );
+
     return {
       distanceMeters: Math.round(route.distance),
       durationSeconds: Math.round(route.duration),
@@ -148,9 +163,7 @@ export class MapboxService {
         coordinates: route.geometry.coordinates as [number, number][],
       },
       waypoints: data.waypoints,
-      // Placeholder temporaire (RED) — remplacé par l'aplatissement réel des
-      // legs[].steps[] en Task 3, une fois `steps=true` activé côté requête.
-      steps: [],
+      steps,
     };
   }
 
