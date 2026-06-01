@@ -12,6 +12,11 @@ export default registerAs('database', (): TypeOrmModuleOptions => {
     migrations: [join(__dirname, '..', 'database', 'migrations', '*.{ts,js}')],
     // true en dev (confort), false en prod (utiliser les migrations)
     synchronize: !isProd,
+    // En prod (synchronize:false), exécute automatiquement les migrations en
+    // attente au démarrage. Les migrations compilées vivent dans
+    // dist/database/migrations/*.js ; idempotent (TypeORM trace la table migrations).
+    // Render ne lance pas de hook de migration : ceci rend chaque deploy auto-migrant.
+    migrationsRun: isProd,
     logging: !isProd,
   };
 
