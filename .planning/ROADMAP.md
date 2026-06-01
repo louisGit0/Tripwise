@@ -53,11 +53,11 @@ Plans:
   3. Paris→Lyon lands in a plausible ≈ €30–45 band.
   4. No paid dependency, no API key, no credit-card-gated service is added.
   5. All existing toll tests stay green; new unit tests cover tolled-km detection + per-network rate application + the no-autoroute=0 case.
-**Plans**: TBD
+**Plans**: 1 plan
 **UI hint**: no
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 01.1 to break down)
+- [ ] 01.1-01-PLAN.md — Route-aware free toll estimator: RouteStep contract + failing route-aware spec (RED), classifier + FREE_AUTOROUTES + NATIONAL_AVG_RATE_PER_KM (GREEN), Mapbox steps=true + call-site threading + trips e2e (Wave 1)
 
 ### Phase 2: Editorial Dark Design System + Trip Result Redesign
 **Goal**: A reusable editorial-premium-dark design language exists as documented tokens, and the highest-value screen — the trip result — is rebuilt around it with designed cost/energy/toll data-viz and micro-interactions, proving the system before rollout.
