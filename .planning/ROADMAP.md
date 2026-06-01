@@ -41,6 +41,24 @@ Plans:
 - [x] 01-03-PLAN.md — Web display: Tooltip atom, réel/≈ estimé badge, hide-when-0 on result, same badge on saved detail (Wave 3)
 - [x] 01-04-PLAN.md — Verification checkpoint **re-scoped (D-07)**: TollGuru paid/no key → estimate-primary adopted; estimate fallback + web visuals + persistence verified, precise live path (TOLL-01/03, Assumptions A1–A6) deferred to a gap-closure plan (Wave 4)
 
+### Phase 01.1: Route-aware free toll estimator (INSERTED)
+
+**Goal:** A user calculating a trip sees a toll estimate that scales with the tolled autoroute kilometres actually on their route (not a flat distance heuristic), computed entirely for free — no paid API, no credit card — behind the existing `TollService`. The value stays honestly labelled "≈ estimé". Replaces the crude `estimateFrenchTolls` flat heuristic (decision D-08, free alternative to the paid TollGuru path which stays dormant).
+**Mode:** mvp
+**Depends on**: Phase 1 (reuses `TollService.computeTollCost(coordinates,...)`, the 30-day cache, the never-throw contract, and the web "≈ estimé" badge — all unchanged)
+**Requirements**: TOLL-02 (refined), TOLL-07
+**Success Criteria** (what must be TRUE):
+  1. A route using tolled autoroutes returns an estimate scaled by detected tolled km × a per-network average €/km (not the old flat value), with `isEstimate=true`.
+  2. A route with no tolled autoroute returns 0 (no toll line shown).
+  3. Paris→Lyon lands in a plausible ≈ €30–45 band.
+  4. No paid dependency, no API key, no credit-card-gated service is added.
+  5. All existing toll tests stay green; new unit tests cover tolled-km detection + per-network rate application + the no-autoroute=0 case.
+**Plans**: TBD
+**UI hint**: no
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 01.1 to break down)
+
 ### Phase 2: Editorial Dark Design System + Trip Result Redesign
 **Goal**: A reusable editorial-premium-dark design language exists as documented tokens, and the highest-value screen — the trip result — is rebuilt around it with designed cost/energy/toll data-viz and micro-interactions, proving the system before rollout.
 **Mode:** mvp
