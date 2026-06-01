@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-last_updated: "2026-05-29T19:57:33.782Z"
+status: phase-complete
+last_updated: "2026-06-01T00:00:00.000Z"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
-  percent: 75
+  completed_plans: 4
+  percent: 100
 ---
 
 # Project State — verygoodtrip
@@ -19,17 +19,17 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 01 — precise-tolls-end-to-end-web
+- **Current focus:** Phase 01 COMPLETE (re-scoped to estimate-primary) → next Phase 02
 
 ## Current Position
 
-Phase: 01 (precise-tolls-end-to-end-web) — EXECUTING
-Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
+Phase: 01 (precise-tolls-end-to-end-web) — COMPLETE (re-scoped, D-07)
+Plan: 4 of 4 complete (01-01, 01-02, 01-03 done; 01-04 checkpoint re-scoped)
 
-- **Phase:** 1 of 5 — Precise Tolls End-to-End (Web)
-- **Plan:** 01-03 complete (web toll display); next 01-04 (live + visual verification)
-- **Status:** Executing Phase 01
-- **Progress:** [████████░░] 75%
+- **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
+- **Plan:** all 4 done; 01-04 checkpoint released by decision D-07 (no paid TollGuru key)
+- **Status:** Phase 01 complete — TOLL-02/04/05/06 delivered; TOLL-01/03 (precise live) deferred
+- **Progress:** [██████████] phase 1/5 complete
 
 ## Roadmap Snapshot
 
@@ -43,9 +43,9 @@ Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
 
 ## Performance Metrics
 
-- Phases complete: 0/5
+- Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 3 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files)
+- Plans executed: 4 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07)
 
 ## Accumulated Context
 
@@ -58,6 +58,7 @@ Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
 - Apply redesign to web AND mobile for cross-platform consistency.
 - Multi-source catalog (ADEME + EPA, extensible) placed AFTER web redesign rollout so the showroom is scaled in its final editorial design, not reworked; placed BEFORE mobile so mobile inherits both the redesign and the server-side catalog search.
 - Consumption must stay real (source-attributed, no fabricated defaults) to protect the Core Value of accurate cost.
+- **D-07 (2026-06-01) — estimate-primary re-scope:** TollGuru is paid and a key cannot be obtained. The heuristic French-toll **estimate is adopted as the primary production mode**. The precise TollGuru code path stays built and dormant; it activates automatically if a `TOLLGURU_API_KEY` is ever configured. TOLL-01 (precise live) and TOLL-03 (class-1 live) are **deferred** to a future gap-closure plan.
 
 ### Todos / Watchpoints
 
@@ -65,7 +66,7 @@ Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
 - TollGuru key is server-side only — never in any client response or bundle.
 - Web token must be cached server-side to avoid burning quota on repeated routes.
 - ✅ `TollService` extracted from `TripsService` (plan 01-01): precise TollGuru polyline call, defensive parse, 30-day SHA-1 cache, silent heuristic fallback; wired via `Promise.all`. `computeTollCost`/`estimateFrenchTolls` removed from `TripsService`.
-- ⚠️ Precise TollGuru branch is unit-tested with a mocked `fetch` only — endpoint/response-shape/precision (RESEARCH A1–A6) still need a one-time live verification with a real `TOLLGURU_API_KEY` (deferred to plan 01-04 checkpoint).
+- ⚠️ Precise TollGuru branch is unit-tested with a mocked `fetch` only — endpoint/response-shape/precision (RESEARCH A1–A6) remain **unverified against the real API** and are now **deferred indefinitely** (no paid key, D-07). Re-open as a gap-closure plan the day a key is obtained: set key → Paris→Lyon → expect `tollIsEstimate=false` ≈ €35–40 + cache-hit + green "réel" badge.
 - ✅ `Trip.tollIsEstimate` persisted (plan 01-02): `toll_is_estimate` boolean column + hand-written migration `1748000000000` (applied dev, `[X] 5`); `SaveTripDto.tollIsEstimate` (optional `@IsBoolean`); `saveTrip` writes `?? false`; crud e2e proves round-trip via `GET /trips/:id` and stats-once. Plan 01-03 renders the badge on the detail page.
 - ℹ️ Global `ValidationPipe` uses `enableImplicitConversion: true` — coerces strings to booleans before `@IsBoolean` runs, so a malformed boolean is silently truthy-coerced (not 400). Project-wide; relevant if any future negative DTO test targets a boolean field.
 - Existing single-source pipeline: `backend/src/vehicles/vehicle-sync.service.ts` + import script `backend/src/scripts/import-ademe.ts` (~266 deduped ADEME entries) — Phase 4 generalizes this into a multi-source, idempotent ingestion with provenance + cross-source merge.
@@ -81,6 +82,6 @@ Plan: 4 of 4 (01-01, 01-02, 01-03 complete)
 
 ## Session Continuity
 
-- **Last action:** Executed plan 01-03 (web toll display) — new `Tooltip` atom (hover+focus+tap, Carbon tokens), `SavedTrip.tollIsEstimate` type, result page hide-when-0 péages line + réel/≈ estimé `Pill`+`Tooltip` (total-inclusive), same badge on saved-trip detail from persisted flag, save payload now sends `tollIsEstimate` (commits `ba1f4e9` Tooltip+type, `a579291` result page, `3e423e0` detail page). tsc clean; next build 18/18 routes. TOLL-04 delivered; TOLL-05 now rendered on detail.
-- **Next action:** Execute plan 01-04 (verification — live TollGuru Paris→Lyon checkpoint + web badge/tooltip visual checkpoint).
-- **Updated:** 2026-05-29
+- **Last action:** Phase 01 closed out. Plan 01-04 verification checkpoint **re-scoped (D-07)** — TollGuru is paid and no key is obtainable, so the heuristic estimate becomes the primary production mode; the precise TollGuru path stays built + dormant. Estimate fallback, web badge/tooltip/hide-when-0, and persistence are verified (e2e + build); precise live path (TOLL-01/03, Assumptions A1–A6) deferred to a future gap-closure plan. REQUIREMENTS/ROADMAP/STATE updated; 01-04-SUMMARY written.
+- **Next action:** Decide push to `master` (auto-deploy Render+Vercel) — backend is estimate-safe with no key; the `1748000000000` migration must be run on the prod DB before/with deploy. Then `/gsd:plan-phase 2` (Editorial Dark DS + Trip Result Redesign).
+- **Updated:** 2026-06-01

@@ -15,7 +15,7 @@ breadth, not the foundation.
 
 ## Phases
 
-- [ ] **Phase 1: Precise Tolls End-to-End (Web)** - Live TollGuru tolls with graceful heuristic fallback, broken out and persisted, shown clearly on web trip results.
+- [x] **Phase 1: Precise Tolls End-to-End (Web)** - Estimate-primary tolls (re-scoped D-07: TollGuru paid/no key), graceful heuristic fallback as the live mode, broken out and persisted, shown clearly on web trip results. Precise TollGuru path built + dormant pending a key.
 - [ ] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result).
 - [ ] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets.
 - [ ] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom.
@@ -39,7 +39,7 @@ Plans:
 - [x] 01-01-PLAN.md — Backend toll engine: extract TollService, precise TollGuru polyline call, defensive parse, 30-day cache, silent fallback, wire into TripsService (Wave 1)
 - [x] 01-02-PLAN.md — Persistence: tollIsEstimate entity column + hand-written migration (run dev) + save-flow + crud e2e (Wave 2)
 - [x] 01-03-PLAN.md — Web display: Tooltip atom, réel/≈ estimé badge, hide-when-0 on result, same badge on saved detail (Wave 3)
-- [ ] 01-04-PLAN.md — Verification: live TollGuru Paris→Lyon checkpoint + web badge/tooltip visual checkpoint (Wave 4)
+- [x] 01-04-PLAN.md — Verification checkpoint **re-scoped (D-07)**: TollGuru paid/no key → estimate-primary adopted; estimate fallback + web visuals + persistence verified, precise live path (TOLL-01/03, Assumptions A1–A6) deferred to a gap-closure plan (Wave 4)
 
 ### Phase 2: Editorial Dark Design System + Trip Result Redesign
 **Goal**: A reusable editorial-premium-dark design language exists as documented tokens, and the highest-value screen — the trip result — is rebuilt around it with designed cost/energy/toll data-viz and micro-interactions, proving the system before rollout.
@@ -97,7 +97,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Precise Tolls End-to-End (Web) | 3/4 | In Progress|  |
+| 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 0/0 | Not started | - |
 | 3. Web Redesign Rollout | 0/0 | Not started | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |

@@ -12,12 +12,12 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 ### Tolls (TOLL)
 
-- [ ] **TOLL-01**: User sees a **precise** toll cost for a calculated trip via TollGuru when an API key is configured (real cost, not an estimate)
-- [ ] **TOLL-02**: When TollGuru is unavailable, over quota, or unconfigured, the toll cost **falls back to the heuristic estimate** and the user clearly sees it is an estimate (badge/label)
-- [ ] **TOLL-03**: Toll cost is computed for a **passenger car (class 1)** by default
+- [ ] **TOLL-01**: User sees a **precise** toll cost for a calculated trip via TollGuru when an API key is configured (real cost, not an estimate) — _**DEFERRED (D-07):** TollGuru is paid; no key obtainable. Code path built + unit-tested (mocked), activates automatically if a key is ever configured. Live verification (Assumptions A1–A6) deferred to a gap-closure plan._
+- [x] **TOLL-02**: When TollGuru is unavailable, over quota, or unconfigured, the toll cost **falls back to the heuristic estimate** and the user clearly sees it is an estimate (badge/label) — _now the **primary** production mode (estimate-primary re-scope, D-07)_
+- [ ] **TOLL-03**: Toll cost is computed for a **passenger car (class 1)** by default — _built (request body sends class-1) but only exercised when the precise call fires; **live verification deferred** with TOLL-01_
 - [x] **TOLL-04**: Toll cost is **broken out clearly** in the trip result and included in the displayed total (separate line, real-vs-estimate indicator)
-- [ ] **TOLL-05**: Toll cost is persisted on saved trips and reflected in history/stats totals
-- [ ] **TOLL-06**: TollGuru calls are **cached and rate-safe** server-side (avoid burning quota on repeated identical routes) and the key is never exposed client-side
+- [x] **TOLL-05**: Toll cost is persisted on saved trips and reflected in history/stats totals
+- [x] **TOLL-06**: TollGuru calls are **cached and rate-safe** server-side (avoid burning quota on repeated identical routes) and the key is never exposed client-side
 
 ### Design System (DES)
 
@@ -52,6 +52,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 ## Deferred (v2+)
 
+- **Precise TollGuru tolls (TOLL-01 + TOLL-03 live)** — gated on a paid TollGuru API key (not obtainable now). Code is built and dormant; estimate-primary in production (decision D-07, 2026-06-01). Re-open with a gap-closure plan once a key exists.
 - Multi-class tolls (trucks, motorcycles, towing) — class 1 only for now
 - Per-segment toll breakdown (barrier-by-barrier list) — single total for now
 - Avoid-tolls routing alternative — display only for now
