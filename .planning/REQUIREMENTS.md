@@ -18,7 +18,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 - [x] **TOLL-04**: Toll cost is **broken out clearly** in the trip result and included in the displayed total (separate line, real-vs-estimate indicator)
 - [x] **TOLL-05**: Toll cost is persisted on saved trips and reflected in history/stats totals
 - [x] **TOLL-06**: TollGuru calls are **cached and rate-safe** server-side (avoid burning quota on repeated identical routes) and the key is never exposed client-side
-- [ ] **TOLL-07**: The (estimate-primary) toll cost is **route-aware** — scaled by the tolled autoroute kilometres actually on the route × a per-network average €/km — computed **fully free** (no paid API, no credit card), behind the existing `TollService`, still labelled "≈ estimé" _(Phase 1.1, decision D-08 — free alternative to the paid TollGuru precise path)_
+- [x] **TOLL-07**: The (estimate-primary) toll cost is **route-aware** — scaled by the tolled autoroute kilometres actually on the route × a per-network average €/km — computed **fully free** (no paid API, no credit card), behind the existing `TollService`, still labelled "≈ estimé" _(Phase 1.1, decision D-08 — free alternative to the paid TollGuru precise path)_
 
 ### Design System (DES)
 

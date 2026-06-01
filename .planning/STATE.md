@@ -81,6 +81,8 @@ Plan: 1 of 1 done
 - Mobile has ~7 pre-existing TS errors unrelated to this work; do not let Phase 5 inherit blame for them.
 - Mobile design tokens must work in RN StyleSheet (no Tailwind); web uses `bg-carbon-*` Tailwind utilities.
 - `master` auto-deploys (Render + Vercel) — commit + push after each verified update.
+- ✅ Phase 1.1 (D-08): route-aware FREE toll estimate shipped — `classifyTolledKm` sums Mapbox `steps[].ref` autoroute km minus `FREE_AUTOROUTES` × `NATIONAL_AVG_RATE_PER_KM` (0.09); Mapbox `getDirections` now requests `steps=true` and surfaces `RouteStep[]`; threaded into `computeTollCost` as an additive optional 4th arg (cache/never-throw/TollGuru branch untouched). `isEstimate` always true. Paris→Lyon ≈ €40.50.
+- ℹ️ Phase 1.1 code review — 2 accepted/deferred warnings: WR-01 `getDirections` requests `steps=true` unconditionally so `calculateMulti` fetches a heavier payload it discards (negligible; revisit if Mapbox quota matters); WR-02 e2e mocks `TollService` (stubs use `steps:[]`) so the real classifier isn't driven through HTTP — mitigated by exhaustive unit coverage (toll 26/26 incl. anchor + ref variants) + the e2e 4th-arg wiring assertion. Add a real-classifier e2e if integration confidence ever needs raising.
 
 ### Blockers
 
