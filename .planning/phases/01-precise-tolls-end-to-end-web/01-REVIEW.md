@@ -8,7 +8,10 @@ findings:
   warning: 2
   info: 4
   total: 7
-status: issues-found
+status: resolved
+fixed: [CR-01, IN-04, WR-01]
+deferred: [WR-02, IN-03, IN-01, IN-02]
+fix_commit: 925236c
 ---
 
 # Phase 1: Code Review Report
