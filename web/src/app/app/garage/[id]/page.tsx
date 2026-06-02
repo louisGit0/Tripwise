@@ -12,9 +12,15 @@ import { Pill } from '@/components/ui/Pill';
 import { Hairline } from '@/components/ui/Hairline';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
+import { KPICell } from '@/components/ui/KPICell';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { UserVehicleWithStats } from '@/types/api';
+
+// Canonical focus token — applied to every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -125,10 +131,27 @@ export default function VehicleDetailPage({ params }: Props) {
   // ── Loading skeleton ──────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6 animate-pulse">
-        <div className="h-6 w-24 bg-carbon-surface2 rounded" />
-        <div className="h-28 bg-carbon-surface2 rounded-card" />
-        <div className="h-48 bg-carbon-surface2 rounded-card" />
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <Skeleton width={64} height={12} />
+          <Skeleton width="55%" height={26} />
+        </div>
+        <SectionCard padding="md">
+          <div className="flex items-center gap-4">
+            <Skeleton width={64} height={64} rounded="rounded-card" />
+            <div className="flex-1 flex flex-col gap-2">
+              <Skeleton width="60%" height={14} />
+              <Skeleton width="40%" height={11} />
+            </div>
+          </div>
+        </SectionCard>
+        <SectionCard padding="md">
+          <div className="flex flex-col gap-4">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} width="100%" height={40} rounded="rounded-xl" />
+            ))}
+          </div>
+        </SectionCard>
       </div>
     );
   }
@@ -138,7 +161,7 @@ export default function VehicleDetailPage({ params }: Props) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
         <p className="font-mono text-xs tracking-widest uppercase">{"// 404"}</p>
-        <p className="text-base font-semibold text-carbon-ink">Véhicule introuvable</p>
+        <p className="text-base font-bold text-carbon-ink">Véhicule introuvable</p>
         <p className="text-sm text-center max-w-xs">Ce véhicule n&apos;existe pas ou a été supprimé.</p>
         <CTAButton variant="ghost" size="sm" onClick={() => router.push('/app/garage')}>
           Retour
@@ -158,7 +181,7 @@ export default function VehicleDetailPage({ params }: Props) {
         <button
           type="button"
           onClick={() => router.push('/app/garage')}
-          className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
+          className={`flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3 rounded ${FOCUS_RING}`}
         >
           <ChevronLeft size={13} />
           Retour
@@ -179,7 +202,7 @@ export default function VehicleDetailPage({ params }: Props) {
         <div className="flex items-center gap-4">
           <BrandAvatar brand={vehicle.vehicleModel.brand} size={64} />
           <div className="flex-1 min-w-0">
-            <p className="text-base font-semibold text-carbon-ink leading-tight">
+            <p className="text-base font-bold text-carbon-ink leading-tight">
               {vehicle.vehicleModel.brand} {vehicle.vehicleModel.model}
               {vehicle.vehicleModel.year ? ` (${vehicle.vehicleModel.year})` : ''}
             </p>
@@ -198,20 +221,21 @@ export default function VehicleDetailPage({ params }: Props) {
             <Hairline className="my-3" />
             <div className="grid grid-cols-4 divide-x divide-carbon-hairline">
               {[
-                { value: vehicle.tripsCount, unit: 'trajets' },
-                { value: `${fmtNum.format(vehicle.totalDistance)}`, unit: 'km' },
-                { value: `${fmtEur.format(vehicle.totalSpent)}`, unit: 'dépensé' },
+                { label: 'Trajets', value: vehicle.tripsCount },
+                { label: 'km', value: fmtNum.format(vehicle.totalDistance) },
+                { label: 'Dépensé', value: fmtEur.format(vehicle.totalSpent) },
                 {
+                  label: '€/km',
                   value: vehicle.costPerKm > 0 ? vehicle.costPerKm.toFixed(3) : '—',
-                  unit: '€/km',
                 },
-              ].map(({ value, unit }, i) => (
-                <div key={i} className="flex flex-col items-center py-1 px-1 gap-0">
-                  <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
-                    {value}
-                  </span>
-                  <span className="text-[10px] text-carbon-muted">{unit}</span>
-                </div>
+              ].map(({ label, value }, i) => (
+                <KPICell
+                  key={i}
+                  label={label}
+                  value={<span className="font-mono tabular-nums">{value}</span>}
+                  size="sm"
+                  className="items-center text-center px-1"
+                />
               ))}
             </div>
           </>
@@ -242,7 +266,7 @@ export default function VehicleDetailPage({ params }: Props) {
           />
           <div className="flex items-center justify-between py-2 border-t border-carbon-hairline">
             <span className="text-sm text-carbon-ink2">Consommation</span>
-            <span className="text-sm font-mono font-semibold text-carbon-ink tabular-nums">
+            <span className="text-sm font-mono font-bold text-carbon-ink tabular-nums">
               {vehicle.vehicleModel.consumption} {isElectric ? 'kWh' : 'L'}/100km
             </span>
           </div>
@@ -276,7 +300,7 @@ export default function VehicleDetailPage({ params }: Props) {
       <SectionCard padding="md">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-carbon-ink">Véhicule par défaut</p>
+            <p className="text-sm font-bold text-carbon-ink">Véhicule par défaut</p>
             <p className="text-xs text-carbon-muted mt-0.5">
               {vehicle.isDefault
                 ? 'Ce véhicule est votre véhicule par défaut.'
@@ -284,7 +308,12 @@ export default function VehicleDetailPage({ params }: Props) {
             </p>
           </div>
           {vehicle.isDefault ? (
-            <Star size={18} className="text-carbon-accent fill-carbon-accent" />
+            <Star
+              size={18}
+              role="img"
+              aria-label="Véhicule par défaut"
+              className="text-carbon-accent fill-carbon-accent"
+            />
           ) : (
             <CTAButton
               variant="ghost"
@@ -304,7 +333,7 @@ export default function VehicleDetailPage({ params }: Props) {
         <Eyebrow className="mb-2 text-red-400">Zone de danger</Eyebrow>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-carbon-ink">Supprimer ce véhicule</p>
+            <p className="text-sm font-bold text-carbon-ink">Supprimer ce véhicule</p>
             <p className="text-xs text-carbon-muted mt-0.5 max-w-xs">
               Cette action est irréversible. Tous les trajets associés seront conservés.
             </p>
