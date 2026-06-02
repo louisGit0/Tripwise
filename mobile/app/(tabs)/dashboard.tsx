@@ -7,7 +7,6 @@ import {
   StyleSheet,
   useColorScheme,
   Share,
-  Alert,
   Modal,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
@@ -19,7 +18,6 @@ import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
 import { SectionCard } from '@/src/components/ui/SectionCard';
 import { Eyebrow } from '@/src/components/ui/Eyebrow';
-import { Pill } from '@/src/components/ui/Pill';
 import { DataBar } from '@/src/components/ui/DataBar';
 import { AnimatedCounter } from '@/src/components/ui/AnimatedCounter';
 import { Colors, Fonts, FontSize, FontSizes, Spacing, type ThemeColors } from '@/constants/theme';
@@ -312,18 +310,7 @@ function ResultCard({
   const tollCost = result.tollCost ?? 0;
   const total = energyCost + tollCost;
   const hasToll = result.tollCost != null && result.tollCost > 0;
-  const tollIsEstimate = result.tollIsEstimate ?? false;
   const energyFill = energyFillForFuelType(result.vehicle.fuelType, c);
-
-  const tollBadge = (
-    <TouchableOpacity
-      onPress={() => Alert.alert(t('dashboard.tollLabel'), t('dashboard.tollEstimateTooltip'))}
-    >
-      <Pill color={tollIsEstimate ? 'warning' : 'success'} size="sm">
-        {tollIsEstimate ? t('dashboard.tollEstimate') : t('dashboard.tollReal')}
-      </Pill>
-    </TouchableOpacity>
-  );
 
   return (
     <SectionCard style={{ backgroundColor: c.surface3 }}>
@@ -359,7 +346,6 @@ function ResultCard({
                   <Text style={[styles.legendText, { color: c.ink2 }]}>
                     {t('dashboard.tollLabel')} · {formatEur(tollCost)}
                   </Text>
-                  {tollBadge}
                 </View>
               )}
             </View>
