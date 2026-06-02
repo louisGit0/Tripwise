@@ -13,6 +13,8 @@ import { Sparkline } from '@/components/ui/Sparkline';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Select } from '@/components/ui/Select';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
+import { useCountUp } from '@/hooks/useCountUp';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type {
@@ -22,6 +24,10 @@ import type {
   Favorite,
   FuelType,
 } from '@/types/api';
+
+// Standardized focus ring (mirrors CTAButton / result page) — every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 // ── LocalStorage prices (mirrors fuel-prices page) ───────────────
 interface UserPrices {
@@ -105,6 +111,14 @@ function DashboardInner() {
   const [quickCalcTab, setQuickCalcTab] = useState<'distance' | 'budget'>('distance');
   const [quickInput, setQuickInput] = useState('');
   const [quickResult, setQuickResult] = useState<string | null>(null);
+  // Additive presentation state (MD-2): the numeric value + unit behind the
+  // string result, used to drive the animated mono figure. Does NOT change any
+  // computed number — handleQuickCalc still produces the exact same figures.
+  const [quickResultValue, setQuickResultValue] = useState<number | null>(null);
+  const [quickResultUnit, setQuickResultUnit] = useState<'€' | 'km' | null>(null);
+
+  // Count-up driver for the hero result figure (instant under reduced motion).
+  const animatedResult = useCountUp(quickResultValue ?? 0);
 
   // ── Load data on mount ──────────────────────────────────────────
   const loadData = useCallback(() => {
@@ -187,6 +201,8 @@ function DashboardInner() {
         cost = totalEnergy * pricePerLitre;
       }
       setQuickResult(`${cost.toFixed(2)} €`);
+      setQuickResultValue(cost);
+      setQuickResultUnit('€');
     } else {
       // budget € → km
       let pricePerUnit: number;
@@ -200,7 +216,16 @@ function DashboardInner() {
           ? (inputNum / ((pricePerUnit * consumption) / 100))
           : 0;
       setQuickResult(`${Math.round(km)} km`);
+      setQuickResultValue(Math.round(km));
+      setQuickResultUnit('km');
     }
+  }
+
+  // Reset both the string result and its animated presentation state together.
+  function resetQuickResult() {
+    setQuickResult(null);
+    setQuickResultValue(null);
+    setQuickResultUnit(null);
   }
 
   const vehicleOptions = vehicles.map((v) => ({
@@ -210,6 +235,117 @@ function DashboardInner() {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* ── Header ────────────────────────────────────────────────── */}
+      <div>
+        <Eyebrow className="mb-0.5">Tableau de bord</Eyebrow>
+        <h1 className="font-display font-bold text-display text-carbon-ink">Aperçu</h1>
+      </div>
+
+      {/* ── Hero calc-entry plate ─────────────────────────────────── */}
+      <SectionCard title={<Eyebrow>Calcul rapide</Eyebrow>} padding="md" className="!bg-carbon-surface3">
+        <div className="flex flex-col gap-4 pt-3">
+          {/* Mode toggle */}
+          <SegmentedControl
+            segments={[
+              { value: 'distance', label: 'Distance → Coût' },
+              { value: 'budget', label: 'Budget → Distance' },
+            ]}
+            value={quickCalcTab}
+            onChange={(tab) => {
+              setQuickCalcTab(tab);
+              resetQuickResult();
+              setQuickInput('');
+            }}
+          />
+
+          {/* Input */}
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              min={0}
+              step={quickCalcTab === 'distance' ? 10 : 0.01}
+              value={quickInput}
+              onChange={(e) => {
+                setQuickInput(e.target.value);
+                resetQuickResult();
+              }}
+              placeholder={
+                quickCalcTab === 'distance' ? 'Distance en km...' : 'Budget en €...'
+              }
+              className={`flex-1 h-10 px-3 rounded-xl border border-carbon-hairline bg-carbon-surface2 text-sm text-carbon-ink outline-none focus:border-carbon-accent font-mono ${FOCUS_RING}`}
+            />
+            <span className="text-xs font-mono text-carbon-muted shrink-0">
+              {quickCalcTab === 'distance' ? 'km' : '€'}
+            </span>
+          </div>
+
+          {/* Quick chips for distance mode */}
+          {quickCalcTab === 'distance' && (
+            <div className="flex gap-2 flex-wrap">
+              {[50, 100, 200, 500].map((km) => (
+                <button
+                  key={km}
+                  type="button"
+                  onClick={() => {
+                    setQuickInput(String(km));
+                    resetQuickResult();
+                  }}
+                  className={`text-xs px-3 py-1.5 rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors font-mono ${FOCUS_RING}`}
+                >
+                  {km} km
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Vehicle selector */}
+          {vehiclesLoading ? (
+            <p className="text-sm text-carbon-muted">Chargement des véhicules...</p>
+          ) : vehicles.length === 0 ? (
+            <p className="text-sm text-carbon-muted">Aucun véhicule. Ajoutez-en un dans le Garage.</p>
+          ) : (
+            <Select
+              label="Véhicule"
+              options={vehicleOptions}
+              value={selectedVehicleId}
+              onChange={(e) => setSelectedVehicleId(e.target.value)}
+              placeholder="Sélectionner un véhicule"
+            />
+          )}
+
+          {/* Result — designed animated mono figure (CLS-safe, fixed decimals) */}
+          {quickResultValue !== null && (
+            <div className="flex items-baseline justify-between gap-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+              <span className="text-caption font-bold tracking-eye uppercase text-carbon-muted">
+                {quickCalcTab === 'distance' ? 'Coût estimé' : 'Distance estimée'}
+              </span>
+              <span className="font-mono font-bold text-carbon-ink leading-none tabular-nums text-display">
+                <span aria-hidden="true">
+                  {quickResultUnit === '€'
+                    ? animatedResult.toFixed(2).replace('.', ',')
+                    : Math.round(animatedResult).toString()}
+                </span>
+                <span className="sr-only">{quickResult}</span>
+                <span aria-hidden="true" className="text-body font-normal text-carbon-muted ml-2">
+                  {quickResultUnit}
+                </span>
+              </span>
+            </div>
+          )}
+
+          {/* Calculate button */}
+          <CTAButton
+            variant="accent"
+            size="lg"
+            className="w-full"
+            onClick={handleQuickCalc}
+            disabled={vehiclesLoading || vehicles.length === 0 || !quickInput}
+          >
+            Calculer
+          </CTAButton>
+        </div>
+      </SectionCard>
+
       {/* ── KPI grid ─────────────────────────────────────────────── */}
       <SectionCard title={<Eyebrow>Ce mois</Eyebrow>} padding="md">
         <div className="grid grid-cols-2 gap-4 pt-3">
@@ -314,112 +450,6 @@ function DashboardInner() {
           </div>
         </SectionCard>
       )}
-
-      {/* ── Quick calculator ─────────────────────────────────────── */}
-      <SectionCard title={<Eyebrow>Calcul rapide</Eyebrow>} padding="md">
-        <div className="flex flex-col gap-4 pt-3">
-          {/* Tabs */}
-          <div className="flex gap-1 p-1 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
-            {(['distance', 'budget'] as const).map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => {
-                  setQuickCalcTab(tab);
-                  setQuickResult(null);
-                  setQuickInput('');
-                }}
-                className={[
-                  'flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all',
-                  quickCalcTab === tab
-                    ? 'bg-carbon-surface text-carbon-ink shadow-sm border border-carbon-hairline'
-                    : 'text-carbon-muted hover:text-carbon-ink',
-                ].join(' ')}
-              >
-                {tab === 'distance' ? 'Distance → Coût' : 'Budget → Distance'}
-              </button>
-            ))}
-          </div>
-
-          {/* Input */}
-          <div className="flex items-center gap-3">
-            <input
-              type="number"
-              min={0}
-              step={quickCalcTab === 'distance' ? 10 : 0.01}
-              value={quickInput}
-              onChange={(e) => {
-                setQuickInput(e.target.value);
-                setQuickResult(null);
-              }}
-              placeholder={
-                quickCalcTab === 'distance' ? 'Distance en km...' : 'Budget en €...'
-              }
-              className="flex-1 h-10 px-3 rounded-xl border border-carbon-hairline bg-carbon-surface2 text-sm text-carbon-ink outline-none focus:border-carbon-accent font-mono"
-            />
-            <span className="text-xs font-mono text-carbon-muted shrink-0">
-              {quickCalcTab === 'distance' ? 'km' : '€'}
-            </span>
-          </div>
-
-          {/* Quick chips for distance mode */}
-          {quickCalcTab === 'distance' && (
-            <div className="flex gap-2 flex-wrap">
-              {[50, 100, 200, 500].map((km) => (
-                <button
-                  key={km}
-                  type="button"
-                  onClick={() => {
-                    setQuickInput(String(km));
-                    setQuickResult(null);
-                  }}
-                  className="text-xs px-3 py-1.5 rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors font-mono"
-                >
-                  {km} km
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Vehicle selector */}
-          {vehiclesLoading ? (
-            <p className="text-sm text-carbon-muted">Chargement des véhicules...</p>
-          ) : vehicles.length === 0 ? (
-            <p className="text-sm text-amber-400">Aucun véhicule. Ajoutez-en un dans le Garage.</p>
-          ) : (
-            <Select
-              label="Véhicule"
-              options={vehicleOptions}
-              value={selectedVehicleId}
-              onChange={(e) => setSelectedVehicleId(e.target.value)}
-              placeholder="Sélectionner un véhicule"
-            />
-          )}
-
-          {/* Result */}
-          {quickResult && (
-            <div className="flex items-center justify-between p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-              <span className="text-xs font-semibold text-carbon-muted uppercase tracking-wider">
-                {quickCalcTab === 'distance' ? 'Coût estimé' : 'Distance estimée'}
-              </span>
-              <span className="text-2xl font-bold font-mono text-carbon-ink tabular-nums">
-                {quickResult}
-              </span>
-            </div>
-          )}
-
-          {/* Calculate button */}
-          <CTAButton
-            variant="accent"
-            size="lg"
-            className="w-full"
-            onClick={handleQuickCalc}
-            disabled={vehiclesLoading || vehicles.length === 0 || !quickInput}
-          >
-            Calculer
-          </CTAButton>
-        </div>
-      </SectionCard>
 
       {/* ── Favorite suggestions ─────────────────────────────────── */}
       {suggestions.length > 0 && (
