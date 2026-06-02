@@ -8,8 +8,8 @@ progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 10
-  completed_plans: 7
-  percent: 40
+  completed_plans: 8
+  percent: 45
 ---
 
 # Project State — verygoodtrip
@@ -24,12 +24,12 @@ progress:
 ## Current Position
 
 Phase: 2 (editorial-dark-design-system-trip-result-redesign) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
 - **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
 - **Status:** Ready to execute
-- **Progress:** [███████░░░] 70%
+- **Progress:** [████████░░] 80%
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 3 of 5
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 7 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files)
+- Plans executed: 8 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files; 02-03 — DataBar/Skeleton data-viz primitives, ~9min, 2 tasks, 2 files)
 
 ## Accumulated Context
 
@@ -90,10 +90,11 @@ Plan: 3 of 5
 
 ## Session Continuity
 
-- **Last action:** Phase 2 plan 02-02 complete — DES-04 motion hooks. 2 atomic commits (92ed137 useReducedMotion, 538c3a9 useCountUp). `web/src/hooks/useReducedMotion.ts` — SSR-safe `useState(false)` + matchMedia `change` subscription with cleanup; `web/src/hooks/useCountUp.ts` — rAF easeOutCubic counter 0→target over 700ms, restarts on target change, `cancelAnimationFrame` cleanup, reduced-motion gate resolves to target instantly (no rAF). Mirrors `useDebounce.ts` convention (named export, no `'use client'`). Web `tsc` clean + `build` 18/18 routes green. Not yet pushed — orchestrator pushes after phase verification.
+- **Last action:** Phase 2 plan 02-03 complete — DES-01/02/03 data-viz primitives. 3 atomic commits (1cc5c56 DataBar initial, e3faccb Skeleton, ac1e281 DataBar Variant A refactor). `web/src/components/ui/DataBar.tsx` — token-driven bar: Variant A segmented Énergie/Péage (energy segment passed `energyFillVar`, toll segment internal `var(--c-toll)`, hidden when `tollValue===0` → full-width energy bar, D-04), Variant B single comparison (width value/max, muted non-current at inline opacity 0.45); fills via inline CSS-var `style` only (no Tailwind palette classes); scaleX(0→1) 600ms cubic-bezier reveal via mounted-flag effect, gated by `useReducedMotion` (reduced → scaleX(1)/transition:none); `pct()` clamps 0–100 + guards zero/NaN totals; heights sm=h-1.5/md=h-2.5. `web/src/components/ui/Skeleton.tsx` — bg-carbon-surface2 block, opacity-based animate-pulse dropped under reduced motion, width/height number→px or string, rounded override, aria-hidden. Web `tsc` clean + `build` 18/18 green; plan grep gate passes (scaleX/var(--c-toll)/useReducedMotion present, no bg-emerald/sky/violet/amber). Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 2 prior:** plan 02-02 complete — DES-04 motion hooks. 2 atomic commits (92ed137 useReducedMotion, 538c3a9 useCountUp). `useReducedMotion.ts` SSR-safe matchMedia; `useCountUp.ts` rAF easeOutCubic 0→target 700ms with reduced-motion instant gate.
 - **Phase 2 prior:** plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), serif h1/h2; Instrument Serif via next/font (2 weights 400/700).
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** execute Phase 2 plan 02-03 (next in wave) — DataBar/Skeleton data-viz primitives (reuse `useReducedMotion` for the `scaleX` fill reveal + skeleton pulse gate), then 02-04 result-page redesign (hero counter via `useCountUp`).
+- **Next action:** execute Phase 2 plan 02-04 — result-page redesign: consume `DataBar` (Variant A breakdown bar in hero plate; Variant B comparison bars replacing ad-hoc `bg-emerald/sky/violet/amber` block), `Skeleton` (replace 3-block placeholder with layout-matching skeleton tree), `useCountUp` (hero counter), serif title + staggered reveal. Énergie/Péage legend + réel/≈ estimé Pill/Tooltip stay caller-side.
 - **Updated:** 2026-06-02
