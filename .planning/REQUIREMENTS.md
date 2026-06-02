@@ -37,7 +37,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 ### Mobile Redesign (MOB)
 
 - [x] **MOB-01**: Mobile screens (auth, dashboard, garage, favorites, settings) are **restyled to match** the editorial dark direction using RN StyleSheet tokens
-- [ ] **MOB-02**: Mobile **trip results show precise tolls** consistent with web (real-vs-estimate)
+- [x] **MOB-02**: Mobile **trip results show precise tolls** consistent with web (real-vs-estimate)
 - [x] **MOB-03**: Design tokens are **kept consistent** between web and mobile (shared source of truth where practical)
 
 ### Vehicle Catalog (CAT)

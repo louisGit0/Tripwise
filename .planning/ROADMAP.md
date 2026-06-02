@@ -140,7 +140,7 @@ Plans:
 - [x] 05-02-PLAN.md — Fonts + shared components (Wave 2): Space Grotesk/JetBrains Mono via @expo-google-fonts + normalize Button/Card/Input/Wordmark/Autocomplete/MapboxMap (fixes last 2 tsc errors) + toll/catalog types + i18n strings
 - [x] 05-03-PLAN.md — RN data-viz/motion primitives (Wave 2): useReducedMotion (AccessibilityInfo) + AnimatedCounter + DataBar (Énergie/Péage) + Pill/SectionCard/Eyebrow
 - [x] 05-04-PLAN.md — Auth + layouts restyle (Wave 3): login + register + auth/tab layouts editorial-dark (flows preserved)
-- [ ] 05-05-PLAN.md — Dashboard + tolls (Wave 3): editorial-dark dashboard + hero AnimatedCounter + Énergie/Péage breakdown + réel/≈ estimé badge (MOB-02)
+- [x] 05-05-PLAN.md — Dashboard + tolls (Wave 3): editorial-dark dashboard + hero AnimatedCounter + Énergie/Péage breakdown + réel/≈ estimé badge (MOB-02)
 - [ ] 05-06-PLAN.md — Vehicles + catalog browse (Wave 3): editorial-dark garage + server-side paginated brand-grouped catalog (fix data.items, no client load-all)
 - [ ] 05-07-PLAN.md — Favorites + settings restyle (Wave 3): editorial-dark, flows preserved
 - [ ] 05-08-PLAN.md — Visual + tolls + catalog human-verify checkpoint (Wave 4): on-device sign-off (MOB-01/02/03)
@@ -154,4 +154,4 @@ Plans:
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 6/6 | Complete   | 2026-06-02 |
-| 5. Mobile Tolls + Editorial Redesign | 4/8 | In Progress|  |
+| 5. Mobile Tolls + Editorial Redesign | 5/8 | In Progress|  |
