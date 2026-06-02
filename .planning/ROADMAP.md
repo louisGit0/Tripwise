@@ -137,7 +137,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — Foundation (Wave 1, BLOCKING): shared editorial-dark token module (shared/src/tokens.ts) + Metro/tsconfig wiring + rewrite mobile theme.ts to one ThemeColors shape (resolves 5 of 7 tsc errors)
-- [ ] 05-02-PLAN.md — Fonts + shared components (Wave 2): Space Grotesk/JetBrains Mono via @expo-google-fonts + normalize Button/Card/Input/Wordmark/Autocomplete/MapboxMap (fixes last 2 tsc errors) + toll/catalog types + i18n strings
+- [x] 05-02-PLAN.md — Fonts + shared components (Wave 2): Space Grotesk/JetBrains Mono via @expo-google-fonts + normalize Button/Card/Input/Wordmark/Autocomplete/MapboxMap (fixes last 2 tsc errors) + toll/catalog types + i18n strings
 - [ ] 05-03-PLAN.md — RN data-viz/motion primitives (Wave 2): useReducedMotion (AccessibilityInfo) + AnimatedCounter + DataBar (Énergie/Péage) + Pill/SectionCard/Eyebrow
 - [ ] 05-04-PLAN.md — Auth + layouts restyle (Wave 3): login + register + auth/tab layouts editorial-dark (flows preserved)
 - [ ] 05-05-PLAN.md — Dashboard + tolls (Wave 3): editorial-dark dashboard + hero AnimatedCounter + Énergie/Péage breakdown + réel/≈ estimé badge (MOB-02)
@@ -154,4 +154,4 @@ Plans:
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 6/6 | Complete   | 2026-06-02 |
-| 5. Mobile Tolls + Editorial Redesign | 1/8 | In Progress|  |
+| 5. Mobile Tolls + Editorial Redesign | 2/8 | In Progress|  |
