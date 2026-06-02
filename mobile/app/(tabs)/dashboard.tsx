@@ -95,15 +95,22 @@ export default function DashboardScreen() {
   const handleShare = async () => {
     if (!result) return;
     // Mirror the hero total (energy + toll) and the on-screen FR comma format,
-    // so the shared figure matches what the user sees (WR-02 / MOB-02).
+    // so the shared figure matches what the user sees (POL-02 / MOB-02).
     const energyCost = result.cost?.totalCost ?? 0;
     const tollCost = result.tollCost ?? 0;
     const cost = formatEur(energyCost + tollCost);
+    const route = `${origin?.label ?? '—'} → ${destination?.label ?? '—'}`;
+    let breakdown = `${t('dashboard.energyLabel')} ${formatEur(energyCost)}`;
+    if (result.tollCost != null && result.tollCost > 0) {
+      breakdown += ` · ${t('dashboard.tollLabel')} ${formatEur(tollCost)}`;
+    }
     await Share.share({
       message: t('dashboard.shareText', {
+        route,
+        cost,
+        breakdown,
         distance: `${result.distance.km} km`,
         duration: result.duration.formatted,
-        cost,
       }),
     });
   };
