@@ -132,8 +132,18 @@ Plans:
   2. A mobile trip result shows the precise toll cost with the same real-vs-estimate indicator as web.
   3. The mobile garage showroom browses the larger catalog via the Phase 4 server-side search + pagination API (no client load-all), staying fast and brand-grouped.
   4. Design tokens (color, typography, spacing) are kept consistent between web and mobile from a shared source of truth where practical.
-**Plans**: TBD
+**Plans**: 8 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 05-01-PLAN.md — Foundation (Wave 1, BLOCKING): shared editorial-dark token module (shared/src/tokens.ts) + Metro/tsconfig wiring + rewrite mobile theme.ts to one ThemeColors shape (resolves 5 of 7 tsc errors)
+- [ ] 05-02-PLAN.md — Fonts + shared components (Wave 2): Space Grotesk/JetBrains Mono via @expo-google-fonts + normalize Button/Card/Input/Wordmark/Autocomplete/MapboxMap (fixes last 2 tsc errors) + toll/catalog types + i18n strings
+- [ ] 05-03-PLAN.md — RN data-viz/motion primitives (Wave 2): useReducedMotion (AccessibilityInfo) + AnimatedCounter + DataBar (Énergie/Péage) + Pill/SectionCard/Eyebrow
+- [ ] 05-04-PLAN.md — Auth + layouts restyle (Wave 3): login + register + auth/tab layouts editorial-dark (flows preserved)
+- [ ] 05-05-PLAN.md — Dashboard + tolls (Wave 3): editorial-dark dashboard + hero AnimatedCounter + Énergie/Péage breakdown + réel/≈ estimé badge (MOB-02)
+- [ ] 05-06-PLAN.md — Vehicles + catalog browse (Wave 3): editorial-dark garage + server-side paginated brand-grouped catalog (fix data.items, no client load-all)
+- [ ] 05-07-PLAN.md — Favorites + settings restyle (Wave 3): editorial-dark, flows preserved
+- [ ] 05-08-PLAN.md — Visual + tolls + catalog human-verify checkpoint (Wave 4): on-device sign-off (MOB-01/02/03)
 
 ## Progress
 
@@ -144,4 +154,4 @@ Plans:
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 6/6 | Complete   | 2026-06-02 |
-| 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
+| 5. Mobile Tolls + Editorial Redesign | 0/8 | Planned | - |
