@@ -19,7 +19,7 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 3 — web-redesign-rollout
+- **Current focus:** Phase 3 COMPLETE (web redesign rollout, visual checkpoint approved) → next Phase 4 (multi-source vehicle catalog + scaled showroom)
 
 ## Current Position
 
@@ -108,6 +108,7 @@ Plan: 7 of 7
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** Phase 3 Wave 2 Clusters A (03-02), C (03-04), D (03-05), E (03-06) DONE. Remaining: 03-03 Cluster B (dashboard data-viz, WEB-03). Then 03-07 visual+CWV human-verify checkpoint (Wave 3). All apply: canonical focus token, 2-weight, Skeleton atom, Space Grotesk titles — NO serif (D-11).
+- **Next action:** Phase 3 COMPLETE + deployed (all 7 plans; visual checkpoint 03-07 approved; pushed a2ede72). WEB-01/03/04 delivered. Begin Phase 4 — Multi-Source Vehicle Catalog + Scaled Showroom (CAT-01..06): multi-source ingestion (ADEME + EPA, provenance, normalized/deduped/merged into thousands of canonical models, no fabricated consumption) + server-side searched/paginated showroom (fixes the deferred client-load-all in garage/add, CAT-06; exposes the API mobile/Phase 5 reuses). Entry: `/gsd:discuss-phase 4` → `/gsd:plan-phase 4` (UI gate may apply for the showroom) → `/gsd:execute-phase 4`.
+- 🔒 Deferred (pre-existing, security): `web/src/components/MapboxMap.tsx` builds station popups via `setHTML` from IRVE name/address (trusted gov open-data) — low-risk latent XSS sink; sanitize / DOM-build the popup in a future cleanup. Plus IN: hero sr-only decimal nuance, stale globals.css serif comment.
 - **Watchpoint (Phase 3 screens):** the normalized atoms now carry weight 700 / canonical focus; remaining per-screen `font-semibold`/`font-medium` usages in the page files (~30 files) still need migration in their cluster plans — atoms are no longer the source of the stale weights.
 - **Updated:** 2026-06-02

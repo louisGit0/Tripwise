@@ -17,7 +17,7 @@ breadth, not the foundation.
 
 - [x] **Phase 1: Precise Tolls End-to-End (Web)** - Estimate-primary tolls (re-scoped D-07: TollGuru paid/no key), graceful heuristic fallback as the live mode, broken out and persisted, shown clearly on web trip results. Precise TollGuru path built + dormant pending a key.
 - [x] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result). (completed 2026-06-02)
-- [ ] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets.
+- [x] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets. (completed 2026-06-02)
 - [ ] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom.
 - [ ] **Phase 5: Mobile Tolls + Editorial Redesign** - Precise tolls, the editorial-dark language, and the scaled server-side catalog brought to the Expo app with shared tokens.
 
@@ -98,8 +98,8 @@ Plans:
 - [x] 03-03-PLAN.md — Cluster B: dashboard data-viz redesign (WEB-03) — hero calc plate + NumberDisplay/DataBar/Sparkline KPI band (Wave 2)
 - [x] 03-04-PLAN.md — Cluster C: garage list + detail + showroom restyle (icon aria-labels; showroom restyle-only) (Wave 2)
 - [x] 03-05-PLAN.md — Cluster D: trips history + trip detail (mirror result page) + favorites restyle (Wave 2)
-- [ ] 03-06-PLAN.md — Cluster E: fuel-prices + settings restyle (completes WEB-01) (Wave 2)
-- [ ] 03-07-PLAN.md — Visual + CWV human-verify checkpoint: repo-wide consistency gate + cross-screen sign-off (Wave 3)
+- [x] 03-06-PLAN.md — Cluster E: fuel-prices + settings restyle (completes WEB-01) (Wave 2)
+- [x] 03-07-PLAN.md — Visual + CWV human-verify checkpoint: repo-wide consistency gate + cross-screen sign-off (Wave 3)
 
 ### Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom
 **Goal**: A user adding a vehicle can find nearly any common model — the catalog is fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical `brand|model|fuel` entries, every entry carries a real source-attributed consumption (no fabricated defaults), and the now-redesigned showroom searches it server-side so it stays fast at scale on web (and exposes the same API mobile will consume).
@@ -134,6 +134,6 @@ Plans:
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
-| 3. Web Redesign Rollout | 5/7 | In Progress|  |
+| 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |

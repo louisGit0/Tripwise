@@ -31,7 +31,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 - [x] **WEB-01**: All web screens (landing, dashboard, trip result, garage, showroom, trips/history, favorites, fuel-prices, settings, auth) are **restyled in the editorial dark direction** with existing flows preserved
 - [x] **WEB-02**: The **trip result** page is redesigned around the total cost + energy/toll breakdown + multi-energy comparison
-- [ ] **WEB-03**: The **dashboard** (calc entry + KPIs) is redesigned in the new language
+- [x] **WEB-03**: The **dashboard** (calc entry + KPIs) is redesigned in the new language
 - [x] **WEB-04**: Redesign meets Core Web Vitals targets (no layout shift, animations on transform/opacity only)
 
 ### Mobile Redesign (MOB)
