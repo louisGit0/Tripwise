@@ -288,8 +288,11 @@ export default function TripResultPage() {
           Coût estimé
         </p>
         <p className="text-hero font-bold font-mono text-carbon-ink leading-none tabular-nums">
-          <span aria-hidden="true">{animatedTotal.toFixed(2)}</span>
-          <span className="sr-only">{fmtEur.format(perPerson)}</span>
+          <span aria-hidden="true">{animatedTotal.toFixed(2).replace('.', ',')}</span>
+          <span className="sr-only">
+            {fmtEur.format(totalCost)}
+            {passengers > 1 ? `, soit ${fmtEur.format(perPerson)} par personne` : ''}
+          </span>
           <span aria-hidden="true" className="text-display font-normal text-carbon-muted ml-2">
             €
           </span>
@@ -301,6 +304,10 @@ export default function TripResultPage() {
         )}
 
         {/* ── Breakdown bar (Variant A — Énergie vs Péage) ──────── */}
+        {/* Guarded: a non-positive total (e.g. distance mode without a
+            computed cost) would render an empty 0%-width track — hide it
+            entirely, mirroring the "Non calculé" affordance in the metrics. */}
+        {totalCost > 0 && (
         <div className="mt-5">
           <DataBar
             energyValue={energyCost}
@@ -334,6 +341,7 @@ export default function TripResultPage() {
             )}
           </div>
         </div>
+        )}
 
         {/* 2×2 metrics grid */}
         <Hairline className="my-4" />
@@ -388,7 +396,9 @@ export default function TripResultPage() {
         <SectionCard
           title={
             <span className="flex items-center gap-1.5">
-              <Eyebrow>Comparatif énergétique</Eyebrow>
+              <Eyebrow as="span" className="font-display">
+                Comparatif énergétique
+              </Eyebrow>
             </span>
           }
           padding="md"
@@ -436,7 +446,9 @@ export default function TripResultPage() {
       <SectionCard
         title={
           <span className="flex items-center gap-1.5">
-            <Eyebrow>Passagers</Eyebrow>
+            <Eyebrow as="span" className="font-display">
+              Passagers
+            </Eyebrow>
           </span>
         }
         padding="md"
