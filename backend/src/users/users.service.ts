@@ -53,4 +53,14 @@ export class UsersService {
     });
     return this.userRepo.findOneByOrFail({ id: userId });
   }
+
+  /**
+   * Met à jour le pseudo (display_name) de l'utilisateur courant uniquement.
+   * Prend l'id de l'utilisateur authentifié et le nouveau pseudo — jamais un id
+   * arbitraire (protection IDOR : l'appelant ne passe que @CurrentUser().id).
+   */
+  async updateProfile(userId: string, displayName: string): Promise<User> {
+    await this.userRepo.update(userId, { displayName });
+    return this.userRepo.findOneByOrFail({ id: userId });
+  }
 }
