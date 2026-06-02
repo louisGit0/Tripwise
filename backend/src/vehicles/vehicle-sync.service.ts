@@ -6,57 +6,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
-import { VehicleModel, FuelType } from './entities/vehicle-model.entity';
+import { VehicleModel } from './entities/vehicle-model.entity';
 import {
   CanonicalVehicle,
   CatalogSourceAdapter,
 } from './adapters/catalog-source-adapter.interface';
-
-/**
- * Precedence-ordered, source-agnostic merge (CAT-03 / CAT-05).
- *
- * Sorts adapters by `precedence` ascending (ADEME=0 first, EPA=10 second), then
- * runs each adapter's `load()` + `normalize()` into a Map keyed by the uppercased
- * `brand|model|fuelType`. First-writer-wins → ADEME wins on overlap (PD4-1), EPA
- * only fills gaps. DB-agnostic and idempotent: re-running rebuilds the identical
- * set. A 3rd adapter drops into the array with no change here (CAT-05).
- *
- * STUB (RED) — implemented in the GREEN step of Task 1.
- */
-export async function mergeCanonical(
-  _adapters: CatalogSourceAdapter[],
-): Promise<CanonicalVehicle[]> {
-  return Promise.resolve([]);
-}
-
-// ── ADEME API types ────────────────────────────────────────────────────────
-
-interface AdemeRecord {
-  Marque?: string;
-  'Modèle'?: string;
-  Energie?: string;
-  Conso_vitesse_mixte_Min?: number | null;
-  Conso_vitesse_mixte_Max?: number | null;
-  Conso_elec_Min?: number | null;
-  Conso_elec_Max?: number | null;
-  [key: string]: unknown;
-}
-
-interface AdemeResponse {
-  total: number;
-  results: AdemeRecord[];
-  next?: string;
-}
-
-type NewVehicle = {
-  brand: string;
-  model: string;
-  year: null;
-  fuelType: FuelType;
-  consumption: number;
-  batteryCapacityKwh: null;
-  tankCapacityLiters: null;
-};
+import { AdemeAdapter } from './adapters/ademe.adapter';
+import { EpaAdapter } from './adapters/epa.adapter';
 
 export interface SyncResult {
   created: number;
@@ -66,79 +22,64 @@ export interface SyncResult {
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const ADEME_BASE_URL =
-  'https://data.ademe.fr/data-fair/api/v1/datasets/ademe-car-labelling/lines';
-const PAGE_SIZE = 1000;
 const BATCH_SIZE = 100;
 
 /**
  * If the catalog already has at least this many entries, skip the automatic
  * startup sync (already populated from a previous run).
+ *
+ * Threshold rationale (multi-source interaction): production currently holds
+ * ~266 ADEME rows (< 500), so on the NEXT deploy the boot count is below the
+ * threshold and the FULL multi-source sync (ADEME + EPA) runs ONCE, growing the
+ * catalog to thousands. Every subsequent boot then sees count >= 500 and skips
+ * — no expensive per-boot re-syncs. The manual `POST /vehicles/sync` endpoint
+ * remains available to refresh the catalog on demand.
  */
 const STARTUP_THRESHOLD = 500;
 
+// ── Precedence merge (CAT-03 / CAT-05) ───────────────────────────────────────
+
 /**
- * Mapping from ADEME `Energie` field values to our `FuelType` enum.
- * `null` means "skip this energy type" (e.g. unknown fuel).
+ * Precedence-ordered, source-agnostic merge.
+ *
+ * Sorts adapters by `precedence` ascending (ADEME=0 first, EPA=10 second), then
+ * runs each adapter's `load()` + `normalize()` (skipping nulls) into a Map keyed
+ * by the uppercased `brand|model|fuelType`. First-writer-wins → ADEME wins on
+ * overlap (PD4-1); EPA only fills keys ADEME didn't have. DB-agnostic and
+ * idempotent: re-running rebuilds the identical set. A 3rd adapter drops into the
+ * array with no change here (CAT-05).
  */
-const ENERGIE_TO_FUEL: Record<string, FuelType | null> = {
-  ESSENCE:           FuelType.SP95,
-  GAZOLE:            FuelType.DIESEL,
-  'GAZ+ELEC HNR':    FuelType.SP95,   // non-plug-in gas hybrid → treat as gasoline
-  'ESS+ELEC HNR':    FuelType.SP95,   // non-plug-in essence hybrid → treat as gasoline
-  'ELEC+ESSENC HR':  FuelType.SP95,   // plug-in hybrid (gas primary) → treat as gasoline
-  ELECTRIC:          FuelType.ELECTRIC,
-  SUPERETHANOL:      FuelType.E85,
-  'ESS+G.P.L.':      FuelType.GPL,
-  'ELEC+GAZOLE HR':  FuelType.DIESEL, // plug-in hybrid (diesel primary) → treat as diesel
-};
+export async function mergeCanonical(
+  adapters: CatalogSourceAdapter[],
+): Promise<CanonicalVehicle[]> {
+  const ordered = [...adapters].sort((a, b) => a.precedence - b.precedence);
+  const merged = new Map<string, CanonicalVehicle>();
 
-/** Brand names that should remain fully uppercase (acronyms / short codes). */
-const UPPERCASE_BRANDS = new Set([
-  'BMW', 'VW', 'MG', 'BYD', 'DS', 'KIA', 'JAC',
-  'GMC', 'RAM', 'GWM', 'SWM', 'BAIC',
-]);
-
-// ── Name normalization helpers ─────────────────────────────────────────────
-
-function toTitleCase(str: string): string {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ''))
-    .join(' ');
-}
-
-function normalizeBrand(raw: string): string {
-  const trimmed = raw.trim();
-  if (UPPERCASE_BRANDS.has(trimmed.toUpperCase())) return trimmed.toUpperCase();
-  return toTitleCase(trimmed);
-}
-
-function normalizeModel(raw: string): string {
-  return toTitleCase(raw.trim());
-}
-
-// ── Consumption computation ────────────────────────────────────────────────
-
-function avgOf(...values: (number | null | undefined)[]): number | null {
-  const valid = values.filter((v): v is number => v != null && !isNaN(v));
-  if (valid.length === 0) return null;
-  return valid.reduce((a, b) => a + b, 0) / valid.length;
-}
-
-function computeConsumption(record: AdemeRecord, fuelType: FuelType): number | null {
-  if (fuelType === FuelType.ELECTRIC) {
-    // ADEME electric consumption is in Wh/km → convert to kWh/100km: × 0.1
-    // e.g. 179 Wh/km × 0.1 = 17.9 kWh/100km
-    const mean = avgOf(record.Conso_elec_Min, record.Conso_elec_Max);
-    if (mean === null || mean <= 0) return null;
-    return Math.round(mean * 0.1 * 10) / 10; // kWh/100km, 1 decimal
+  for (const adapter of ordered) {
+    const raws = await adapter.load();
+    for (const raw of raws) {
+      const v = adapter.normalize(raw);
+      if (!v) continue; // skip unmapped fuel / missing conso / filtered brand
+      const key = `${v.brand}|${v.model}|${v.fuelType}`.toUpperCase();
+      if (!merged.has(key)) merged.set(key, v); // first-writer-wins (ADEME wins)
+    }
   }
-  // Thermal / hybrid: ADEME is already in L/100km
-  const mean = avgOf(record.Conso_vitesse_mixte_Min, record.Conso_vitesse_mixte_Max);
-  if (mean === null || mean <= 0) return null;
-  return Math.round(mean * 10) / 10; // L/100km, 1 decimal
+
+  return [...merged.values()];
+}
+
+/** Map a canonical row to the entity insert shape (year excluded from the key). */
+function toEntityValues(v: CanonicalVehicle): Partial<VehicleModel> {
+  return {
+    brand: v.brand,
+    model: v.model,
+    year: null,
+    fuelType: v.fuelType,
+    consumption: v.consumption,
+    batteryCapacityKwh: v.batteryCapacityKwh,
+    tankCapacityLiters: v.tankCapacityLiters,
+    source: v.source,
+  };
 }
 
 // ── Service ────────────────────────────────────────────────────────────────
@@ -155,37 +96,38 @@ export class VehicleSyncService implements OnApplicationBootstrap {
 
   /**
    * Checks catalog size at startup. If below STARTUP_THRESHOLD, triggers a
-   * background ADEME sync without blocking the NestJS application boot.
+   * background multi-source sync without blocking the NestJS application boot.
    */
   async onApplicationBootstrap(): Promise<void> {
     const count = await this.vehicleModelRepo.count();
     if (count >= STARTUP_THRESHOLD) {
       this.logger.log(
-        `Vehicle catalog already populated (${count} entries) — ADEME sync skipped`,
+        `Vehicle catalog already populated (${count} entries) — multi-source sync skipped`,
       );
       return;
     }
     this.logger.log(
-      `Vehicle catalog has ${count} entries — launching ADEME sync in background...`,
+      `Vehicle catalog has ${count} entries — launching multi-source sync in background...`,
     );
     void this.syncFromAdeme().catch((err: unknown) =>
       this.logger.error(
-        'Background ADEME sync failed',
+        'Background multi-source sync failed',
         err instanceof Error ? err.stack : String(err),
       ),
     );
   }
 
   /**
-   * Fetches all vehicles from the ADEME Car Labelling dataset and inserts any
-   * that are not already in the local catalog (idempotent).
+   * Runs the full multi-source merge (ADEME precedence-first, then EPA) and
+   * upserts the result idempotently. Kept named `syncFromAdeme` so the existing
+   * `POST /vehicles/sync` controller route (plan 04-03) needs no change.
    *
    * @throws ConflictException if a sync is already in progress.
    */
   async syncFromAdeme(): Promise<SyncResult> {
     if (this.isSyncing) {
       throw new ConflictException(
-        'Une synchronisation ADEME est déjà en cours — réessayez dans quelques instants',
+        'Une synchronisation du catalogue est déjà en cours — réessayez dans quelques instants',
       );
     }
     this.isSyncing = true;
@@ -199,99 +141,47 @@ export class VehicleSyncService implements OnApplicationBootstrap {
   // ── Private ──────────────────────────────────────────────────────────────
 
   private async doSync(): Promise<SyncResult> {
-    // ── Step 1 : fetch raw ADEME data ──────────────────────────────────────
-    const rawRecords = await this.fetchAllAdemeRecords();
-    this.logger.log(`Fetched ${rawRecords.length} raw records from ADEME API`);
-
-    // ── Step 2 : process & deduplicate in memory ───────────────────────────
-    // Key: "brand|model|fuelType" — keeps the first occurrence when ADEME
-    // lists multiple trims/options of the same model.
-    const processedMap = new Map<string, NewVehicle>();
-
-    for (const record of rawRecords) {
-      const brand = normalizeBrand(record.Marque ?? '');
-      const model = normalizeModel(record['Modèle'] ?? '');
-      if (!brand || !model) continue;
-
-      const fuelType = ENERGIE_TO_FUEL[record.Energie ?? ''];
-      if (!fuelType) continue; // unknown or unhandled energy type
-
-      const consumption = computeConsumption(record, fuelType);
-      if (!consumption) continue;
-
-      const key = `${brand}|${model}|${fuelType}`;
-      if (!processedMap.has(key)) {
-        processedMap.set(key, {
-          brand,
-          model,
-          year: null,
-          fuelType,
-          consumption,
-          batteryCapacityKwh: null,
-          tankCapacityLiters: null,
-        });
-      }
-    }
-
+    // ── Step 1 : precedence-ordered merge across every source ──────────────
+    const adapters: CatalogSourceAdapter[] = [
+      new AdemeAdapter(),
+      new EpaAdapter(),
+    ];
+    const merged = await mergeCanonical(adapters);
     this.logger.log(
-      `Processed ${processedMap.size} unique vehicle variants from ADEME data`,
+      `Merged ${merged.length} unique vehicles across ${adapters.length} sources`,
     );
 
-    // ── Step 3 : load existing null-year records (single query) ────────────
+    // ── Step 2 : load existing null-year keys (single query) ───────────────
     const existingModels = await this.vehicleModelRepo.find({
       where: { year: IsNull() },
       select: { brand: true, model: true, fuelType: true },
     });
     const existingSet = new Set(
-      existingModels.map((m) => `${m.brand}|${m.model}|${m.fuelType}`),
+      existingModels.map((m) =>
+        `${m.brand}|${m.model}|${m.fuelType}`.toUpperCase(),
+      ),
     );
 
-    // ── Step 4 : filter to genuinely new records ───────────────────────────
-    const toInsert = [...processedMap.values()].filter(
-      (r) => !existingSet.has(`${r.brand}|${r.model}|${r.fuelType}`),
+    // ── Step 3 : filter to genuinely new keys ──────────────────────────────
+    const toInsert = merged.filter(
+      (v) => !existingSet.has(`${v.brand}|${v.model}|${v.fuelType}`.toUpperCase()),
     );
     this.logger.log(`Inserting ${toInsert.length} new vehicle variants...`);
 
-    // ── Step 5 : bulk insert in batches of BATCH_SIZE ─────────────────────
+    // ── Step 4 : bulk insert in batches of BATCH_SIZE ──────────────────────
     for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
       const batch = toInsert
         .slice(i, i + BATCH_SIZE)
-        .map((v) => this.vehicleModelRepo.create(v));
+        .map((v) => this.vehicleModelRepo.create(toEntityValues(v)));
       await this.vehicleModelRepo.save(batch);
     }
 
     const result: SyncResult = {
       created: toInsert.length,
-      skipped: processedMap.size - toInsert.length,
-      total:   rawRecords.length,
+      skipped: merged.length - toInsert.length,
+      total: merged.length,
     };
-    this.logger.log(`ADEME sync complete — ${JSON.stringify(result)}`);
+    this.logger.log(`Multi-source sync complete — ${JSON.stringify(result)}`);
     return result;
-  }
-
-  private async fetchAllAdemeRecords(): Promise<AdemeRecord[]> {
-    const records: AdemeRecord[] = [];
-    let nextUrl: string | undefined = `${ADEME_BASE_URL}?size=${PAGE_SIZE}`;
-
-    while (nextUrl) {
-      const response = await fetch(nextUrl, {
-        headers: { Accept: 'application/json' },
-        signal: AbortSignal.timeout(30_000),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `ADEME API responded with HTTP ${response.status} for ${nextUrl}`,
-        );
-      }
-
-      const data = (await response.json()) as AdemeResponse;
-      records.push(...data.results);
-
-      // data-fair returns an absolute `next` URL for the following page
-      nextUrl = data.next ?? undefined;
-    }
-
-    return records;
   }
 }
