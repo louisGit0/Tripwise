@@ -109,7 +109,7 @@ export default function DashboardScreen() {
         route,
         cost,
         breakdown,
-        distance: `${result.distance.km} km`,
+        distance: `${String(result.distance.km).replace('.', ',')} km`,
         duration: result.duration.formatted,
       }),
     });

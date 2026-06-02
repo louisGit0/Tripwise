@@ -266,7 +266,7 @@ export default function TripResultPage() {
       `${from} → ${to}`,
       `Coût total : ${fmtEur.format(totalCost)}`,
       breakdown,
-      `${result.distance.km.toFixed(1)} km · ${formatDuration(result.duration.seconds)}`,
+      `${result.distance.km.toFixed(1).replace('.', ',')} km · ${formatDuration(result.duration.seconds)}`,
       'Calculé avec verygoodtrip',
     ].join('\n');
     const title = `${from} → ${to}`;
