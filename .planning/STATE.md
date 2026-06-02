@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-02T06:00:02.332Z"
+last_updated: "2026-06-02T06:03:32Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 10
-  completed_plans: 6
-  percent: 33
+  completed_plans: 7
+  percent: 40
 ---
 
 # Project State — verygoodtrip
@@ -24,12 +24,12 @@ progress:
 ## Current Position
 
 Phase: 2 (editorial-dark-design-system-trip-result-redesign) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
 - **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
 - **Status:** Ready to execute
-- **Progress:** [██████░░░░] 60%
+- **Progress:** [███████░░░] 70%
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 2 of 5
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 6 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files)
+- Plans executed: 7 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files)
 
 ## Accumulated Context
 
@@ -90,9 +90,10 @@ Plan: 2 of 5
 
 ## Session Continuity
 
-- **Last action:** Phase 2 plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens: `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), 4 `--text-*` size vars, serif h1/h2; Tailwind `carbon.surface3/fuelGpl/toll` + `font-serif` + `text-hero/display/body/caption` + 12/20px spacing aliases; Instrument Serif wired via next/font, fonts trimmed to 2 weights (400/700). Web `tsc` clean + `build` 18/18 routes green. Not yet pushed — orchestrator pushes after phase verification.
+- **Last action:** Phase 2 plan 02-02 complete — DES-04 motion hooks. 2 atomic commits (92ed137 useReducedMotion, 538c3a9 useCountUp). `web/src/hooks/useReducedMotion.ts` — SSR-safe `useState(false)` + matchMedia `change` subscription with cleanup; `web/src/hooks/useCountUp.ts` — rAF easeOutCubic counter 0→target over 700ms, restarts on target change, `cancelAnimationFrame` cleanup, reduced-motion gate resolves to target instantly (no rAF). Mirrors `useDebounce.ts` convention (named export, no `'use client'`). Web `tsc` clean + `build` 18/18 routes green. Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 2 prior:** plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), serif h1/h2; Instrument Serif via next/font (2 weights 400/700).
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** execute Phase 2 plan 02-02 (next in wave) — continue the editorial-dark phase (DataBar/Skeleton primitives, hooks, result-page redesign).
+- **Next action:** execute Phase 2 plan 02-03 (next in wave) — DataBar/Skeleton data-viz primitives (reuse `useReducedMotion` for the `scaleX` fill reveal + skeleton pulse gate), then 02-04 result-page redesign (hero counter via `useCountUp`).
 - **Updated:** 2026-06-02
