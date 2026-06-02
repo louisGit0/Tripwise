@@ -89,8 +89,17 @@ Plans:
   2. The dashboard (calc entry + KPIs) is redesigned in the new language with the same calculation behavior.
   3. Navigating between any two restyled screens feels visually consistent — shared surfaces, typography, and interaction states.
   4. Restyled pages meet Core Web Vitals targets: no new layout shift, and animations run on transform/opacity only.
-**Plans**: TBD
+**Plans**: 7 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 03-01-PLAN.md — Atom normalization + AppLayout shell (Wave 1, BLOCKING): weights→400/700, canonical accent focus ring, accent-color fix, optional useReducedMotion provider
+- [ ] 03-02-PLAN.md — Cluster A: landing + auth (login/register/OAuth callbacks) restyle (Wave 2)
+- [ ] 03-03-PLAN.md — Cluster B: dashboard data-viz redesign (WEB-03) — hero calc plate + NumberDisplay/DataBar/Sparkline KPI band (Wave 2)
+- [ ] 03-04-PLAN.md — Cluster C: garage list + detail + showroom restyle (icon aria-labels; showroom restyle-only) (Wave 2)
+- [ ] 03-05-PLAN.md — Cluster D: trips history + trip detail (mirror result page) + favorites restyle (Wave 2)
+- [ ] 03-06-PLAN.md — Cluster E: fuel-prices + settings restyle (completes WEB-01) (Wave 2)
+- [ ] 03-07-PLAN.md — Visual + CWV human-verify checkpoint: repo-wide consistency gate + cross-screen sign-off (Wave 3)
 
 ### Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom
 **Goal**: A user adding a vehicle can find nearly any common model — the catalog is fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical `brand|model|fuel` entries, every entry carries a real source-attributed consumption (no fabricated defaults), and the now-redesigned showroom searches it server-side so it stays fast at scale on web (and exposes the same API mobile will consume).
@@ -125,6 +134,6 @@ Plans:
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
-| 3. Web Redesign Rollout | 0/0 | Not started | - |
+| 3. Web Redesign Rollout | 0/7 | Planned | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
