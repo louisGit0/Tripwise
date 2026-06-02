@@ -195,7 +195,7 @@ export function TripModal({ open, onClose }: TripModalProps) {
             />
             {chargingMode === 'mix' && (
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-carbon-ink2">
+                <label className="text-xs font-normal text-carbon-ink2">
                   Part domicile : {Math.round(chargingMixRatio * 100)}%
                 </label>
                 <input

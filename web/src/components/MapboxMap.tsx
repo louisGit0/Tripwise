@@ -73,7 +73,7 @@ export default function MapboxMap({
         if (stations) {
           for (const station of stations) {
             const popup = new mapboxgl.Popup({ offset: 20 }).setHTML(
-              `<p class="font-semibold text-xs">${station.name}</p>${station.powerKw ? `<p class="text-xs">${station.powerKw} kW</p>` : ''}${station.address ? `<p class="text-xs text-gray-500">${station.address}</p>` : ''}`,
+              `<p class="font-bold text-xs">${station.name}</p>${station.powerKw ? `<p class="text-xs">${station.powerKw} kW</p>` : ''}${station.address ? `<p class="text-xs text-carbon-muted">${station.address}</p>` : ''}`,
             );
             new mapboxgl.Marker({ color: '#22c55e', scale: 0.7 })
               .setLngLat([station.lng, station.lat])

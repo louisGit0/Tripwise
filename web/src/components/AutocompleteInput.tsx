@@ -74,7 +74,7 @@ export function AutocompleteInput({
 
   return (
     <div ref={containerRef} className="relative flex flex-col gap-1">
-      <label className="text-xs font-semibold tracking-wider uppercase text-carbon-muted">
+      <label className="text-xs font-bold tracking-wider uppercase text-carbon-muted">
         {label}
       </label>
       <div className="relative">
