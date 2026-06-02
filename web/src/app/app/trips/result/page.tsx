@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Minus, Save, RotateCcw } from 'lucide-react';
+import { Plus, Minus, Save, RotateCcw, Share2 } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -253,6 +253,45 @@ export default function TripResultPage() {
     },
   ].filter(Boolean) as Array<{ label: string; value: string }>;
 
+  // ── Share summary (POL-02) — toll-inclusive FR text ───────────
+  // navigator.share when available (AbortError on cancel is swallowed),
+  // else a navigator.clipboard fallback with a success toast.
+  const handleShare = async () => {
+    const from = session.origin?.label?.split(',')[0] ?? '—';
+    const to = session.destination?.label?.split(',')[0] ?? '—';
+    const breakdown = hasToll
+      ? `Énergie ${fmtEur.format(energyCost)} · Péage ${fmtEur.format(tollCost)}`
+      : `Énergie ${fmtEur.format(energyCost)}`;
+    const text = [
+      `${from} → ${to}`,
+      `Coût total : ${fmtEur.format(totalCost)}`,
+      breakdown,
+      `${result.distance.km.toFixed(1)} km · ${formatDuration(result.duration.seconds)}`,
+      'Calculé avec verygoodtrip',
+    ].join('\n');
+    const title = `${from} → ${to}`;
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share({ title, text });
+        return;
+      }
+    } catch (err) {
+      // User dismissed the share sheet — treat as a no-op, do not fall back.
+      if (err instanceof Error && err.name === 'AbortError') return;
+      // Any other share failure falls through to the clipboard path below.
+    }
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        showToast('success', 'Résumé copié dans le presse-papiers');
+      }
+    } catch {
+      showToast('error', 'Une erreur est survenue');
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       {/* ── Header ────────────────────────────────────────────── */}
@@ -476,6 +515,15 @@ export default function TripResultPage() {
             {isSaving ? 'Enregistrement...' : 'Enregistrer dans l\'historique'}
           </CTAButton>
         )}
+        <CTAButton
+          variant="ghost"
+          size="lg"
+          icon={<Share2 size={15} />}
+          onClick={handleShare}
+          className="w-full"
+        >
+          Partager
+        </CTAButton>
         <CTAButton
           variant="ghost"
           size="lg"
