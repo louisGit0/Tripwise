@@ -17,7 +17,8 @@ import { Input } from '@/src/components/ui/Input';
 import { SectionCard } from '@/src/components/ui/SectionCard';
 import { Eyebrow } from '@/src/components/ui/Eyebrow';
 import { Pill } from '@/src/components/ui/Pill';
-import { Colors, Fonts, FontSize, FontSizes, Spacing } from '@/constants/theme';
+import { VehicleImage } from '@/src/components/ui/VehicleImage';
+import { Colors, Fonts, FontSize, FontSizes, Radius, Spacing } from '@/constants/theme';
 import { useDebounce } from '@/src/hooks/useDebounce';
 import client from '@/src/api/client';
 import type { UserVehicle, VehicleModel, CatalogPage } from '@/src/types/api';
@@ -33,6 +34,21 @@ function FuelPill({ fuelType }: { fuelType: string }) {
 
 // Per-fuel consumption unit (mirrors the web showroom).
 const unitFor = (fuelType: string) => (fuelType === 'ELECTRIC' ? 'kWh' : 'L');
+
+// Dark ink label on the bright accent chip (matches the Button accent contrast).
+const ACCENT_INK = '#0e0c0a';
+
+// SHOW-03 fuel filter chips → ONE server `fuelCategory` param (mirrors the web
+// fuelParams mapping). Values match the backend categoryToFuelTypes contract.
+// 'all' sends no param. NO client-side filtering of the catalog items.
+type FuelFilter = 'all' | 'gas' | 'diesel' | 'ev' | 'gpl';
+const FUEL_FILTERS: { key: FuelFilter; labelKey: string }[] = [
+  { key: 'all', labelKey: 'vehicles.fuelAll' },
+  { key: 'gas', labelKey: 'vehicles.fuelGas' },
+  { key: 'diesel', labelKey: 'vehicles.fuelDiesel' },
+  { key: 'ev', labelKey: 'vehicles.fuelEv' },
+  { key: 'gpl', labelKey: 'vehicles.fuelGpl' },
+];
 
 export default function VehiclesScreen() {
   const { t } = useTranslation();
@@ -132,6 +148,7 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
 
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
+  const [fuelFilter, setFuelFilter] = useState<FuelFilter>('all');
 
   // ── Server-side search + pagination state (frozen Phase-4 contract) ──────────
   const [items, setItems] = useState<VehicleModel[]>([]);
@@ -146,10 +163,10 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
   const [publicPrice, setPublicPrice] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // Reset to page 1 whenever the (debounced) query changes.
+  // Reset to page 1 whenever the (debounced) query OR the fuel filter changes.
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, fuelFilter]);
 
   // Server-side loader: page 1 REPLACES, page > 1 APPENDS. Deps include `page`;
   // when the query changes the reset effect sets page→1, re-running this and the
@@ -159,9 +176,12 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
     let cancelled = false;
     const isFirstPage = page === 1;
     if (!isFirstPage) setIsLoadingMore(true);
+    // SHOW-03: the chip maps to ONE server param ('all' → none). Server-side
+    // filtering only — the catalog `items` are never filtered client-side.
+    const fuelCategory = fuelFilter === 'all' ? undefined : fuelFilter;
     client
       .get<CatalogPage>('/vehicles/catalog', {
-        params: { search: debouncedSearch || undefined, page, limit: 30 },
+        params: { search: debouncedSearch || undefined, page, limit: 30, fuelCategory },
       })
       .then((r) => {
         if (cancelled) return;
@@ -177,7 +197,7 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
     return () => {
       cancelled = true;
     };
-  }, [debouncedSearch, page]);
+  }, [debouncedSearch, fuelFilter, page]);
 
   // Group the accumulated items into brand sections (mirror the web showroom).
   const sections = useMemo(() => {
@@ -225,18 +245,51 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
 
         {!selected ? (
           <>
-            <Input
-              placeholder={t('vehicles.searchPlaceholder')}
-              value={search}
-              onChangeText={setSearch}
-              containerStyle={{ marginHorizontal: Spacing[4], marginTop: Spacing[4] }}
-            />
+            {/* SHOW-03: the search is the clear primary affordance. */}
+            <View style={styles.searchBlock}>
+              <Eyebrow>{t('vehicles.selectModel')}</Eyebrow>
+              <Input
+                placeholder={t('vehicles.searchPlaceholder')}
+                value={search}
+                onChangeText={setSearch}
+                containerStyle={{ marginTop: Spacing[2] }}
+              />
+            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              style={styles.chipsScroll}
+              contentContainerStyle={styles.chipsRow}
+            >
+              {FUEL_FILTERS.map((f) => {
+                const active = fuelFilter === f.key;
+                return (
+                  <TouchableOpacity
+                    key={f.key}
+                    onPress={() => setFuelFilter(f.key)}
+                    activeOpacity={0.75}
+                    style={[
+                      styles.chip,
+                      active
+                        ? { backgroundColor: c.accent, borderColor: c.accent }
+                        : { backgroundColor: c.surface2, borderColor: c.hairline },
+                    ]}
+                  >
+                    <Text style={[styles.chipLabel, { color: active ? ACCENT_INK : c.ink }]}>
+                      {t(f.labelKey)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
             {items.length > 0 && (
               <Text style={[styles.resultsCount, { color: c.mutedText }]}>
                 {t('vehicles.resultsCount', { loaded: items.length, total })}
               </Text>
             )}
             <SectionList
+              style={styles.catalogList}
               sections={sections}
               keyExtractor={(item) => item.id}
               stickySectionHeadersEnabled={false}
@@ -248,15 +301,26 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
               )}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={[styles.catalogItem, { borderBottomColor: c.hairline }]}
+                  style={[styles.catalogCard, { backgroundColor: c.surface, borderColor: c.hairline }]}
                   onPress={() => setSelected(item)}
+                  activeOpacity={0.8}
                 >
-                  <Text style={[styles.catalogName, { color: c.ink }]}>{item.model}</Text>
-                  <View style={styles.catalogMeta}>
-                    <FuelPill fuelType={item.fuelType} />
-                    <Text style={[styles.catalogSub, { color: c.mutedText }]}>
-                      {item.consumptionPer100km} {unitFor(item.fuelType)}/100km
+                  <VehicleImage
+                    brand={item.brand}
+                    model={item.model}
+                    fuelType={item.fuelType}
+                    style={styles.catalogThumb}
+                  />
+                  <View style={styles.catalogInfo}>
+                    <Text style={[styles.catalogName, { color: c.ink }]} numberOfLines={1}>
+                      {item.model}
                     </Text>
+                    <View style={styles.catalogMeta}>
+                      <FuelPill fuelType={item.fuelType} />
+                      <Text style={[styles.catalogSub, { color: c.mutedText }]} numberOfLines={1}>
+                        {item.consumptionPer100km} {unitFor(item.fuelType)}/100km
+                      </Text>
+                    </View>
                   </View>
                 </TouchableOpacity>
               )}
@@ -284,6 +348,13 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
             <TouchableOpacity onPress={() => setSelected(null)} style={styles.backBtn}>
               <Text style={[styles.closeLabel, { color: c.accent }]}>← {t('common.back')}</Text>
             </TouchableOpacity>
+            {/* Confirm the right car with its photo (or brand placeholder). */}
+            <VehicleImage
+              brand={selected.brand}
+              model={selected.model}
+              fuelType={selected.fuelType}
+              style={styles.confirmImage}
+            />
             <Text style={[styles.selectedModel, { color: c.ink }]}>
               {selected.brand} {selected.model}
             </Text>
@@ -424,7 +495,13 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing[4],
     marginTop: Spacing[2],
   },
-  sectionHeader: { paddingHorizontal: Spacing[4], paddingTop: Spacing[3], paddingBottom: Spacing[2] },
+  searchBlock: { marginHorizontal: Spacing[4], marginTop: Spacing[4] },
+  chipsScroll: { flexGrow: 0, marginTop: Spacing[3] },
+  chipsRow: { paddingHorizontal: Spacing[4], gap: Spacing[2], alignItems: 'center' },
+  chip: { paddingVertical: 6, paddingHorizontal: Spacing[3], borderRadius: Radius.full, borderWidth: 1 },
+  chipLabel: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.caption, letterSpacing: 0.3 },
+  catalogList: { flex: 1 },
+  sectionHeader: { paddingHorizontal: Spacing[4], paddingTop: Spacing[4], paddingBottom: Spacing[2] },
   noResults: {
     fontFamily: Fonts.displayRegular,
     fontSize: FontSizes.base,
@@ -432,11 +509,24 @@ const styles = StyleSheet.create({
     marginTop: Spacing[8],
   },
   listFooter: { padding: Spacing[4] },
-  catalogItem: { padding: Spacing[4], borderBottomWidth: StyleSheet.hairlineWidth, gap: Spacing[2] },
+  // Designed editorial-dark catalog card: leading photo thumbnail + info block.
+  catalogCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing[3],
+    padding: Spacing[3],
+    marginHorizontal: Spacing[4],
+    marginBottom: Spacing[3],
+    borderRadius: Radius.card,
+    borderWidth: 1,
+  },
+  catalogThumb: { width: 92, height: 58 },
+  catalogInfo: { flex: 1, gap: Spacing[2] },
   catalogName: { fontFamily: Fonts.display, fontSize: FontSizes.base, fontWeight: '700' },
   catalogMeta: { flexDirection: 'row', alignItems: 'center', gap: Spacing[2] },
-  catalogSub: { fontFamily: Fonts.mono, fontSize: FontSizes.sm },
+  catalogSub: { fontFamily: Fonts.mono, fontSize: FontSizes.sm, flexShrink: 1 },
   formContainer: { padding: Spacing[4], gap: Spacing[4] },
   backBtn: { marginBottom: Spacing[2] },
+  confirmImage: { width: '100%', aspectRatio: 16 / 10 },
   selectedModel: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
 });

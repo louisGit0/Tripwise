@@ -97,6 +97,11 @@ export default {
     noResults: 'No models',
     resultsCount: '{{loaded}} of {{total}}',
     searchHint: 'Search a brand or model to add a vehicle',
+    fuelAll: 'All',
+    fuelGas: 'Petrol',
+    fuelDiesel: 'Diesel',
+    fuelEv: 'Electric',
+    fuelGpl: 'LPG',
   },
   favorites: {
     title: 'My favorites',

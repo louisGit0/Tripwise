@@ -97,6 +97,11 @@ export default {
     noResults: 'Aucun modèle',
     resultsCount: '{{loaded}} sur {{total}}',
     searchHint: 'Recherchez une marque ou un modèle pour ajouter un véhicule',
+    fuelAll: 'Tous',
+    fuelGas: 'Essence',
+    fuelDiesel: 'Diesel',
+    fuelEv: 'Électrique',
+    fuelGpl: 'GPL',
   },
   favorites: {
     title: 'Mes favoris',
