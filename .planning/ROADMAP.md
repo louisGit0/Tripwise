@@ -134,6 +134,6 @@ Plans:
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
-| 3. Web Redesign Rollout | 1/7 | Executing | - |
+| 3. Web Redesign Rollout | 1/7 | In Progress|  |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
