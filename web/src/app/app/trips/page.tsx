@@ -8,6 +8,7 @@ import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { FuelBadge } from '@/components/ui/FuelBadge';
 import { Hairline } from '@/components/ui/Hairline';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { TripHistoryPage, TripStats, SavedTrip } from '@/types/api';
@@ -15,6 +16,10 @@ import type { TripHistoryPage, TripStats, SavedTrip } from '@/types/api';
 type FuelFilter = 'all' | 'ev' | 'gas' | 'diesel' | 'gpl';
 
 const LIMIT = 50;
+
+// Canonical focus ring (mirrors result/page.tsx) — every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 function groupByMonth(items: SavedTrip[]): { monthKey: string; trips: SavedTrip[] }[] {
   const map = new Map<string, SavedTrip[]>();
@@ -130,7 +135,7 @@ export default function TripsPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <Eyebrow className="mb-0.5">Trajets</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">Historique</h1>
+        <h1 className="font-display font-bold text-display text-carbon-ink">Historique</h1>
       </div>
 
       {/* ── Stats strip ───────────────────────────────────────── */}
@@ -148,7 +153,7 @@ export default function TripsPage() {
               },
             ].map(({ label, value }) => (
               <div key={label} className="flex flex-col items-center py-3 px-2 gap-0.5">
-                <span className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted">
+                <span className="text-caption font-bold tracking-widest uppercase text-carbon-muted">
                   {label}
                 </span>
                 <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
@@ -167,10 +172,10 @@ export default function TripsPage() {
             key={key}
             type="button"
             onClick={() => setFilter(key)}
-            className={`shrink-0 px-3 py-1.5 rounded-chip text-xs font-semibold transition-colors ${
+            className={`shrink-0 px-3 py-1.5 rounded-chip text-xs font-normal transition-colors ${FOCUS_RING} ${
               filter === key
                 ? 'bg-carbon-accent text-white'
-                : 'bg-carbon-surface2 text-carbon-ink2 border border-carbon-hairline hover:border-carbon-accent hover:text-carbon-accent'
+                : 'text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint'
             }`}
           >
             {label}
@@ -180,10 +185,26 @@ export default function TripsPage() {
 
       {/* ── Trip list ─────────────────────────────────────────── */}
       {isLoading ? (
-        <div className="flex flex-col gap-2 animate-pulse">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-16 bg-carbon-surface2 rounded-card" />
-          ))}
+        <div className="flex flex-col gap-4">
+          {/* Month header placeholder */}
+          <div className="px-1">
+            <Skeleton width="30%" height={12} />
+          </div>
+          {/* Row list mirroring the real layout (date · route · cost) */}
+          <SectionCard padding="none">
+            <div className="flex flex-col divide-y divide-carbon-hairline">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex items-center gap-3 px-4 py-3">
+                  <Skeleton width={32} height={11} />
+                  <div className="flex-1 flex flex-col gap-1.5">
+                    <Skeleton width="60%" height={14} />
+                    <Skeleton width="40%" height={11} />
+                  </div>
+                  <Skeleton width={56} height={14} />
+                </div>
+              ))}
+            </div>
+          </SectionCard>
         </div>
       ) : trips.length === 0 ? (
         <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
@@ -207,7 +228,7 @@ export default function TripsPage() {
             <div key={monthKey}>
               {/* ── Month header ──────────────────────────────── */}
               <div className="flex items-baseline justify-between mb-2 px-1">
-                <span className="text-xs font-semibold tracking-widest uppercase text-carbon-muted">
+                <span className="text-caption font-bold tracking-widest uppercase text-carbon-muted">
                   {formatMonthHeader(monthKey)}
                 </span>
                 <span className="text-[11px] font-mono text-carbon-muted">
@@ -224,7 +245,7 @@ export default function TripsPage() {
                       key={trip.id}
                       type="button"
                       onClick={() => router.push(`/app/trips/${trip.id}`)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full"
+                      className={`flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full ${FOCUS_RING}`}
                     >
                       {/* Date */}
                       <span className="text-[11px] font-mono text-carbon-muted w-8 shrink-0 tabular-nums">
@@ -233,7 +254,7 @@ export default function TripsPage() {
 
                       {/* Route info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-carbon-ink truncate leading-tight">
+                        <p className="text-sm font-normal text-carbon-ink truncate leading-tight">
                           {trip.originLabel.split(',')[0]}
                           <span className="text-carbon-muted mx-1">→</span>
                           {trip.destinationLabel.split(',')[0]}
@@ -261,7 +282,7 @@ export default function TripsPage() {
                         <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
                           {trip.totalCost.toFixed(2)} €
                         </span>
-                        <ChevronRight size={13} className="text-carbon-muted" />
+                        <ChevronRight size={13} className="text-carbon-muted" aria-hidden="true" />
                       </div>
                     </button>
                   ))}
