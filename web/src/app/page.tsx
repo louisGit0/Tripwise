@@ -6,6 +6,11 @@ import { Pill } from '@/components/ui/Pill';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
+import { CTAButton } from '@/components/ui/CTAButton';
+
+// Canonical focus-visible ring (PD3-1) for hand-rolled links.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 const FEATURES = [
   {
@@ -37,15 +42,14 @@ export default function LandingPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm font-medium text-carbon-muted hover:text-carbon-ink transition-colors"
+            className={`text-sm text-carbon-muted hover:text-carbon-ink transition-colors rounded-lg ${FOCUS_RING}`}
           >
             Se connecter
           </Link>
-          <Link
-            href="/register"
-            className="inline-flex items-center justify-center h-8 px-4 text-xs font-semibold rounded-lg bg-carbon-accent text-white hover:brightness-110 transition-all"
-          >
-            Créer un compte
+          <Link href="/register">
+            <CTAButton variant="accent" size="md">
+              Créer un compte
+            </CTAButton>
           </Link>
         </div>
       </header>
@@ -59,7 +63,7 @@ export default function LandingPage() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl md:text-5xl font-extrabold font-display leading-tight tracking-display mb-5">
+          <h1 className="text-display font-display leading-tight tracking-display mb-5">
             Calculez le coût
             <br />
             de vos trajets
@@ -78,17 +82,19 @@ export default function LandingPage() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center h-11 px-6 text-sm font-semibold rounded-xl bg-carbon-accent text-white hover:brightness-110 active:brightness-90 transition-all shadow-lg shadow-blue-500/20"
-            >
-              Commencer gratuitement
+            <Link href="/register" className="w-full sm:w-auto">
+              <CTAButton
+                variant="accent"
+                size="lg"
+                className="w-full shadow-lg shadow-blue-500/20"
+              >
+                Commencer gratuitement
+              </CTAButton>
             </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center h-11 px-6 text-sm font-semibold rounded-xl bg-carbon-surface2 text-carbon-ink border border-carbon-hairline hover:bg-carbon-faint transition-all"
-            >
-              Se connecter
+            <Link href="/login" className="w-full sm:w-auto">
+              <CTAButton variant="surface" size="lg" className="w-full">
+                Se connecter
+              </CTAButton>
             </Link>
           </div>
         </div>
@@ -103,8 +109,8 @@ export default function LandingPage() {
                   <div className="w-10 h-10 rounded-lg bg-blue-500/15 flex items-center justify-center">
                     <Icon size={18} className="text-carbon-accent" />
                   </div>
-                  <h3 className="font-semibold text-carbon-ink text-sm">{title}</h3>
-                  <p className="text-xs text-carbon-muted leading-relaxed">{desc}</p>
+                  <h3 className="font-bold text-carbon-ink text-sm">{title}</h3>
+                  <p className="text-sm text-carbon-muted leading-relaxed">{desc}</p>
                 </div>
               </SectionCard>
             ))}
@@ -115,7 +121,7 @@ export default function LandingPage() {
       {/* ── Footer ─────────────────────────────────────────────── */}
       <footer className="py-6 px-6">
         <Hairline className="mb-4" />
-        <p className="text-center text-xs text-carbon-muted">
+        <p className="text-center text-caption text-carbon-muted">
           © {new Date().getFullYear()} verygoodtrip &nbsp;·&nbsp; v2.4 — BUILD 0521
         </p>
       </footer>
