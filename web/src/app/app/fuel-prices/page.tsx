@@ -1,11 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Save, Zap, Fuel, RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
+import { useState, useEffect, type ReactNode } from 'react';
+import { Save, Zap, Fuel, RefreshCw, TrendingUp, TrendingDown, RadioTower, Pencil } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+// Canonical focus token (PD3-1) — every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
+
+const SOURCE_META: Record<PriceSource, { label: string; icon: ReactNode }> = {
+  api:    { label: 'Prix officiels', icon: <RadioTower size={14} aria-hidden="true" /> },
+  custom: { label: 'Mes prix',       icon: <Pencil size={14} aria-hidden="true" /> },
+};
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { DefaultPrices } from '@/types/api';
@@ -103,7 +113,7 @@ function DeltaBadge({ current, previous }: DeltaBadgeProps) {
   const isUp = pct > 0;
   return (
     <span
-      className={`flex items-center gap-0.5 text-[10px] font-mono font-semibold shrink-0 ${
+      className={`flex items-center gap-0.5 text-[10px] font-mono font-bold shrink-0 ${
         isUp ? 'text-red-400' : 'text-emerald-400'
       }`}
     >
@@ -235,10 +245,14 @@ export default function FuelPricesPage() {
 
   if (!mounted) {
     return (
-      <div className="flex flex-col gap-6 animate-pulse">
-        <div className="h-8 bg-carbon-surface2 rounded-xl w-48" />
-        <div className="h-48 bg-carbon-surface2 rounded-card" />
-        <div className="h-48 bg-carbon-surface2 rounded-card" />
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <Skeleton width={120} height={12} />
+          <Skeleton width={200} height={28} rounded="rounded-lg" />
+        </div>
+        <Skeleton height={88} rounded="rounded-card" className="w-full" />
+        <Skeleton height={200} rounded="rounded-card" className="w-full" />
+        <Skeleton height={320} rounded="rounded-card" className="w-full" />
       </div>
     );
   }
@@ -250,7 +264,7 @@ export default function FuelPricesPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <Eyebrow className="mb-0.5">Carburant · Prix</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">Carburant / Prix</h1>
+        <h1 className="text-display font-bold font-display text-carbon-ink">Carburant / Prix</h1>
         <p className="text-sm text-carbon-muted mt-1 max-w-sm">
           Consultez les prix en temps réel et choisissez la source utilisée pour vos calculs.
         </p>
@@ -258,22 +272,22 @@ export default function FuelPricesPage() {
 
       {/* ── Toggle source de prix ──────────────────────────────── */}
       <SectionCard padding="md">
-        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-3">
-          Source des prix pour les calculs
-        </p>
-        <div className="flex rounded-xl overflow-hidden border border-carbon-hairline">
+        <Eyebrow className="mb-3">Source des prix pour les calculs</Eyebrow>
+        <div className="flex rounded-xl overflow-hidden border border-carbon-hairline bg-carbon-surface2">
           {(['api', 'custom'] as PriceSource[]).map((src) => (
             <button
               key={src}
               type="button"
               onClick={() => handleSourceChange(src)}
-              className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
+              aria-pressed={priceSource === src}
+              className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 text-sm font-normal transition-all ${FOCUS_RING} ${
                 priceSource === src
                   ? 'bg-carbon-accent text-white'
-                  : 'bg-carbon-surface2 text-carbon-ink2 hover:bg-carbon-surface'
+                  : 'text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint'
               }`}
             >
-              {src === 'api' ? '📡 Prix officiels' : '✏️ Mes prix'}
+              {SOURCE_META[src].icon}
+              {SOURCE_META[src].label}
             </button>
           ))}
         </div>
@@ -295,7 +309,11 @@ export default function FuelPricesPage() {
         padding="md"
       >
         {loadingDefaults ? (
-          <p className="text-sm text-carbon-muted font-mono">Chargement...</p>
+          <div className="grid grid-cols-2 gap-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} height={56} rounded="rounded-xl" className="w-full" />
+            ))}
+          </div>
         ) : defaults ? (
           <>
             <div className="flex items-center justify-between mb-3">
@@ -328,7 +346,7 @@ export default function FuelPricesPage() {
                 >
                   <span className="text-xs text-carbon-muted truncate mr-1">{label}</span>
                   <div className="flex flex-col items-end gap-0.5 shrink-0">
-                    <span className="font-mono text-sm text-carbon-ink font-semibold tabular-nums">
+                    <span className="font-mono text-sm text-carbon-ink font-bold tabular-nums">
                       {value?.toFixed(4)}{' '}
                       <span className="text-carbon-muted font-normal text-[10px]">{unit}</span>
                     </span>
@@ -359,7 +377,7 @@ export default function FuelPricesPage() {
         <Hairline className="my-2" />
 
         {/* Carburants */}
-        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-1">Carburants</p>
+        <Eyebrow className="mb-1">Carburants</Eyebrow>
         <div className="flex flex-col divide-y divide-carbon-hairline">
           <PriceRow label="SP95 / Essence (€/L)" value={prices.gas} onChange={(v) => updatePrice('gas', v)} unit="€/L" step={0.001} max={5} />
           <PriceRow label="Gazole / Diesel (€/L)" value={prices.diesel} onChange={(v) => updatePrice('diesel', v)} unit="€/L" step={0.001} max={5} />
@@ -370,9 +388,9 @@ export default function FuelPricesPage() {
         <Hairline className="my-3" />
 
         {/* Électricité */}
-        <p className="text-xs font-semibold text-carbon-muted uppercase tracking-wider mb-1 flex items-center gap-1">
-          <Zap size={11} /> Électricité
-        </p>
+        <Eyebrow className="mb-1 flex items-center gap-1">
+          <Zap size={11} aria-hidden="true" /> Électricité
+        </Eyebrow>
         <div className="flex flex-col divide-y divide-carbon-hairline">
           <PriceRow label="Domicile (€/kWh)" value={prices.evHome} onChange={(v) => updatePrice('evHome', v)} unit="€/kWh" step={0.0001} max={2} />
           <PriceRow label="Borne rapide (€/kWh)" value={prices.evFast} onChange={(v) => updatePrice('evFast', v)} unit="€/kWh" step={0.0001} max={2} />
