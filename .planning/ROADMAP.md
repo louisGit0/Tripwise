@@ -111,8 +111,16 @@ Plans:
   2. Records from different sources for the same `brand|model|fuel` appear exactly once (deduped/merged), with consumption normalized to the app's canonical units (US MPG → L/100km, Wh/km → kWh/100km).
   3. The showroom loads and searches via server-side search + pagination (no client load-all), staying fast and brand-grouped even with thousands of models, via an API mobile can reuse.
   4. Re-running the catalog sync is idempotent — no duplicates created — like the existing ADEME sync, and a new source can be added to the pipeline without reworking normalization/dedup.
-**Plans**: TBD
+**Plans**: 6 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 04-01-PLAN.md — Schema foundation: source provenance column + canonical UNIQUE index (dedupe-before-index) + pg_trgm/brand/GIN search indexes (Wave 1)
+- [ ] 04-02-PLAN.md — Ingestion spine: CatalogSourceAdapter contract + verified conversions/EPA→FuelType map + AdemeAdapter + EpaAdapter + committed trimmed EPA snapshot (Wave 2)
+- [ ] 04-03-PLAN.md — Server-side catalog API: extend GET /vehicles/catalog (search/brand/fuelCategory/pagination) + /catalog/brands facet + e2e (Wave 2)
+- [ ] 04-04-PLAN.md — Merge orchestrator: ADEME-precedence first-writer-wins + ON CONFLICT upsert (idempotent, extensible) + merge unit spec (Wave 3)
+- [ ] 04-05-PLAN.md — Showroom rework: garage/add → debounced server-side search + pagination, Phase 3 visuals preserved (Wave 3)
+- [ ] 04-06-PLAN.md — Phase verification checkpoint: catalog grew to thousands, multi-source/real consumption, no dupes, server-side fast showroom (Wave 4)
 
 ### Phase 5: Mobile Tolls + Editorial Redesign
 **Goal**: The Expo mobile app matches the web — precise tolls with real-vs-estimate indication on trip results, the editorial-dark language applied via shared design tokens, and a garage showroom that browses the scaled catalog through the same server-side search API instead of loading all models.
@@ -135,5 +143,5 @@ Plans:
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
-| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
+| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/6 | Planned | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
