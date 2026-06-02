@@ -96,7 +96,7 @@ Plans:
 - [x] 03-01-PLAN.md — Atom normalization + AppLayout shell (Wave 1, BLOCKING): weights→400/700, canonical accent focus ring, accent-color fix, optional useReducedMotion provider
 - [x] 03-02-PLAN.md — Cluster A: landing + auth (login/register/OAuth callbacks) restyle (Wave 2)
 - [x] 03-03-PLAN.md — Cluster B: dashboard data-viz redesign (WEB-03) — hero calc plate + NumberDisplay/DataBar/Sparkline KPI band (Wave 2)
-- [ ] 03-04-PLAN.md — Cluster C: garage list + detail + showroom restyle (icon aria-labels; showroom restyle-only) (Wave 2)
+- [x] 03-04-PLAN.md — Cluster C: garage list + detail + showroom restyle (icon aria-labels; showroom restyle-only) (Wave 2)
 - [ ] 03-05-PLAN.md — Cluster D: trips history + trip detail (mirror result page) + favorites restyle (Wave 2)
 - [ ] 03-06-PLAN.md — Cluster E: fuel-prices + settings restyle (completes WEB-01) (Wave 2)
 - [ ] 03-07-PLAN.md — Visual + CWV human-verify checkpoint: repo-wide consistency gate + cross-screen sign-off (Wave 3)
@@ -134,6 +134,6 @@ Plans:
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
-| 3. Web Redesign Rollout | 3/7 | In Progress|  |
+| 3. Web Redesign Rollout | 4/7 | In Progress|  |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
