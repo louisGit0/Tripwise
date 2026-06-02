@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Modal,
-  FlatList,
+  SectionList,
   StyleSheet,
   useColorScheme,
   Alert,
@@ -20,7 +20,7 @@ import { Pill } from '@/src/components/ui/Pill';
 import { Colors, Fonts, FontSize, FontSizes, Spacing } from '@/constants/theme';
 import { useDebounce } from '@/src/hooks/useDebounce';
 import client from '@/src/api/client';
-import type { UserVehicle, VehicleModel } from '@/src/types/api';
+import type { UserVehicle, VehicleModel, CatalogPage } from '@/src/types/api';
 
 // Editorial fuel badge — EV reads the accent tint, everything else neutral.
 function FuelPill({ fuelType }: { fuelType: string }) {
@@ -132,21 +132,65 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
 
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
-  const [catalog, setCatalog] = useState<VehicleModel[]>([]);
+
+  // ── Server-side search + pagination state (frozen Phase-4 contract) ──────────
+  const [items, setItems] = useState<VehicleModel[]>([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const [selected, setSelected] = useState<VehicleModel | null>(null);
   const [nickname, setNickname] = useState('');
   const [homePrice, setHomePrice] = useState('');
   const [publicPrice, setPublicPrice] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Reset to page 1 whenever the (debounced) query changes.
   useEffect(() => {
-    client
-      .get<{ data: VehicleModel[]; total: number }>('/vehicles/catalog', {
-        params: { search: debouncedSearch, limit: 20 },
-      })
-      .then((r) => setCatalog(r.data.data))
-      .catch(() => {});
+    setPage(1);
   }, [debouncedSearch]);
+
+  // Server-side loader: page 1 REPLACES, page > 1 APPENDS. Deps include `page`;
+  // when the query changes the reset effect sets page→1, re-running this and the
+  // cleanup `cancelled` flag discards any in-flight page>1 fetch (so a lingering
+  // higher page never wrongly appends after a search reset). NO client load-all.
+  useEffect(() => {
+    let cancelled = false;
+    const isFirstPage = page === 1;
+    if (!isFirstPage) setIsLoadingMore(true);
+    client
+      .get<CatalogPage>('/vehicles/catalog', {
+        params: { search: debouncedSearch || undefined, page, limit: 30 },
+      })
+      .then((r) => {
+        if (cancelled) return;
+        const fetched = r.data.items ?? [];
+        setItems((prev) => (isFirstPage ? fetched : [...prev, ...fetched]));
+        setTotalPages(r.data.totalPages ?? 1);
+        setTotal(r.data.total ?? 0);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setIsLoadingMore(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSearch, page]);
+
+  // Group the accumulated items into brand sections (mirror the web showroom).
+  const sections = useMemo(() => {
+    const map = new Map<string, VehicleModel[]>();
+    for (const m of items) {
+      const list = map.get(m.brand);
+      if (list) list.push(m);
+      else map.set(m.brand, [m]);
+    }
+    return [...map.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0], 'fr'))
+      .map(([title, data]) => ({ title, data }));
+  }, [items]);
 
   const isElectric = selected?.fuelType === 'ELECTRIC';
 
@@ -185,19 +229,29 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
               placeholder={t('vehicles.searchPlaceholder')}
               value={search}
               onChangeText={setSearch}
-              containerStyle={{ margin: Spacing[4] }}
+              containerStyle={{ marginHorizontal: Spacing[4], marginTop: Spacing[4] }}
             />
-            <FlatList
-              data={catalog}
+            {items.length > 0 && (
+              <Text style={[styles.resultsCount, { color: c.mutedText }]}>
+                {t('vehicles.resultsCount', { loaded: items.length, total })}
+              </Text>
+            )}
+            <SectionList
+              sections={sections}
               keyExtractor={(item) => item.id}
+              stickySectionHeadersEnabled={false}
+              keyboardShouldPersistTaps="handled"
+              renderSectionHeader={({ section }) => (
+                <View style={[styles.sectionHeader, { backgroundColor: c.bg }]}>
+                  <Eyebrow>{section.title}</Eyebrow>
+                </View>
+              )}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[styles.catalogItem, { borderBottomColor: c.hairline }]}
                   onPress={() => setSelected(item)}
                 >
-                  <Text style={[styles.catalogName, { color: c.ink }]}>
-                    {item.brand} {item.model}
-                  </Text>
+                  <Text style={[styles.catalogName, { color: c.ink }]}>{item.model}</Text>
                   <View style={styles.catalogMeta}>
                     <FuelPill fuelType={item.fuelType} />
                     <Text style={[styles.catalogSub, { color: c.mutedText }]}>
@@ -206,6 +260,23 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
                   </View>
                 </TouchableOpacity>
               )}
+              ListEmptyComponent={
+                <Text style={[styles.noResults, { color: c.mutedText }]}>
+                  {t('vehicles.noResults')}
+                </Text>
+              }
+              ListFooterComponent={
+                page < totalPages ? (
+                  <View style={styles.listFooter}>
+                    <Button
+                      label={t('vehicles.loadMore')}
+                      onPress={() => setPage((p) => p + 1)}
+                      loading={isLoadingMore}
+                      variant="secondary"
+                    />
+                  </View>
+                ) : null
+              }
             />
           </>
         ) : (
@@ -347,6 +418,20 @@ const styles = StyleSheet.create({
   },
   modalTitle: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
   closeLabel: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSizes.base },
+  resultsCount: {
+    fontFamily: Fonts.mono,
+    fontSize: FontSize.caption,
+    marginHorizontal: Spacing[4],
+    marginTop: Spacing[2],
+  },
+  sectionHeader: { paddingHorizontal: Spacing[4], paddingTop: Spacing[3], paddingBottom: Spacing[2] },
+  noResults: {
+    fontFamily: Fonts.displayRegular,
+    fontSize: FontSizes.base,
+    textAlign: 'center',
+    marginTop: Spacing[8],
+  },
+  listFooter: { padding: Spacing[4] },
   catalogItem: { padding: Spacing[4], borderBottomWidth: StyleSheet.hairlineWidth, gap: Spacing[2] },
   catalogName: { fontFamily: Fonts.display, fontSize: FontSizes.base, fontWeight: '700' },
   catalogMeta: { flexDirection: 'row', alignItems: 'center', gap: Spacing[2] },
