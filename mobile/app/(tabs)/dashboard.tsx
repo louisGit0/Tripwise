@@ -7,6 +7,7 @@ import {
   StyleSheet,
   useColorScheme,
   Share,
+  Alert,
   Modal,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
@@ -18,7 +19,10 @@ import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
 import { SectionCard } from '@/src/components/ui/SectionCard';
 import { Eyebrow } from '@/src/components/ui/Eyebrow';
-import { Colors, Fonts, FontSizes, Spacing, type ThemeColors } from '@/constants/theme';
+import { Pill } from '@/src/components/ui/Pill';
+import { DataBar } from '@/src/components/ui/DataBar';
+import { AnimatedCounter } from '@/src/components/ui/AnimatedCounter';
+import { Colors, Fonts, FontSize, FontSizes, Spacing, type ThemeColors } from '@/constants/theme';
 import client from '@/src/api/client';
 import type { GeoPoint, UserVehicle, TripResult } from '@/src/types/api';
 
@@ -226,31 +230,13 @@ export default function DashboardScreen() {
       {result && (
         <>
           <MapboxMap result={result} />
-
-          <SectionCard title={t('dashboard.cost')}>
-            <View style={styles.cardInner}>
-              <View style={styles.statRow}>
-                <StatItem label={t('dashboard.distance')} value={`${result.distance.km} km`} c={c} />
-                <StatItem label={t('dashboard.duration')} value={result.duration.formatted} c={c} />
-                {result.cost && (
-                  <StatItem label={t('dashboard.cost')} value={`${result.cost.totalCost.toFixed(2)} €`} c={c} />
-                )}
-              </View>
-
-              {result.cost?.type === 'electric' && (
-                <View style={[styles.note, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
-                  <Text style={[styles.noteText, { color: c.ink2 }]}>
-                    {t('dashboard.disclaimerElectric')}
-                  </Text>
-                </View>
-              )}
-
-              <View style={styles.actionRow}>
-                <Button label={t('dashboard.addFavorite')} onPress={() => setFavModal(true)} variant="secondary" size="sm" />
-                <Button label={t('dashboard.share')} onPress={handleShare} variant="ghost" size="sm" />
-              </View>
-            </View>
-          </SectionCard>
+          <ResultCard
+            result={result}
+            c={c}
+            t={t}
+            onShare={handleShare}
+            onAddFavorite={() => setFavModal(true)}
+          />
         </>
       )}
 
@@ -281,6 +267,121 @@ export default function DashboardScreen() {
         </View>
       </Modal>
     </ScrollView>
+  );
+}
+
+type TFn = ReturnType<typeof useTranslation>['t'];
+
+/** Energy-segment fill colour for the trip's own fuel type (mirrors web). */
+function energyFillForFuelType(fuelType: string, c: ThemeColors): string {
+  if (fuelType === 'ELECTRIC') return c.ev;
+  if (fuelType === 'DIESEL') return c.fuelDie;
+  if (fuelType === 'GPL') return c.fuelGpl;
+  return c.fuelGas; // SP95 / SP95_E10 / SP98 / E85
+}
+
+/** FR euro formatting: 2 decimals, comma separator. */
+function formatEur(n: number): string {
+  return `${n.toFixed(2).replace('.', ',')} €`;
+}
+
+/**
+ * Toll-aware inline result — mirrors the web trip-result: an animated hero total
+ * (energy + toll), an Énergie/Péage Variant-A DataBar (hidden when no toll, D-04),
+ * and the réel / ≈ estimé Pill driven by `tollIsEstimate` (MOB-02). Reduced motion
+ * is honored by AnimatedCounter (instant) + DataBar (no reveal).
+ */
+function ResultCard({
+  result,
+  c,
+  t,
+  onShare,
+  onAddFavorite,
+}: {
+  result: TripResult;
+  c: ThemeColors;
+  t: TFn;
+  onShare: () => void;
+  onAddFavorite: () => void;
+}) {
+  const energyCost = result.cost?.totalCost ?? 0;
+  const tollCost = result.tollCost ?? 0;
+  const total = energyCost + tollCost;
+  const hasToll = result.tollCost != null && result.tollCost > 0;
+  const tollIsEstimate = result.tollIsEstimate ?? false;
+  const energyFill = energyFillForFuelType(result.vehicle.fuelType, c);
+
+  const tollBadge = (
+    <TouchableOpacity
+      onPress={() => Alert.alert(t('dashboard.tollLabel'), t('dashboard.tollEstimateTooltip'))}
+    >
+      <Pill color={tollIsEstimate ? 'warning' : 'success'} size="sm">
+        {tollIsEstimate ? t('dashboard.tollEstimate') : t('dashboard.tollReal')}
+      </Pill>
+    </TouchableOpacity>
+  );
+
+  return (
+    <SectionCard style={{ backgroundColor: c.surface3 }}>
+      <View style={styles.cardInner}>
+        {/* Hero total (energy + toll) */}
+        <View style={styles.heroBlock}>
+          <Eyebrow>{t('dashboard.costEstimated')}</Eyebrow>
+          <View style={styles.heroRow}>
+            <AnimatedCounter value={total} style={styles.heroValue} />
+            <Text style={[styles.heroSuffix, { color: c.mutedText }]}>€</Text>
+          </View>
+        </View>
+
+        {/* Énergie / Péage breakdown — hidden when there is nothing to show */}
+        {total > 0 && (
+          <View style={styles.breakdown}>
+            <DataBar
+              energyValue={energyCost}
+              tollValue={tollCost}
+              total={total}
+              energyFill={energyFill}
+            />
+            <View style={styles.legend}>
+              <View style={styles.legendItem}>
+                <View style={[styles.dot, { backgroundColor: energyFill }]} />
+                <Text style={[styles.legendText, { color: c.ink2 }]}>
+                  {t('dashboard.energyLabel')} · {formatEur(energyCost)}
+                </Text>
+              </View>
+              {hasToll && (
+                <View style={styles.legendItem}>
+                  <View style={[styles.dot, { backgroundColor: c.toll }]} />
+                  <Text style={[styles.legendText, { color: c.ink2 }]}>
+                    {t('dashboard.tollLabel')} · {formatEur(tollCost)}
+                  </Text>
+                  {tollBadge}
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* Distance / duration metrics */}
+        <View style={styles.statRow}>
+          <StatItem label={t('dashboard.distance')} value={`${result.distance.km} km`} c={c} />
+          <StatItem label={t('dashboard.duration')} value={result.duration.formatted} c={c} />
+        </View>
+
+        {result.cost?.type === 'electric' && (
+          <View style={[styles.note, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
+            <Text style={[styles.noteText, { color: c.ink2 }]}>
+              {t('dashboard.disclaimerElectric')}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.actionRow}>
+          <Button label={t('dashboard.addFavorite')} onPress={onAddFavorite} variant="secondary" size="sm" />
+          <Button label={t('dashboard.share')} onPress={onShare} variant="ghost" size="sm" />
+        </View>
+      </View>
+    </SectionCard>
   );
 }
 
@@ -319,6 +420,15 @@ const styles = StyleSheet.create({
   },
   modeBtnText: { fontFamily: Fonts.display, fontSize: FontSizes.sm, fontWeight: '700' },
   modalTitle: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
+  heroBlock: { gap: Spacing[2] },
+  heroRow: { flexDirection: 'row', alignItems: 'flex-end' },
+  heroValue: { fontSize: FontSize.hero, lineHeight: FontSize.hero },
+  heroSuffix: { fontFamily: Fonts.display, fontSize: FontSize.display, fontWeight: '400', marginLeft: Spacing[2] },
+  breakdown: { gap: Spacing[2] },
+  legend: { gap: Spacing[2] },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dot: { width: 6, height: 6, borderRadius: 3 },
+  legendText: { fontFamily: Fonts.mono, fontSize: FontSize.caption },
   statRow: { flexDirection: 'row', gap: Spacing[4] },
   stat: { flex: 1, gap: 2 },
   statLabel: { fontSize: FontSizes.xs },
