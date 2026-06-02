@@ -47,7 +47,7 @@ export function SegmentedControl<T extends string>({
             disabled={seg.disabled}
             onClick={() => !seg.disabled && onChange(seg.value)}
             className={[
-              `inline-flex items-center justify-center gap-1.5 font-medium transition-all`,
+              `inline-flex items-center justify-center gap-1.5 font-normal transition-all`,
               cls.seg,
               isActive
                 ? 'bg-carbon-accent text-white shadow-sm'

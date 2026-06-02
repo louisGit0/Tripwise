@@ -7,8 +7,8 @@ interface WordmarkProps {
 }
 
 const sizeClasses = {
-  sm: 'text-sm font-semibold tracking-display',
-  md: 'text-base font-semibold tracking-display',
+  sm: 'text-sm font-bold tracking-display',
+  md: 'text-base font-bold tracking-display',
   lg: 'text-lg font-bold tracking-display',
 };
 

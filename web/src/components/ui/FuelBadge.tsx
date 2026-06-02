@@ -35,7 +35,7 @@ const styles: Record<FuelType, string> = {
 export function FuelBadge({ fuelType, className = '' }: FuelBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold tracking-eye uppercase rounded border ${styles[fuelType]} ${className}`}
+      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold tracking-eye uppercase rounded border ${styles[fuelType]} ${className}`}
     >
       {labels[fuelType]}
     </span>

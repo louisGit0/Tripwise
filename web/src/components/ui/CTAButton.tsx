@@ -15,13 +15,13 @@ interface CTAButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<Variant, string> = {
-  // accent colour ≈ blue-500 (#4d8bff) — using concrete class so /opacity works
+  // accent ring = --c-accent (#4d8bff) — canonical accent focus token (PD3-1)
   accent:
-    'bg-carbon-accent text-white hover:brightness-110 active:brightness-90 focus-visible:ring-blue-500/50',
+    'bg-carbon-accent text-white hover:brightness-110 active:brightness-90 focus-visible:ring-carbon-accent/50',
   surface:
-    'bg-carbon-surface2 text-carbon-ink border border-carbon-hairline hover:bg-carbon-faint active:bg-carbon-hairline focus-visible:ring-blue-500/30',
+    'bg-carbon-surface2 text-carbon-ink border border-carbon-hairline hover:bg-carbon-faint active:bg-carbon-hairline focus-visible:ring-carbon-accent/50',
   ghost:
-    'text-carbon-ink2 hover:text-carbon-ink hover:bg-carbon-faint active:bg-carbon-hairline focus-visible:ring-blue-500/30',
+    'text-carbon-ink2 hover:text-carbon-ink hover:bg-carbon-faint active:bg-carbon-hairline focus-visible:ring-carbon-accent/50',
   danger:
     'bg-red-600 text-white hover:bg-red-500 active:bg-red-700 focus-visible:ring-red-500/40',
 };
@@ -51,7 +51,7 @@ export function CTAButton({
     <button
       disabled={isDisabled}
       className={[
-        'inline-flex items-center justify-center font-medium transition-all',
+        'inline-flex items-center justify-center font-bold transition-all',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         variantClasses[variant],

@@ -22,18 +22,18 @@ export function KPICell({ label, value, unit, delta, size = 'md', className = ''
 
   return (
     <div className={`flex flex-col gap-0.5 ${className}`}>
-      <span className="text-[10px] font-semibold tracking-eye-wide uppercase text-carbon-muted">
+      <span className="text-[10px] font-bold tracking-eye-wide uppercase text-carbon-muted">
         {label}
       </span>
       <div className="flex items-baseline gap-1.5">
         <span className={`text-carbon-ink ${valueSize[size]}`}>{value}</span>
         {unit && (
-          <span className="text-sm font-medium text-carbon-muted">{unit}</span>
+          <span className="text-sm font-normal text-carbon-muted">{unit}</span>
         )}
       </div>
       {delta !== undefined && (
         <span
-          className={`text-[11px] font-medium tabular-nums ${
+          className={`text-[11px] font-normal tabular-nums ${
             isUp ? 'text-emerald-400' : isDown ? 'text-red-400' : 'text-carbon-muted'
           }`}
         >

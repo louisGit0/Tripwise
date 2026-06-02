@@ -30,7 +30,7 @@ export function BrandAvatar({ brand, size = 36, className = '' }: BrandAvatarPro
 
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full font-semibold select-none shrink-0 ${className}`}
+      className={`inline-flex items-center justify-center rounded-full font-bold select-none shrink-0 ${className}`}
       style={{
         width: size,
         height: size,

@@ -46,7 +46,7 @@ export function NumberDisplay({
 
   return (
     <span
-      className={`font-mono tabular-nums font-medium ${sizeClasses[size]} ${colorClasses[color]} ${className}`}
+      className={`font-mono tabular-nums font-normal ${sizeClasses[size]} ${colorClasses[color]} ${className}`}
     >
       {formatted}
       {unit && (

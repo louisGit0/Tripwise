@@ -33,7 +33,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       <div className="relative z-10 w-full max-w-lg bg-carbon-surface border border-carbon-hairline rounded-card shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-carbon-hairline">
-          <h2 className="text-base font-semibold text-carbon-ink">{title}</h2>
+          <h2 className="text-base font-bold text-carbon-ink">{title}</h2>
           <button
             type="button"
             onClick={onClose}

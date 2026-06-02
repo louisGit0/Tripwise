@@ -39,7 +39,7 @@ export function SectionCard({
         >
           <div className="flex flex-col gap-0.5 min-w-0">
             {title && (
-              <h2 className="text-sm font-semibold text-carbon-ink leading-tight truncate">
+              <h2 className="text-sm font-bold text-carbon-ink leading-tight truncate">
                 {title}
               </h2>
             )}

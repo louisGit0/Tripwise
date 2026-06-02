@@ -37,7 +37,7 @@ const sizeClasses = {
 export function Pill({ children, color = 'default', size = 'md', dot = false, className = '' }: PillProps) {
   return (
     <span
-      className={`inline-flex items-center font-medium rounded-full border ${colorClasses[color]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center font-bold rounded-full border ${colorClasses[color]} ${sizeClasses[size]} ${className}`}
     >
       {dot && (
         <span
