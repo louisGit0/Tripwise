@@ -48,20 +48,31 @@ const STARTUP_THRESHOLD = 500;
  * overlap (PD4-1); EPA only fills keys ADEME didn't have. DB-agnostic and
  * idempotent: re-running rebuilds the identical set. A 3rd adapter drops into the
  * array with no change here (CAT-05).
+ *
+ * WR-04 (failure isolation): each adapter's load+normalize runs in its own
+ * try/catch so ONE source failing (e.g. EPA snapshot ENOENT) is reported via
+ * `onAdapterError` and SKIPPED — the other sources (notably ADEME) still
+ * ingest. An EPA snapshot problem must never sink the whole catalog sync.
  */
 export async function mergeCanonical(
   adapters: CatalogSourceAdapter[],
+  onAdapterError?: (source: string, err: unknown) => void,
 ): Promise<CanonicalVehicle[]> {
   const ordered = [...adapters].sort((a, b) => a.precedence - b.precedence);
   const merged = new Map<string, CanonicalVehicle>();
 
   for (const adapter of ordered) {
-    const raws = await adapter.load();
-    for (const raw of raws) {
-      const v = adapter.normalize(raw);
-      if (!v) continue; // skip unmapped fuel / missing conso / filtered brand
-      const key = `${v.brand}|${v.model}|${v.fuelType}`.toUpperCase();
-      if (!merged.has(key)) merged.set(key, v); // first-writer-wins (ADEME wins)
+    try {
+      const raws = await adapter.load();
+      for (const raw of raws) {
+        const v = adapter.normalize(raw);
+        if (!v) continue; // skip unmapped fuel / missing conso / filtered brand
+        const key = `${v.brand}|${v.model}|${v.fuelType}`.toUpperCase();
+        if (!merged.has(key)) merged.set(key, v); // first-writer-wins (ADEME wins)
+      }
+    } catch (err: unknown) {
+      // Isolate this source's failure; let the others continue (WR-04).
+      if (onAdapterError) onAdapterError(adapter.source, err);
     }
   }
 
@@ -155,7 +166,14 @@ export class VehicleSyncService implements OnApplicationBootstrap {
       new AdemeAdapter(),
       new EpaAdapter(),
     ];
-    const merged = await mergeCanonical(adapters);
+    const merged = await mergeCanonical(adapters, (source, err) =>
+      // WR-04: a single source failing (e.g. EPA snapshot missing from
+      // dist/data) logs a warning and is skipped — ADEME still ingests.
+      this.logger.warn(
+        `Catalog source "${source}" failed to load — skipping it; other sources continue: ` +
+          (err instanceof Error ? err.message : String(err)),
+      ),
+    );
     this.logger.log(
       `Merged ${merged.length} unique vehicles across ${adapters.length} sources`,
     );

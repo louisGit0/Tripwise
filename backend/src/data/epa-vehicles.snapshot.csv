@@ -26748,4 +26748,2368 @@ Audi;A6 e-tron ultra;2027;Electricity;;EV;127;26.463;Large Cars
 Nissan;Van (cargo);1988;Regular Gasoline;;;18;0.0;Vans
 Audi;S6 e-tron (20 inch wheels);2027;Electricity;;EV;103;32.6585;Large Cars
 Audi;S6 e-tron (21 inch wheels);2027;Electricity;;EV;100;33.7893;Large Cars
-MINI;Countryman SE ALL4 (18 Wheels),,false,0,0,216,224.0,0.0,207.0,0.0,Automatic (A1),144.7,0.0,133.2,0.0,Small Sport Utility Vehicle 4WD,2027,8000,Countryman,,,,,EV,,,140 and 140 kW EESM,BMX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.08879999999999999,0.0,0.0,11.7,103,103.0,0,0.0,0.0,33.0,0.0,0,-1,0.0,0.0,92,92.0,0,0.0,37.0,0.0,0.0,,,Rear-Wheel Drive,80,,9,850,0,Electricity,Electricity,10,-1,81,81.0,0,0.0,0.0,41.0,0.0,0,0,50375,0,0,Hyundai,Ioniq 9 RWD,,false,0,0,335,372.0,0.0,299.0,0.0,Automatic (A1),154.4,0.0,122.2,0.0,Standard Sport Utility Vehicle 2WD,2027,7750,Ioniq 9,,,,,EV,,,160 kW PMSM,HYX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.07919999999999999,0.0,0.0,12.0,110,109.9818,0,0.0,0.0,30.646,0.0,0,-1,0.0,0.0,104,103.6844,0,0.0,32.5073,0.0,0.0,,,All-Wheel Drive,612,,9,750,0,Electricity,Electricity,10,-1,97,96.9028,0,0.0,0.0,34.7823,0.0,0,0,50376,0,0,Audi,Q6 e-tron quattro (19 inch Tires),,false,0,0,325,345.0,0.0,304.0,0.0,Automatic (A1),157.1,0.0,138.4,0.0,Standard Sport Utility Vehicle 4WD,2027,8250,Q6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.08399999999999999,0.0,0.0,12.0,103,102.5362,0,0.0,0.0,32.8713,0.0,0,-1,0.0,0.0,96,96.0621,0,0.0,35.0867,0.0,0.0,,,All-Wheel Drive,712,,9,800,0,Electricity,Electricity,10,-1,89,89.1801,0,0.0,0.0,37.7944,0.0,0,0,50377,0,0,Audi,Q6 e-tron quattro (20 inch Tires),,false,0,0,301,321.0,0.0,279.0,0.0,Automatic (A1),146.5,0.0,127.4,0.0,Standard Sport Utility Vehicle 4WD,2027,8000,Q6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.08399999999999999,0.0,0.0,12.0,103,102.5362,0,0.0,0.0,32.8713,0.0,0,-1,0.0,0.0,96,96.0621,0,0.0,35.0867,0.0,0.0,,,All-Wheel Drive,715,,9,800,0,Electricity,Electricity,10,-1,89,89.1801,0,0.0,0.0,37.7944,0.0,0,0,50378,0,0,Audi,Q6 e-tron SB quattro (20 inch Tires),,false,0,0,301,321.0,0.0,279.0,0.0,Automatic (A1),146.5,0.0,127.4,0.0,Standard Sport Utility Vehicle 4WD,2027,8000,Q6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.07919999999999999,0.0,0.0,12.0,110,109.9818,0,0.0,0.0,30.646,0.0,0,-1,0.0,0.0,104,103.6844,0,0.0,32.5073,0.0,0.0,,,All-Wheel Drive,615,,9,750,0,Electricity,Electricity,10,-1,97,96.9028,0,0.0,0.0,34.7823,0.0,0,0,50379,0,0,Audi,Q6 Sportback e-tron quattro,,false,0,0,325,345.0,0.0,304.0,0.0,Automatic (A1),157.1,0.0,138.4,0.0,Standard Sport Utility Vehicle 4WD,2027,8250,Q6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 19.834,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,592.4666666666667,15,0.0,0,0.0,0.0,0.0,0.0,6,3.9,Rear-Wheel Drive,2872,(FFS),-1,4500,0,Regular,Regular Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5038,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,16.6667,0.0,23.0,0.0,Vans,1988,-10500,B150/B250 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 0.08879999999999999,0.0,0.0,12.0,97,96.5288,0,0.0,0.0,34.917,0.0,0,-1,0.0,0.0,92,92.1163,0,0.0,36.5896,0.0,0.0,,,All-Wheel Drive,613,,9,800,0,Electricity,Electricity,10,-1,87,87.2421,0,0.0,0.0,38.6339,0.0,0,0,50380,0,0,Audi,SQ6 e-tron (20 inch Tires),,false,0,0,285,299.0,0.0,270.0,0.0,Automatic (A1),137.9,0.0,124.6,0.0,Standard Sport Utility Vehicle 4WD,2027,8000,SQ6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.096,0.0,0.0,12.0,89,89.4322,0,0.0,0.0,37.6877,0.0,0,-1,0.0,0.0,85,84.9773,0,0.0,39.6635,0.0,0.0,,,All-Wheel Drive,713,,9,900,0,Electricity,Electricity,10,-1,80,80.1006,0,0.0,0.0,42.0783,0.0,0,0,50381,0,0,Audi,SQ6 e-tron (21 inch Tires),,false,0,0,264,278.0,0.0,249.0,0.0,Automatic (A1),127.8,0.0,114.4,0.0,Standard Sport Utility Vehicle 4WD,2027,7500,SQ6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.08879999999999999,0.0,0.0,12.0,97,96.5288,0,0.0,0.0,34.917,0.0,0,-1,0.0,0.0,92,92.1163,0,0.0,36.5896,0.0,0.0,,,All-Wheel Drive,614,,9,800,0,Electricity,Electricity,10,-1,87,87.2421,0,0.0,0.0,38.6339,0.0,0,0,50382,0,0,Audi,SQ6 Sportback e-tron (20 inch Tires),,false,0,0,285,299.0,0.0,270.0,0.0,Automatic (A1),137.9,0.0,124.6,0.0,Standard Sport Utility Vehicle 4WD,2027,8000,SQ6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.096,0.0,0.0,12.0,89,89.4322,0,0.0,0.0,37.6877,0.0,0,-1,0.0,0.0,85,84.9773,0,0.0,39.6635,0.0,0.0,,,All-Wheel Drive,714,,9,900,0,Electricity,Electricity,10,-1,80,80.1006,0,0.0,0.0,42.0783,0.0,0,0,50383,0,0,Audi,SQ6 Sportback e-tron (21 inch Tires),,false,0,0,264,278.0,0.0,249.0,0.0,Automatic (A1),127.8,0.0,114.4,0.0,Standard Sport Utility Vehicle 4WD,2027,7500,SQ6 e-tron,,,,,EV,,,225 and 270 kW Asynchron 3-Phase,VGA,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.07919999999999999,0.0,0.0,8.0,107,106.54,0,0.0,0.0,31.636,0.0,0,-1,0.0,0.0,102,101.8251,0,0.0,33.1009,0.0,0.0,,,All-Wheel Drive,395,,9,750,0,Electricity,Electricity,10,-1,97,96.6,0,0.0,0.0,34.8913,0.0,0,0,50384,0,0,BMW,iX3 50 xDrive (20 inch All-Season Tires),,false,0,0,383,401.0,0.0,363.0,0.0,Automatic (A1),152.2,0.0,138.0,0.0,Standard Sport Utility Vehicle 4WD,2027,8250,iX3,,,,,EV,,,123 and 240 kW EESM,BMX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.0696,0.0,0.0,8.0,125,125.44,0,0.0,0.0,26.8634,0.0,0,-1,0.0,0.0,118,118.0444,0,0.0,28.5528,0.0,0.0,,,All-Wheel Drive,394,,9,650,0,Electricity,Electricity,10,-1,110,110.11,0,0.0,0.0,30.6103,0.0,0,0,50385,0,0,BMW,iX3 50 xDrive (20 inch Summer Tires),,false,0,0,434,461.0,0.0,405.0,0.0,Automatic (A1),179.2,0.0,157.3,0.0,Standard Sport Utility Vehicle 4WD,2027,8750,iX3,,,,,EV,,,123 and 240 kW EESM,BMX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.0768,0.0,0.0,8.0,111,111.09,0,0.0,0.0,30.3403,0.0,0,-1,0.0,0.0,105,104.647,0,0.0,32.2083,0.0,0.0,,,All-Wheel Drive,397,,9,700,0,Electricity,Electricity,10,-1,98,97.72,0,0.0,0.0,34.4914,0.0,0,0,50386,0,0,BMW,iX3 50 xDrive (21 inch All-Season Tires),,false,0,0,399,424.0,0.0,373.0,0.0,Automatic (A1),158.7,0.0,139.6,0.0,Standard Sport Utility Vehicle 4WD,2027,8500,iX3,,,,,EV,,,123 and 240 kW EESM,BMX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.0768,0.0,0.0,8.0,111,110.6,0,0.0,0.0,30.4747,0.0,0,-1,0.0,0.0,104,103.8286,0,0.0,32.4622,0.0,0.0,,,All-Wheel Drive,398,,9,750,0,Electricity,Electricity,10,-1,97,96.6,0,0.0,0.0,34.8913,0.0,0,0,50387,0,0,BMW,iX3 50 xDrive (22 inch Summer Tires),,false,0,0,392,418.0,0.0,365.0,0.0,Automatic (A1),158.0,0.0,138.0,0.0,Standard Sport Utility Vehicle 4WD,2027,8250,iX3,,,,,EV,,,123 and 240 kW EESM,BMX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.09119999999999999,0.0,0.0,11.6,98,98.0,0,0.0,0.0,34.0,0.0,0,-1,0.0,0.0,88,88.0,0,0.0,38.0,0.0,0.0,,,All-Wheel Drive,81,,9,850,0,Electricity,Electricity,10,-1,78,78.0,0,0.0,0.0,43.0,0.0,0,0,50388,0,0,Hyundai,Ioniq 9 AWD,,false,0,0,320,358.0,0.0,283.0,0.0,Automatic (A1),146.0,0.0,117.2,0.0,Standard Sport Utility Vehicle 4WD,2027,7750,Ioniq 9,,,,,EV,,,66 and 160 kW PMSM,HYX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.096,0.0,0.0,11.5,91,91.0,0,0.0,0.0,37.0,0.0,0,-1,0.0,0.0,85,85.0,0,0.0,40.0,0.0,0.0,,,All-Wheel Drive,82,,9,900,0,Electricity,Electricity,10,-1,79,79.0,0,0.0,0.0,43.0,0.0,0,0,50389,0,0,Hyundai,Ioniq 9 AWD Performance,,false,0,0,311,334.0,0.0,287.0,0.0,Automatic (A1),135.1,0.0,117.2,0.0,Standard Sport Utility Vehicle 4WD,2027,7500,Ioniq 9,,,,,EV,,,157 kW PMSM (IPM),HYX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 19.834,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,592.4666666666667,15,0.0,0,0.0,0.0,0.0,0.0,6,3.9,Rear-Wheel Drive,2842,(FFS),-1,4500,0,Regular,Regular Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5039,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,16.6667,0.0,23.0,0.0,Vans,1988,-10500,B150/B250 Van,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 0.08159999999999999,0.0,0.0,9.5,109,108.7218,0,0.0,0.0,31.0011,0.0,0,-1,0.0,0.0,99,98.8522,0,0.0,34.0963,0.0,0.0,,,4-Wheel Drive,110,,9,750,0,Electricity,Electricity,10,-1,89,88.9798,0,0.0,0.0,37.8794,0.0,0,0,50390,0,0,Rivian,R2 Performance AWD (20in AT),,false,0,0,307,338.0,0.0,276.0,0.0,Automatic (A1),154.2,0.0,126.2,0.0,Standard Sport Utility Vehicle 4WD,2027,8250,R2,,,,,EV,,,300 kW ACPM,RIV,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 0.0768,0.0,0.0,9.5,114,113.566,0,0.0,0.0,29.6788,0.0,0,-1,0.0,0.0,105,104.7626,0,0.0,32.1727,0.0,0.0,,,4-Wheel Drive,109,,9,700,0,Electricity,Electricity,10,-1,96,95.696,0,0.0,0.0,35.2209,0.0,0,0,50391,0,0,Rivian,R2 Performance AWD (21in),,false,0,0,330,358.0,0.0,301.0,0.0,Automatic (A1),155.7,0.0,131.2,0.0,Standard Sport Utility Vehicle 4WD,2027,8500,R2,,,,,EV,,,300 kW ACPM,RIV,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,N,0,0,0 7.628461538461539,0.0,0.0,2.03,36,35.757,94,94.4317,0.0,36.0,0.601,0,-1,0.0,0.0,39,38.8152,87,86.6101,39.0,0.0,0.5879,,,Front-Wheel Drive,561,,9,0,0,Electricity and Hydrogen,,10,-1,43,42.553,79,78.6482,0.0,43.0,0.548,0,0,50392,0,30,Honda,CR-V e-FCEV,,false,0,106,240,0.0,31.4,0.0,26.65,Automatic (A1),24.9841,134.9059,29.9989,112.3541,Midsize Station Wagons,2026,12000,CR-V,,,,,eFCV,,29,60 kW AC PMSM,HNX,,0.0,,Wed May 13 00:00:00 EDT 2026,Wed May 13 00:00:00 EDT 2026,Y,78,65,71 17.009285714285717,0.0,0.0,0.0,18,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,484.76190476190476,21,0.0,0,0.0,0.0,0.0,0.0,8,5.7,Front-Wheel Drive,4340,(350 V8),-1,4050,0,Diesel,Diesel,-1,-1,26,0.0,0,0.0,0.0,0.0,0.0,0,0,504,15,0,Oldsmobile,Toronado,N,false,100,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,22.0,0.0,36.0,0.0,Midsize Cars,1985,-8250,Toronado,,,,,Diesel,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,6,3.9,Rear-Wheel Drive,2872,(FFS),-1,4800,0,Regular,Regular Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5040,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,14.4444,0.0,24.0,0.0,Vans,1988,-12000,B150/B250 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 24.7925,0.0,0.0,0.0,11,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,740.5833333333334,12,0.0,0,0.0,0.0,0.0,0.0,8,5.2,Rear-Wheel Drive,2882,(FFS),-1,5600,0,Regular,Regular Gasoline,-1,-1,13,0.0,0,0.0,0.0,0.0,0.0,0,0,5041,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,14.0,0.0,18.0,0.0,Vans,1988,-16000,B150/B250 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,8,5.2,Rear-Wheel Drive,2882,(FFS),-1,4800,0,Regular,Regular Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5042,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,15.0,0.0,21.7949,0.0,Vans,1988,-12000,B150/B250 Van,,Lockup A3,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,8,5.2,Rear-Wheel Drive,2883,(FFS),-1,4800,0,Regular,Regular Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5043,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,15.0,0.0,23.0769,0.0,Vans,1988,-12000,B150/B250 Van,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 27.04636363636364,0.0,0.0,0.0,10,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,807.9090909090909,11,0.0,0,0.0,0.0,0.0,0.0,8,5.9,Rear-Wheel Drive,2894,,-1,6150,0,Regular,Regular Gasoline,-1,-1,12,0.0,0,0.0,0.0,0.0,0.0,0,0,5044,0,0,Dodge,B150/B250 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,12.0,0.0,17.0,0.0,Vans,1988,-18750,B150/B250 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 24.7925,0.0,0.0,0.0,11,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,740.5833333333334,12,0.0,0,0.0,0.0,0.0,0.0,8,5.2,Rear-Wheel Drive,2882,(FFS),-1,5600,0,Regular,Regular Gasoline,-1,-1,13,0.0,0,0.0,0.0,0.0,0.0,0,0,5045,0,0,Dodge,B350 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,14.0,0.0,18.0,0.0,Vans,1988,-16000,B350 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,8,5.2,Rear-Wheel Drive,2883,(FFS),-1,4800,0,Regular,Regular Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5046,0,0,Dodge,B350 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,15.0,0.0,22.0,0.0,Vans,1988,-12000,B350 Van,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 27.04636363636364,0.0,0.0,0.0,10,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,807.9090909090909,11,0.0,0,0.0,0.0,0.0,0.0,8,5.9,Rear-Wheel Drive,2894,,-1,6150,0,Regular,Regular Gasoline,-1,-1,12,0.0,0,0.0,0.0,0.0,0.0,0,0,5047,0,0,Dodge,B350 Van 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,12.0,0.0,17.0,0.0,Vans,1988,-18750,B350 Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 17.500588235294117,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,522.7647058823529,17,0.0,0,0.0,0.0,0.0,0.0,6,3.0,Rear-Wheel Drive,3804,(FFS),-1,3950,0,Regular,Regular Gasoline,-1,-1,20,0.0,0,0.0,0.0,0.0,0.0,0,0,5048,0,0,Ford,Aerostar Van,Y,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,19.0,0.0,28.2051,0.0,Vans,1988,-7750,Aerostar Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,3.0,Rear-Wheel Drive,3800,(FFS),-1,3750,0,Regular,Regular Gasoline,-1,-1,22,0.0,0,0.0,0.0,0.0,0.0,0,0,5049,0,0,Ford,Aerostar Van,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,20.0,0.0,30.7692,0.0,Vans,1988,-6750,Aerostar Van,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 14.167142857142858,0.0,0.0,0.0,20,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,423.1904761904762,21,0.0,0,0.0,0.0,0.0,0.0,4,2.2,Front-Wheel Drive,2200,(FFS),-1,3200,0,Regular,Regular Gasoline,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,0,0,505,0,17,Plymouth,Caravelle,N,false,0,97,0,0.0,0.0,0.0,0.0,Automatic 3-spd,25.0,0.0,33.0,0.0,Midsize Cars,1985,-4000,Caravelle,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,6,4.9,Rear-Wheel Drive,3812,(FFS),-1,4800,0,Regular,Regular Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5050,0,0,Ford,E150 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,16.6667,0.0,21.7949,0.0,Vans,1988,-12000,E150 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 19.834,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,592.4666666666667,15,0.0,0,0.0,0.0,0.0,0.0,6,4.9,Rear-Wheel Drive,3810,(FFS),-1,4500,0,Regular,Regular Gasoline,-1,-1,18,0.0,0,0.0,0.0,0.0,0.0,0,0,5051,0,0,Ford,E150 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,17.0,0.0,24.359,0.0,Vans,1988,-10500,E150 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 19.834,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,592.4666666666667,15,0.0,0,0.0,0.0,0.0,0.0,6,4.9,Rear-Wheel Drive,3818,(FFS),-1,4500,0,Regular,Regular Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5052,0,0,Ford,E150 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,16.6667,0.0,23.0,0.0,Vans,1988,-10500,E150 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 22.885384615384616,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,683.6153846153846,13,0.0,0,0.0,0.0,0.0,0.0,8,5.0,Rear-Wheel Drive,3910,(FFS),-1,5200,0,Regular,Regular Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5053,0,0,Ford,E150 Econoline 2WD,Y,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,14.4444,0.0,22.0,0.0,Vans,1988,-14000,E150 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 27.04636363636364,0.0,0.0,0.0,10,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,807.9090909090909,11,0.0,0,0.0,0.0,0.0,0.0,8,5.8,Rear-Wheel Drive,3942,(FFS),-1,6150,0,Regular,Regular Gasoline,-1,-1,13,0.0,0,0.0,0.0,0.0,0.0,0,0,5054,0,0,Ford,E150 Econoline 2WD,Y,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,12.0,0.0,18.0,0.0,Vans,1988,-18750,E150 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 22.885384615384616,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,683.6153846153846,13,0.0,0,0.0,0.0,0.0,0.0,6,4.9,Rear-Wheel Drive,3815,(FFS),-1,5200,0,Regular,Regular Gasoline,-1,-1,14,0.0,0,0.0,0.0,0.0,0.0,0,0,5055,0,0,Ford,E250 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,15.0,0.0,19.0,0.0,Vans,1988,-14000,E250 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 22.885384615384616,0.0,0.0,0.0,11,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,683.6153846153846,13,0.0,0,0.0,0.0,0.0,0.0,8,5.0,Rear-Wheel Drive,3911,(FFS),-1,5200,0,Regular,Regular Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5056,0,0,Ford,E250 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,14.0,0.0,22.0,0.0,Vans,1988,-14000,E250 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 27.04636363636364,0.0,0.0,0.0,10,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,807.9090909090909,11,0.0,0,0.0,0.0,0.0,0.0,8,5.8,Rear-Wheel Drive,3942,(FFS),-1,6150,0,Regular,Regular Gasoline,-1,-1,12,0.0,0,0.0,0.0,0.0,0.0,0,0,5057,0,0,Ford,E250 Econoline 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,12.0,0.0,17.0,0.0,Vans,1988,-18750,E250 Econoline,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 18.594375,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,555.4375,16,0.0,0,0.0,0.0,0.0,0.0,6,4.3,Rear-Wheel Drive,4826,(FFS),-1,4200,0,Regular,Regular Gasoline,-1,-1,18,0.0,0,0.0,0.0,0.0,0.0,0,0,5058,0,0,GMC,G15/25 Vandura 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 3-spd,19.0,0.0,24.359,0.0,Vans,1988,-9000,Vandura,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 18.594375,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,555.4375,16,0.0,0,0.0,0.0,0.0,0.0,6,4.3,Rear-Wheel Drive,4827,(FFS),-1,4200,0,Regular,Regular Gasoline,-1,-1,20,0.0,0,0.0,0.0,0.0,0.0,0,0,5059,0,0,GMC,G15/25 Vandura 2WD,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,18.0,0.0,27.0,0.0,Vans,1988,-9000,Vandura,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 15.65842105263158,0.0,0.0,0.0,18,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,467.7368421052632,19,0.0,0,0.0,0.0,0.0,0.0,4,2.2,Front-Wheel Drive,2300,(FFS;TRBO),-1,3950,0,Regular,Regular Gasoline,-1,-1,22,0.0,0,0.0,0.0,0.0,0.0,0,0,5277,0,0,Mazda,RX-7,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,18.0,0.0,30.7692,0.0,Two Seaters,1989,-7750,RX-7,,,T,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 21.250714285714285,0.0,0.0,0.0,12,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,634.7857142857143,14,0.0,0,0.0,0.0,0.0,0.0,8,5.6,Rear-Wheel Drive,20060,(GUZZLER)  (FFS),-1,5850,0,Premium,Premium Gasoline,-1,-1,16,0.0,0,0.0,0.0,0.0,0.0,0,0,5278,0,0,Mercedes-Benz,560SL,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,15.0,0.0,22.0,0.0,Two Seaters,1989,-17250,560,T,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 12.935217391304349,0.0,0.0,0.0,21,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,386.39130434782606,23,0.0,0,0.0,0.0,0.0,0.0,4,1.8,Front-Wheel Drive,66022,(FFS)      (MPFI),-1,2950,0,Regular,Regular Gasoline,-1,-1,26,0.0,0,0.0,0.0,0.0,0.0,0,0,5279,0,0,Subaru,XT-DL,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,27.0,0.0,36.0,0.0,Two Seaters,1989,-2750,XT,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,17,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,4,2.3,Rear-Wheel Drive,60030,(FFS;Electricity;TRBO),-1,3700,0,Diesel,Diesel,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,0,0,532,0,17,Volvo,740/760,N,false,0,95,0,0.0,0.0,0.0,0.0,Automatic 4-spd,27.0,0.0,34.0,0.0,Midsize Cars,1985,-6500,740/760,,,T,,Diesel,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,Rear-Wheel Drive,12041,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,20,0.0,0,0.0,0.0,0.0,0.0,0,0,5320,12,12,BMW,325i/325is,Y,false,81,81,0,0.0,0.0,0.0,0.0,Automatic 4-spd,20.0,0.0,28.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,Rear-Wheel Drive,12041,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,22,0.0,0,0.0,0.0,0.0,0.0,0,0,5321,12,12,BMW,325i/325is,Y,false,81,81,0,0.0,0.0,0.0,0.0,Manual 5-spd,20.0,0.0,30.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,17,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,4-Wheel or All-Wheel Drive,12045,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,20,0.0,0,0.0,0.0,0.0,0.0,0,0,5322,12,12,BMW,325ix,N,false,81,81,0,0.0,0.0,0.0,0.0,Automatic 4-spd,21.0,0.0,28.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,4-Wheel or All-Wheel Drive,12045,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,21,0.0,0,0.0,0.0,0.0,0.0,0,0,5323,12,12,BMW,325ix,N,false,81,81,0,0.0,0.0,0.0,0.0,Manual 5-spd,19.0,0.0,29.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 19.834,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,592.4666666666667,15,0.0,0,0.0,0.0,0.0,0.0,6,3.4,Rear-Wheel Drive,12056,(GUZZLER)  (FFS)      (MPFI),-1,4500,0,Regular,Regular Gasoline,-1,-1,18,0.0,0,0.0,0.0,0.0,0.0,0,0,5324,12,0,BMW,635csi,N,false,84,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,16.6667,0.0,24.359,0.0,Subcompact Cars,1989,-10500,6 Series,T,2MODE,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 18.594375,0.0,0.0,0.0,14,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,555.4375,16,0.0,0,0.0,0.0,0.0,0.0,6,3.4,Rear-Wheel Drive,12056,(GUZZLER)  (FFS)      (MPFI),-1,4200,0,Regular,Regular Gasoline,-1,-1,21,0.0,0,0.0,0.0,0.0,0.0,0,0,5325,12,0,BMW,635csi,N,false,84,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,17.0,0.0,29.0,0.0,Subcompact Cars,1989,-9000,6 Series,T,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 14.8755,0.0,0.0,0.0,17,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,444.35,20,0.0,0,0.0,0.0,0.0,0.0,6,2.8,Rear-Wheel Drive,4103,(FFS),-1,3400,0,Regular,Regular Gasoline,-1,-1,25,0.0,0,0.0,0.0,0.0,0.0,12,85,5326,5,0,Chevrolet,Camaro,Y,false,82,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,21.0,0.0,35.0,0.0,Subcompact Cars,1989,-5000,Camaro,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 15.65842105263158,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,467.7368421052632,19,0.0,0,0.0,0.0,0.0,0.0,6,2.8,Rear-Wheel Drive,4122,(FFS),-1,3550,0,Regular,Regular Gasoline,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,12,85,5327,5,0,Chevrolet,Camaro,Y,false,82,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,20.0,0.0,34.0,0.0,Subcompact Cars,1989,-5750,Camaro,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,8,5.0,Rear-Wheel Drive,4110,(GM-CHEV)  (FFS),-1,3750,0,Regular,Regular Gasoline,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,12,85,5328,5,0,Chevrolet,Camaro,N,false,82,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,19.0,0.0,33.0,0.0,Subcompact Cars,1989,-6750,Camaro,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,8,5.0,Rear-Wheel Drive,4105,(GM-CHEV)  (FFS),-1,4550,0,Premium,Premium Gasoline,-1,-1,23,0.0,0,0.0,0.0,0.0,0.0,12,85,5329,5,0,Chevrolet,Camaro,N,false,82,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,18.0,0.0,32.0,0.0,Subcompact Cars,1989,-10750,Camaro,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 14.883125,0.0,0.0,0.0,22,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,424.1666666666667,24,0.0,0,0.0,0.0,0.0,0.0,6,2.4,Rear-Wheel Drive,60050,(DSL;TRBO),-1,3550,0,Regular,Regular Gasoline,-1,-1,23,0.0,0,0.0,0.0,0.0,0.0,0,0,531,0,17,Volvo,740/760,Y,false,0,95,0,0.0,0.0,0.0,0.0,Manual 4-spd,21.0,0.0,32.0,0.0,Midsize Cars,1985,-5750,740/760,,SIL,T,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 33.05666666666667,0.0,0.0,0.0,8,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,987.4444444444445,9,0.0,0,0.0,0.0,0.0,0.0,8,5.3,Rear-Wheel Drive,7001,(GUZZLER),-1,7500,0,Regular,Regular Gasoline,-1,-1,10,0.0,0,0.0,0.0,0.0,0.0,0,0,5310,7,0,Aston Martin,Saloon/Vantage/Volante,N,false,79,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,9.0,0.0,14.0,0.0,Subcompact Cars,1989,-25500,Saloon/Vantage/Volante,T,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 13.52318181818182,0.0,0.0,0.0,20,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,403.95454545454544,22,0.0,0,0.0,0.0,0.0,0.0,4,2.0,Front-Wheel Drive,64010,(FFS),-1,3050,0,Regular,Regular Gasoline,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,0,0,5311,0,10,Audi,80/90,N,false,0,86,0,0.0,0.0,0.0,0.0,Automatic 3-spd,25.0,0.0,34.0,0.0,Subcompact Cars,1989,-3250,80/90,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 13.52318181818182,0.0,0.0,0.0,19,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,403.95454545454544,22,0.0,0,0.0,0.0,0.0,0.0,4,2.0,Front-Wheel Drive,64010,(FFS),-1,3050,0,Regular,Regular Gasoline,-1,-1,28,0.0,0,0.0,0.0,0.0,0.0,0,0,5312,0,10,Audi,80/90,N,false,0,86,0,0.0,0.0,0.0,0.0,Manual 5-spd,24.4444,0.0,39.0,0.0,Subcompact Cars,1989,-3250,80/90,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,17,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,5,2.3,Front-Wheel Drive,64014,(FFS),-1,3750,0,Regular,Regular Gasoline,-1,-1,20,0.0,0,0.0,0.0,0.0,0.0,0,0,5313,0,10,Audi,80/90,N,false,0,86,0,0.0,0.0,0.0,0.0,Automatic 3-spd,21.0,0.0,28.0,0.0,Subcompact Cars,1989,-6750,80/90,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 14.8755,0.0,0.0,0.0,18,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,444.35,20,0.0,0,0.0,0.0,0.0,0.0,5,2.3,Front-Wheel Drive,64011,(FFS),-1,3400,0,Regular,Regular Gasoline,-1,-1,24,0.0,0,0.0,0.0,0.0,0.0,0,0,5314,0,10,Audi,80/90,N,false,0,86,0,0.0,0.0,0.0,0.0,Manual 5-spd,22.0,0.0,33.0,0.0,Subcompact Cars,1989,-5000,80/90,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,5,2.3,4-Wheel or All-Wheel Drive,64011,(FFS),-1,3750,0,Regular,Regular Gasoline,-1,-1,22,0.0,0,0.0,0.0,0.0,0.0,0,0,5315,0,8,Audi,80/90 quattro,N,false,0,86,0,0.0,0.0,0.0,0.0,Manual 5-spd,20.0,0.0,31.0,0.0,Subcompact Cars,1989,-6750,80/90,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,4,2.3,Rear-Wheel Drive,12050,(FFS)      (MPFI),-1,4550,0,Premium,Premium Gasoline,-1,-1,26,0.0,0,0.0,0.0,0.0,0.0,0,0,5316,12,0,BMW,M3,N,false,81,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,18.8889,0.0,37.0,0.0,Subcompact Cars,1989,-10750,M,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 24.7925,0.0,0.0,0.0,9,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,740.5833333333334,12,0.0,0,0.0,0.0,0.0,0.0,6,3.5,Rear-Wheel Drive,12070,(GUZZLER)  (FFS)      (MPFI),-1,6800,0,Premium,Premium Gasoline,-1,-1,17,0.0,0,0.0,0.0,0.0,0.0,0,0,5317,12,0,BMW,M6,N,false,84,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,11.0,0.0,24.0,0.0,Subcompact Cars,1989,-22000,M,T,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,Rear-Wheel Drive,12042,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,21,0.0,0,0.0,0.0,0.0,0.0,0,0,5318,9,0,BMW,325i Convertible,Y,false,76,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,20.0,0.0,29.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,16,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,6,2.5,Rear-Wheel Drive,12042,(FFS)      (MPFI),-1,3750,0,Regular,Regular Gasoline,-1,-1,22,0.0,0,0.0,0.0,0.0,0.0,0,0,5319,9,0,BMW,325i Convertible,Y,false,76,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,20.0,0.0,31.0,0.0,Subcompact Cars,1989,-6750,3 Series,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 15.530217391304348,0.0,0.0,0.0,21,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,442.60869565217394,23,0.0,0,0.0,0.0,0.0,0.0,6,2.4,Rear-Wheel Drive,60050,(DSL;98;34.5685;TRBO),-1,5450,0,Premium,Premium Gasoline,-1,-1,19,0.0,0,0.0,0.0,0.0,0.0,0,0,5274,0,0,Maserati,Spyder,N,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,16.6667,0.0,26.0,0.0,Two Seaters,1989,-15250,Spyder,T,,T,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 17.500588235294117,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,522.7647058823529,17,0.0,0,0.0,0.0,0.0,0.0,2,1.3,Rear-Wheel Drive,56010,(FFS),-1,3950,0,Regular,Regular Gasoline,-1,-1,21,0.0,0,0.0,0.0,0.0,0.0,0,0,5275,0,0,Mazda,RX-7,N,false,0,0,0,0.0,0.0,0.0,0.0,Automatic 4-spd,19.0,0.0,30.0,0.0,Two Seaters,1989,-7750,RX-7,,CLKUP,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 16.528333333333336,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,493.72222222222223,18,0.0,0,0.0,0.0,0.0,0.0,2,1.3,Rear-Wheel Drive,56010,(FFS),-1,3750,0,Regular,Regular Gasoline,-1,-1,23,0.0,0,0.0,0.0,0.0,0.0,0,0,5276,0,0,Mazda,RX-7,Y,false,0,0,0,0.0,0.0,0.0,0.0,Manual 5-spd,19.0,0.0,32.0,0.0,Two Seaters,1989,-6750,RX-7,,,,,,,,,,,0.0,,Tue Jan 01 00:00:00 EST 2013,Tue Jan 01 00:00:00 EST 2013,,0,0,0 17.500588235294117,0.0,0.0,0.0,15,0.0,0,0.0,0.0,0.0,0.0,-1,-1,0.0,522.7647058823529,17,0.0,0,0.0,0.0,0.0,0.0,2,1.3,Rear-Wheel Drive,56015,(FFS
+MINI;Countryman SE ALL4 (18" Wheels);2027;Electricity;;EV;98;34.5685;Small Sport Utility Vehicle 4WD
+Hyundai;Ioniq 9 RWD;2027;Electricity;;EV;92;37.0;Standard Sport Utility Vehicle 2WD
+Audi;Q6 e-tron quattro (19 inch Tires);2027;Electricity;;EV;104;32.5073;Standard Sport Utility Vehicle 4WD
+Audi;Q6 e-tron quattro (20 inch Tires);2027;Electricity;;EV;96;35.0867;Standard Sport Utility Vehicle 4WD
+Audi;Q6 e-tron SB quattro (20 inch Tires);2027;Electricity;;EV;96;35.0867;Standard Sport Utility Vehicle 4WD
+Audi;Q6 Sportback e-tron quattro;2027;Electricity;;EV;104;32.5073;Standard Sport Utility Vehicle 4WD
+Audi;SQ6 e-tron (20 inch Tires);2027;Electricity;;EV;92;36.5896;Standard Sport Utility Vehicle 4WD
+Audi;SQ6 e-tron (21 inch Tires);2027;Electricity;;EV;85;39.6635;Standard Sport Utility Vehicle 4WD
+Audi;SQ6 Sportback e-tron (20 inch Tires);2027;Electricity;;EV;92;36.5896;Standard Sport Utility Vehicle 4WD
+Audi;SQ6 Sportback e-tron (21 inch Tires);2027;Electricity;;EV;85;39.6635;Standard Sport Utility Vehicle 4WD
+BMW;iX3 50 xDrive (20 inch All-Season Tires);2027;Electricity;;EV;102;33.1009;Standard Sport Utility Vehicle 4WD
+BMW;iX3 50 xDrive (20 inch Summer Tires);2027;Electricity;;EV;118;28.5528;Standard Sport Utility Vehicle 4WD
+BMW;iX3 50 xDrive (21 inch All-Season Tires);2027;Electricity;;EV;105;32.2083;Standard Sport Utility Vehicle 4WD
+BMW;iX3 50 xDrive (22 inch Summer Tires);2027;Electricity;;EV;104;32.4622;Standard Sport Utility Vehicle 4WD
+Hyundai;Ioniq 9 AWD;2027;Electricity;;EV;88;38.0;Standard Sport Utility Vehicle 4WD
+Hyundai;Ioniq 9 AWD Performance;2027;Electricity;;EV;85;40.0;Standard Sport Utility Vehicle 4WD
+Honda;CR-V e-FCEV;2026;;;eFCV;39;39.0;Midsize Station Wagons
+Ford;Aerostar Van;1988;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Van;1988;Regular Gasoline;;;18;0.0;Vans
+Ford;E150 Econoline 2WD;1988;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1988;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Econoline 2WD;1988;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Econoline 2WD;1988;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Econoline 2WD;1988;Regular Gasoline;;;11;0.0;Vans
+Ford;E250 Econoline 2WD;1988;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1988;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1988;Regular Gasoline;;;11;0.0;Vans
+Mitsubishi;Van;1988;Regular Gasoline;;;18;0.0;Vans
+Toyota;Van 2WD (cargo);1988;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 2WD (cargo);1988;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 4WD (cargo);1988;Regular Gasoline;;;18;0.0;Vans
+Toyota;Van 4WD (cargo);1988;Regular Gasoline;;;19;0.0;Vans
+Nissan;Van (passenger);1988;Regular Gasoline;;;17;0.0;Vans
+Nissan;Van (passenger);1988;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Wagon;1988;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1988;Regular Gasoline;;;17;0.0;Vans
+Audi;Coupe GT;1985;Regular Gasoline;;;19;0.0;Subcompact Cars
+Ford;E150 Club Wagon;1988;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1988;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Club Wagon;1988;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1988;Regular Gasoline;;;11;0.0;Vans
+Mitsubishi;Wagon;1988;Regular Gasoline;;;17;0.0;Vans
+Toyota;Van 2WD (passenger);1988;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 2WD (passenger);1988;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 4WD (passenger);1988;Regular Gasoline;;;18;0.0;Vans
+Toyota;Van 4WD (passenger);1988;Regular Gasoline;;;19;0.0;Vans
+Volkswagen;Vanagon Syncro 4WD;1988;Regular Gasoline;;;14;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1988;Regular Gasoline;;;15;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1988;Regular Gasoline;;;16;0.0;Vans
+Ford;Bronco II 2WD;1988;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Ford;Bronco II 2WD;1988;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1988;Regular Gasoline;;;21;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1988;Regular Gasoline;;;20;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 4WD;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Nissan;Stanza Wagon 4WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Nissan;Stanza Wagon 4WD;1988;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Ford;Bronco II 4WD;1988;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;Bronco II 4WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1988;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Audi;Quattro;1985;Regular Gasoline;;;17;0.0;Subcompact Cars
+Jeep;Cherokee/Wagoneer 4WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1988;Regular Gasoline;;;21;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1988;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1988;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Grand Wagoneer 4WD;1988;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1988;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1988;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Land Rover;Range Rover;1988;Premium Gasoline;;;13;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1988;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Subaru;Hatchback 4WD;1988;Regular Gasoline;;;24;0.0;Special Purpose Vehicles
+Subaru;Justy 4WD;1988;Regular Gasoline;;;28;0.0;Special Purpose Vehicles
+Subaru;Sedan/3 Door 4WD;1988;Regular Gasoline;;;21;0.0;Special Purpose Vehicles
+Subaru;Sedan/3 Door 4WD;1988;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Subaru;Wagon 4WD;1988;Regular Gasoline;;;21;0.0;Special Purpose Vehicles
+Subaru;Wagon 4WD;1988;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Toyota;Land Cruiser Wagon 4WD;1988;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1988;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1988;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1988;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Nissan;Truck Cab Chassis 2WD;1988;Regular Gasoline;;;11;0.0;Special Purpose Vehicle 2WD
+Nissan;Truck Cab Chassis 2WD;1988;Regular Gasoline;;;13;0.0;Special Purpose Vehicle 2WD
+Toyota;Cab/Chassis 2WD;1988;Regular Gasoline;;;12;0.0;Special Purpose Vehicle 2WD
+Toyota;Cab/Chassis 2WD;1988;Regular Gasoline;;;14;0.0;Special Purpose Vehicle 2WD
+Alfa Romeo;Spider;1989;Regular Gasoline;;;21;0.0;Two Seaters
+Nissan;300ZX;1989;Regular Gasoline;;;19;0.0;Two Seaters
+Nissan;300ZX;1989;Regular Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1989;Regular Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1989;Regular Gasoline;;;18;0.0;Two Seaters
+Honda;Civic CRX;1989;Regular Gasoline;;;28;0.0;Two Seaters
+Honda;Civic CRX;1989;Regular Gasoline;;;32;0.0;Two Seaters
+Honda;Civic CRX;1989;Regular Gasoline;;;26;0.0;Two Seaters
+Honda;Civic CRX HF;1989;Regular Gasoline;;;44;0.0;Two Seaters
+Honda;Civic CRX HF;1989;Regular Gasoline;;;41;0.0;Two Seaters
+Jaguar;XJS Convertible;1989;Regular Gasoline;;;13;0.0;Two Seaters
+Jaguar;XJS Convertible;1989;Regular Gasoline;;;13;0.0;Two Seaters
+Maserati;Karif;1989;Premium Gasoline;;;14;0.0;Two Seaters
+Maserati;Karif;1989;Premium Gasoline;;;15;0.0;Two Seaters
+Maserati;Spyder;1989;Premium Gasoline;;;15;0.0;Two Seaters
+Maserati;Spyder;1989;Premium Gasoline;;;15;0.0;Two Seaters
+Mazda;RX-7;1989;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;RX-7;1989;Regular Gasoline;;;18;0.0;Two Seaters
+Mazda;RX-7;1989;Regular Gasoline;;;17;0.0;Two Seaters
+Mercedes-Benz;560SL;1989;Premium Gasoline;;;14;0.0;Two Seaters
+Subaru;XT-DL;1989;Regular Gasoline;;;23;0.0;Two Seaters
+Volvo;740/760;1985;Regular Gasoline;;;18;0.0;Midsize Cars
+Toyota;MR2;1989;Regular Gasoline;;;24;0.0;Two Seaters
+Toyota;MR2;1989;Premium Gasoline;;;22;0.0;Two Seaters
+Toyota;MR2;1989;Premium Gasoline;;;23;0.0;Two Seaters
+Toyota;MR2;1989;Regular Gasoline;;;25;0.0;Two Seaters
+Maserati;225;1989;Premium Gasoline;;;15;0.0;Minicompact Cars
+Maserati;222E;1989;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;911 Carrera;1989;Premium Gasoline;;;19;0.0;Minicompact Cars
+Porsche;911 Carrera;1989;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;911 Carrera 4;1989;Premium Gasoline;;;16;0.0;Minicompact Cars
+Volvo;740/760;1985;Regular Gasoline;;;21;0.0;Midsize Cars
+Porsche;911 Turbo;1989;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 S4;1989;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 S4;1989;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 S4;1989;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;944;1989;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;944;1989;Premium Gasoline;;;19;0.0;Minicompact Cars
+Porsche;944 S2;1989;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;944 Turbo;1989;Premium Gasoline;;;20;0.0;Minicompact Cars
+Toyota;Celica Convertible;1989;Regular Gasoline;;;25;0.0;Minicompact Cars
+Toyota;Celica Convertible;1989;Regular Gasoline;;;25;0.0;Minicompact Cars
+Audi;4000s;1985;Regular Gasoline;;;23;0.0;Subcompact Cars
+Volvo;740/760;1985;Regular Gasoline;;;22;0.0;Midsize Cars
+Porsche;911 Carrera;1989;Premium Gasoline;;;18;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1989;Regular Gasoline;;;20;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1989;Regular Gasoline;;;23;0.0;Minicompact Cars
+Alfa Romeo;Milano;1989;Regular Gasoline;;;17;0.0;Subcompact Cars
+Alfa Romeo;Milano;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Alfa Romeo;Milano;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Volvo;740/760;1985;Regular Gasoline;;;19;0.0;Midsize Cars
+Audi;80/90;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Audi;80/90;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Audi;80/90;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Audi;80/90;1989;Regular Gasoline;;;20;0.0;Subcompact Cars
+Audi;80/90 quattro;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;M3;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+BMW;M6;1989;Premium Gasoline;;;12;0.0;Subcompact Cars
+BMW;325i Convertible;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i Convertible;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Volvo;740/760;1985;Diesel;;Diesel;23;0.0;Midsize Cars
+BMW;325i/325is;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;635csi;1989;Regular Gasoline;;;15;0.0;Subcompact Cars
+BMW;635csi;1989;Regular Gasoline;;;16;0.0;Subcompact Cars
+Volvo;740/760;1985;Diesel;;Diesel;24;0.0;Midsize Cars
+Volvo;740/760;1985;Regular Gasoline;;;18;0.0;Midsize Cars
+Nissan;Pulsar NX;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Nissan;Pulsar NX;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Nissan;Pulsar NX;1989;Regular Gasoline;;;21;0.0;Subcompact Cars
+Nissan;Pulsar NX;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Nissan;Sentra Coupe;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Nissan;Sentra Coupe;1989;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;240SX;1989;Regular Gasoline;;;20;0.0;Subcompact Cars
+Nissan;240SX;1989;Regular Gasoline;;;20;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1989;Regular Gasoline;;;19;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Ford;Festiva;1989;Regular Gasoline;;;34;0.0;Subcompact Cars
+Ford;Festiva;1989;Regular Gasoline;;;35;0.0;Subcompact Cars
+Ford;Festiva;1989;Regular Gasoline;;;27;0.0;Subcompact Cars
+Ford;Mustang;1989;Regular Gasoline;;;21;0.0;Subcompact Cars
+Ford;Mustang;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Ford;Mustang;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Ford;Mustang;1989;Regular Gasoline;;;18;0.0;Subcompact Cars
+Honda;Civic;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Civic;1989;Regular Gasoline;;;31;0.0;Subcompact Cars
+Honda;Civic;1989;Regular Gasoline;;;29;0.0;Subcompact Cars
+Honda;Civic;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Prelude;1989;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1989;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1989;Regular Gasoline;;;21;0.0;Subcompact Cars
+Hyundai;Excel;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1989;Regular Gasoline;;;28;0.0;Subcompact Cars
+Audi;4000s;1985;Regular Gasoline;;;24;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1989;Regular Gasoline;;;13;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1989;Regular Gasoline;;;13;0.0;Subcompact Cars
+Maserati;430;1989;Premium Gasoline;;;14;0.0;Subcompact Cars
+Maserati;430;1989;Premium Gasoline;;;15;0.0;Subcompact Cars
+Mercedes-Benz;190D 2.5;1989;Diesel;;Diesel;27;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1989;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1989;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;300CE;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Mirage;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mitsubishi;Mirage;1989;Regular Gasoline;;;30;0.0;Subcompact Cars
+Mitsubishi;Mirage;1989;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mitsubishi;Mirage;1989;Premium Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Precis;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Precis;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Precis;1989;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mitsubishi;Starion;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Starion;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Subaru;Hatchback;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;Hatchback;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Subaru;Justy;1989;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1989;Regular Gasoline;;;31;0.0;Subcompact Cars
+Subaru;Justy 4WD;1989;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;XT;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;XT;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;XT;1989;Regular Gasoline;;;21;0.0;Subcompact Cars
+Subaru;XT 4WD;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;XT 4WD;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;XT 4WD;1989;Regular Gasoline;;;19;0.0;Subcompact Cars
+Subaru;XT 4WD;1989;Regular Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Celica;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Celica;1989;Premium Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Celica;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;28;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1989;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Supra;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1989;Premium Gasoline;;;17;0.0;Subcompact Cars
+Toyota;Supra;1989;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Tercel;1989;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Tercel;1989;Regular Gasoline;;;33;0.0;Subcompact Cars
+Toyota;Tercel;1989;Regular Gasoline;;;29;0.0;Subcompact Cars
+Volkswagen;Fox;1989;Regular Gasoline;;;24;0.0;Subcompact Cars
+Volkswagen;Fox;1989;Regular Gasoline;;;23;0.0;Subcompact Cars
+Audi;4000s quattro;1985;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;525i;1989;Regular Gasoline;;;18;0.0;Compact Cars
+BMW;525i;1989;Regular Gasoline;;;18;0.0;Compact Cars
+BMW;535i;1989;Regular Gasoline;;;15;0.0;Compact Cars
+BMW;535i;1989;Regular Gasoline;;;16;0.0;Compact Cars
+BMW;535i;1989;Regular Gasoline;;;16;0.0;Compact Cars
+Ford;LTD Crown Victoria;1985;Regular Gasoline;;;17;0.0;Large Cars
+Nissan;Sentra;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Nissan;Sentra;1989;Regular Gasoline;;;28;0.0;Compact Cars
+Nissan;Sentra;1989;Regular Gasoline;;;27;0.0;Compact Cars
+Nissan;Stanza;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;LTD Crown Victoria;1985;Regular Gasoline;;;13;0.0;Large Cars
+Nissan;Stanza;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;Escort;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Escort;1989;Regular Gasoline;;;32;0.0;Compact Cars
+Ford;Escort;1989;Regular Gasoline;;;27;0.0;Compact Cars
+Ford;Escort;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Laser;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Laser;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Probe;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;Probe;1989;Premium Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Tempo;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Tempo;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo AWD;1989;Regular Gasoline;;;19;0.0;Compact Cars
+Honda;Accord;1989;Regular Gasoline;;;23;0.0;Compact Cars
+Honda;Accord;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Jaguar;XJ6;1989;Premium Gasoline;;;18;0.0;Compact Cars
+Mazda;323;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;323;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323;1989;Premium Gasoline;;;22;0.0;Compact Cars
+Mazda;323;1989;Premium Gasoline;;;20;0.0;Compact Cars
+Mazda;323;1989;Regular Gasoline;;;27;0.0;Compact Cars
+Mercedes-Benz;260E;1989;Premium Gasoline;;;19;0.0;Compact Cars
+Mercedes-Benz;300E;1989;Premium Gasoline;;;18;0.0;Compact Cars
+Mercedes-Benz;300SE;1989;Premium Gasoline;;;16;0.0;Compact Cars
+Mercedes-Benz;560SEC;1989;Premium Gasoline;;;13;0.0;Compact Cars
+Mitsubishi;Galant;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Mitsubishi;Galant;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1989;Regular Gasoline;;;23;0.0;Compact Cars
+Mitsubishi;Sigma;1989;Regular Gasoline;;;18;0.0;Compact Cars
+Mitsubishi;Sigma;1989;Regular Gasoline;;;18;0.0;Compact Cars
+BMW;3 Series;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Subaru;Sedan/3 Door;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Subaru;Sedan/3 Door;1989;Regular Gasoline;;;23;0.0;Compact Cars
+Subaru;Sedan/3 Door;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Subaru;Sedan/3Door 4WD Turbo;1989;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Sedan/3Door 4WD Turbo;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;24;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Camry;1989;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Cressida;1989;Premium Gasoline;;;19;0.0;Compact Cars
+Volkswagen;Golf;1989;Diesel;;Diesel;34;0.0;Compact Cars
+Volkswagen;Golf;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Volkswagen;Golf;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;GTI 16v;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Volkswagen;Jetta;1989;Diesel;;Diesel;34;0.0;Compact Cars
+Volkswagen;Jetta;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Volkswagen;Jetta;1989;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;Jetta GLI 16v;1989;Regular Gasoline;;;22;0.0;Compact Cars
+Volvo;240 DL/240 GL;1989;Regular Gasoline;;;19;0.0;Compact Cars
+Volvo;240 DL/240 GL;1989;Regular Gasoline;;;19;0.0;Compact Cars
+Volvo;240 DL/240 GL;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Volvo;240 DL/240 GL;1989;Regular Gasoline;;;21;0.0;Compact Cars
+Volvo;780;1989;Regular Gasoline;;;18;0.0;Compact Cars
+Volvo;780;1989;Regular Gasoline;;;17;0.0;Compact Cars
+Audi;100;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;100;1989;Regular Gasoline;;;19;0.0;Midsize Cars
+Audi;100 quattro;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200;1989;Regular Gasoline;;;19;0.0;Midsize Cars
+Audi;200 quattro;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+BMW;735i;1989;Regular Gasoline;;;15;0.0;Midsize Cars
+BMW;735i;1989;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735i;1989;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735il;1989;Regular Gasoline;;;15;0.0;Midsize Cars
+BMW;735il;1989;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;750il;1989;Regular Gasoline;;;13;0.0;Midsize Cars
+BMW;750il;1989;Regular Gasoline;;;13;0.0;Midsize Cars
+Nissan;Maxima;1989;Premium Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima;1989;Premium Gasoline;;;20;0.0;Midsize Cars
+BMW;3 Series;1985;Regular Gasoline;;;23;0.0;Subcompact Cars
+Ford;Taurus;1989;Regular Gasoline;;;21;0.0;Midsize Cars
+Ford;Taurus;1989;Regular Gasoline;;;21;0.0;Midsize Cars
+Ford;Taurus;1989;Premium Gasoline;;;19;0.0;Midsize Cars
+Ford;Taurus;1989;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1989;Premium Gasoline;;;17;0.0;Midsize Cars
+Ford;Thunderbird;1989;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1989;Premium Gasoline;;;18;0.0;Midsize Cars
+Hyundai;Sonata;1989;Regular Gasoline;;;21;0.0;Midsize Cars
+Hyundai;Sonata;1989;Regular Gasoline;;;20;0.0;Midsize Cars
+Hyundai;Sonata;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Maserati;228;1989;Premium Gasoline;;;14;0.0;Midsize Cars
+Maserati;228;1989;Premium Gasoline;;;14;0.0;Midsize Cars
+Mazda;626/MX-6;1989;Regular Gasoline;;;22;0.0;Midsize Cars
+Mazda;626/MX-6;1989;Premium Gasoline;;;19;0.0;Midsize Cars
+Mazda;626/MX-6;1989;Regular Gasoline;;;24;0.0;Midsize Cars
+Mazda;626/MX-6;1989;Premium Gasoline;;;21;0.0;Midsize Cars
+Mazda;929;1989;Regular Gasoline;;;19;0.0;Midsize Cars
+Mazda;929;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Mercedes-Benz;300SEL;1989;Premium Gasoline;;;16;0.0;Midsize Cars
+Mercedes-Benz;420SEL;1989;Premium Gasoline;;;15;0.0;Midsize Cars
+Mercedes-Benz;560SEL;1989;Premium Gasoline;;;13;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;19;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima Wagon;1985;Regular Gasoline;;;17;0.0;Small Station Wagons
+Volvo;740;1989;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;21;0.0;Midsize Cars
+Volvo;740;1989;Regular Gasoline;;;21;0.0;Midsize Cars
+Volvo;760;1989;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;760;1989;Regular Gasoline;;;17;0.0;Midsize Cars
+BMW;3 Series;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Nissan;Sentra Wagon;1985;Regular Gasoline;;;25;0.0;Small Station Wagons
+Ford;LTD Crown Victoria;1989;Regular Gasoline;;;18;0.0;Large Cars
+Ford;LTD Crown Victoria;1989;Regular Gasoline;;;14;0.0;Large Cars
+Mercedes-Benz;300SEL;1989;Regular Gasoline;;;15;0.0;Large Cars
+Nissan;Sentra Wagon;1985;Regular Gasoline;;;29;0.0;Small Station Wagons
+Nissan;Sentra Wagon;1989;Regular Gasoline;;;25;0.0;Small Station Wagons
+Nissan;Sentra Wagon;1989;Regular Gasoline;;;27;0.0;Small Station Wagons
+Nissan;Sentra Wagon 4WD;1989;Regular Gasoline;;;21;0.0;Small Station Wagons
+Nissan;Sentra Wagon 4WD;1989;Regular Gasoline;;;24;0.0;Small Station Wagons
+Ford;Escort Wagon;1989;Regular Gasoline;;;24;0.0;Small Station Wagons
+Ford;Escort Wagon;1989;Regular Gasoline;;;27;0.0;Small Station Wagons
+Honda;Civic Wagon;1989;Regular Gasoline;;;26;0.0;Small Station Wagons
+Honda;Civic Wagon;1989;Regular Gasoline;;;29;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1989;Regular Gasoline;;;23;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1989;Regular Gasoline;;;23;0.0;Small Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;24;0.0;Small Station Wagons
+Mazda;323 Wagon;1989;Regular Gasoline;;;23;0.0;Small Station Wagons
+Mazda;323 Wagon;1989;Regular Gasoline;;;27;0.0;Small Station Wagons
+Mitsubishi;Mirage Wagon;1989;Regular Gasoline;;;25;0.0;Small Station Wagons
+Mitsubishi;Mirage Wagon;1989;Regular Gasoline;;;28;0.0;Small Station Wagons
+Mitsubishi;Space Wagon;1989;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Wagon;1989;Regular Gasoline;;;20;0.0;Small Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;27;0.0;Small Station Wagons
+Subaru;Wagon;1989;Regular Gasoline;;;23;0.0;Small Station Wagons
+Subaru;Wagon;1989;Regular Gasoline;;;24;0.0;Small Station Wagons
+Subaru;Wagon 4WD Turbo;1989;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Wagon 4WD Turbo;1989;Regular Gasoline;;;21;0.0;Small Station Wagons
+Toyota;Camry Wagon;1989;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Camry Wagon;1989;Regular Gasoline;;;25;0.0;Small Station Wagons
+Toyota;Camry Wagon;1989;Regular Gasoline;;;19;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1989;Regular Gasoline;;;23;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1989;Regular Gasoline;;;22;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1989;Regular Gasoline;;;25;0.0;Small Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;26;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1989;Regular Gasoline;;;28;0.0;Small Station Wagons
+Volkswagen;Fox Wagon;1989;Regular Gasoline;;;24;0.0;Small Station Wagons
+Audi;100 Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Audi;100 Wagon;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Audi;200 quattro Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;23;0.0;Small Station Wagons
+Ford;Taurus Wagon;1989;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1989;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon V6 A/C;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon V6 A/C;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;25;0.0;Small Station Wagons
+Mercedes-Benz;300TE;1989;Premium Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;25;0.0;Small Station Wagons
+Volvo;240 DL/240 GL Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;240 DL/240 GL Wagon;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;240 DL/240 GL Wagon;1989;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;240 DL/240 GL Wagon;1989;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+BMW;3 Series;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Ford;Escort Wagon;1985;Regular Gasoline;;;32;0.0;Small Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1989;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;760 Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;LTD Crown Victoria/Country Squire Wagon;1989;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Escort Wagon;1985;Regular Gasoline;;;27;0.0;Small Station Wagons
+Nissan;Truck 2WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1989;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1989;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1989;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Escort Wagon;1985;Diesel;;Diesel;34;0.0;Small Station Wagons
+Ford;Courier;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Courier;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1989;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1989;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1989;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1989;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Honda;Civic Wagon;1985;Regular Gasoline;;;24;0.0;Small Station Wagons
+Mitsubishi;Truck 2WD;1989;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1989;Regular Gasoline;;;23;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1989;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Honda;Civic Wagon;1985;Regular Gasoline;;;28;0.0;Small Station Wagons
+Mitsubishi;Truck 2WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Mazda;B2200/B2600;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Mazda;B2200/B2600;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Mazda;B2200/B2600;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1989;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Honda;Civic Wagon 4WD;1985;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Truck 2WD;1989;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1989;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1989;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1989;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Mazda;B2600i 4x4;1989;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Nissan;300ZX;1985;Regular Gasoline;;;17;0.0;Two Seaters
+BMW;6 Series;1985;Regular Gasoline;;;17;0.0;Subcompact Cars
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1989;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1989;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1989;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Mazda;GLC Wagon;1985;Regular Gasoline;;;20;0.0;Small Station Wagons
+Mazda;GLC Wagon;1985;Regular Gasoline;;;24;0.0;Small Station Wagons
+Mazda;GLC Wagon;1985;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;1-Ton Truck 2WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Mitsubishi;Space Wagon;1985;Regular Gasoline;;;22;0.0;Small Station Wagons
+Nissan;Truck 4WD;1989;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+BMW;6 Series;1985;Regular Gasoline;;;17;0.0;Subcompact Cars
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1989;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1989;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1989;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1989;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1989;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1989;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1989;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1989;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1989;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1989;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1989;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;Aerostar Van;1989;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Van;1989;Regular Gasoline;;;18;0.0;Vans
+Ford;E150 Econoline 2WD;1989;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1989;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1989;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Econoline 2WD;1989;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Econoline 2WD;1989;Regular Gasoline;;;11;0.0;Vans
+Ford;E250 Econoline 2WD;1989;Regular Gasoline;;;14;0.0;Vans
+Ford;E250 Econoline 2WD;1989;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1989;Regular Gasoline;;;11;0.0;Vans
+Subaru;Wagon;1985;Regular Gasoline;;;23;0.0;Small Station Wagons
+Mitsubishi;Van;1989;Regular Gasoline;;;19;0.0;Vans
+Toyota;Van 2WD (cargo);1989;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 2WD (cargo);1989;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 4WD (cargo);1989;Regular Gasoline;;;18;0.0;Vans
+Subaru;Wagon;1985;Regular Gasoline;;;26;0.0;Small Station Wagons
+Subaru;Wagon;1985;Regular Gasoline;;;21;0.0;Small Station Wagons
+Ford;Aerostar Wagon;1989;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1989;Regular Gasoline;;;17;0.0;Vans
+Ford;E150 Club Wagon;1989;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1989;Regular Gasoline;;;14;0.0;Vans
+Subaru;Wagon;1985;Regular Gasoline;;;25;0.0;Small Station Wagons
+Ford;E150 Club Wagon;1989;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1989;Regular Gasoline;;;11;0.0;Vans
+Toyota;Tercel Wagon 2WD;1985;Regular Gasoline;;;26;0.0;Small Station Wagons
+Mitsubishi;Wagon;1989;Regular Gasoline;;;17;0.0;Vans
+Toyota;Van 2WD (passenger);1989;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 2WD (passenger);1989;Regular Gasoline;;;20;0.0;Vans
+Toyota;Van 4WD (passenger);1989;Regular Gasoline;;;18;0.0;Vans
+Toyota;Van 4WD (passenger);1989;Regular Gasoline;;;19;0.0;Vans
+Volkswagen;Vanagon Syncro 4WD;1989;Regular Gasoline;;;14;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1989;Regular Gasoline;;;15;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1989;Regular Gasoline;;;17;0.0;Vans
+Toyota;Tercel Wagon 2WD;1985;Regular Gasoline;;;29;0.0;Small Station Wagons
+Nissan;Pathfinder 2WD;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 2WD;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicle 2WD
+Toyota;Tercel Wagon 4WD;1985;Regular Gasoline;;;22;0.0;Small Station Wagons
+Jeep;Cherokee 2WD;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1989;Regular Gasoline;;;20;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Toyota;Tercel Wagon 4WD;1985;Regular Gasoline;;;26;0.0;Small Station Wagons
+Ford;Bronco II 2WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Ford;Bronco II 2WD;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Volkswagen;Quantum Syncro Wagon;1985;Regular Gasoline;;;17;0.0;Small Station Wagons
+Mazda;MPV;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Volkswagen;Quantum Wagon;1985;Diesel;;Diesel;31;0.0;Small Station Wagons
+Volkswagen;Quantum Wagon;1985;Regular Gasoline;;;21;0.0;Small Station Wagons
+Nissan;Pathfinder 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1989;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Volkswagen;Quantum Wagon;1985;Regular Gasoline;;;25;0.0;Small Station Wagons
+Jeep;Cherokee/Wagoneer 4WD;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Cherokee/Wagoneer 4WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Grand Wagoneer 4WD;1989;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Jeep;Wagoneer Limited 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Audi;5000S Wagon;1985;Regular Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Jeep;Wrangler 4WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1989;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Ford;Bronco II 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 4WD
+Ford;Bronco II 4WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Audi;5000S Wagon;1985;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Ford;Bronco 4WD;1989;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1989;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Land Rover;Range Rover;1989;Premium Gasoline;;;12;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mitsubishi;Space Wagon 4WD;1989;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Mazda;MPV 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Subaru;Hatchback 4WD;1989;Regular Gasoline;;;24;0.0;Special Purpose Vehicles
+Subaru;Sedan/3 Door 4WD;1989;Regular Gasoline;;;21;0.0;Special Purpose Vehicles
+Subaru;Sedan/3 Door 4WD;1989;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Subaru;Wagon 4WD;1989;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Wagon 4WD;1989;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Toyota;Land Cruiser Wagon 4WD;1989;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1989;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1989;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1989;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1989;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Nissan;Truck Cab Chassis 2WD;1989;Regular Gasoline;;;11;0.0;Special Purpose Vehicle 2WD
+Nissan;Truck Cab Chassis 2WD;1989;Regular Gasoline;;;13;0.0;Special Purpose Vehicle 2WD
+Toyota;Cab/Chassis 2WD;1989;Regular Gasoline;;;10;0.0;Special Purpose Vehicle 2WD
+Toyota;Cab/Chassis 2WD;1989;Regular Gasoline;;;12;0.0;Special Purpose Vehicle 2WD
+Alfa Romeo;Spider;1990;Premium Gasoline;;;23;0.0;Two Seaters
+Nissan;300ZX;1990;Premium Gasoline;;;19;0.0;Two Seaters
+Nissan;300ZX;1990;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1990;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1990;Premium Gasoline;;;18;0.0;Two Seaters
+Honda;Civic CRX;1990;Regular Gasoline;;;28;0.0;Two Seaters
+Honda;Civic CRX;1990;Regular Gasoline;;;29;0.0;Two Seaters
+Honda;Civic CRX;1990;Regular Gasoline;;;27;0.0;Two Seaters
+Honda;Civic CRX HF;1990;Regular Gasoline;;;43;0.0;Two Seaters
+Honda;Civic CRX HF;1990;Regular Gasoline;;;39;0.0;Two Seaters
+Jaguar;XJS Convertible;1990;Premium Gasoline;;;13;0.0;Two Seaters
+Maserati;Karif;1990;Premium Gasoline;;;14;0.0;Two Seaters
+Maserati;Karif;1990;Premium Gasoline;;;15;0.0;Two Seaters
+Maserati;Spyder;1990;Premium Gasoline;;;15;0.0;Two Seaters
+Maserati;Spyder;1990;Premium Gasoline;;;15;0.0;Two Seaters
+Mazda;RX-7;1990;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;RX-7;1990;Regular Gasoline;;;18;0.0;Two Seaters
+Mazda;RX-7;1990;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;MX-5 Miata;1990;Regular Gasoline;;;23;0.0;Two Seaters
+Mazda;MX-5 Miata;1990;Regular Gasoline;;;24;0.0;Two Seaters
+Mercedes-Benz;300SL;1990;Premium Gasoline;;;17;0.0;Two Seaters
+Mercedes-Benz;300SL;1990;Premium Gasoline;;;16;0.0;Two Seaters
+Mercedes-Benz;500SL;1990;Premium Gasoline;;;14;0.0;Two Seaters
+Nissan;240SX;1990;Regular Gasoline;;;20;0.0;Minicompact Cars
+Nissan;240SX;1990;Regular Gasoline;;;20;0.0;Minicompact Cars
+Maserati;222E;1990;Premium Gasoline;;;15;0.0;Minicompact Cars
+Maserati;222E;1990;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1990;Premium Gasoline;;;17;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1990;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1990;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;928 S4;1990;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 S4;1990;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;944 S2;1990;Premium Gasoline;;;18;0.0;Minicompact Cars
+Toyota;Celica Convertible;1990;Regular Gasoline;;;23;0.0;Minicompact Cars
+Toyota;Celica Convertible;1990;Regular Gasoline;;;22;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1990;Regular Gasoline;;;23;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1990;Regular Gasoline;;;25;0.0;Minicompact Cars
+Audi;Coupe quattro;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+Audi;80;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Audi;80;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Audi;80 quattro;1990;Regular Gasoline;;;19;0.0;Subcompact Cars
+Audi;90;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+Audi;90;1990;Regular Gasoline;;;20;0.0;Subcompact Cars
+Audi;90 quattro 20v;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;M3;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i Convertible;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i Convertible;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+Nissan;Pulsar NX;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;Pulsar NX;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Nissan;Pulsar NX;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Nissan;Pulsar NX;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Nissan;Sentra;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Nissan;Sentra;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Nissan;Sentra;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;Sentra Coupe;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Nissan;Sentra Coupe;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1990;Premium Gasoline;;;19;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+Ford;Festiva;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Ford;Festiva;1990;Regular Gasoline;;;33;0.0;Subcompact Cars
+Ford;Mustang;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Ford;Mustang;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Ford;Mustang;1990;Regular Gasoline;;;18;0.0;Subcompact Cars
+Ford;Mustang;1990;Regular Gasoline;;;17;0.0;Subcompact Cars
+Honda;Civic;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Civic;1990;Regular Gasoline;;;30;0.0;Subcompact Cars
+Honda;Civic;1990;Regular Gasoline;;;29;0.0;Subcompact Cars
+Honda;Civic;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Honda;Civic;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Ford;LTD Wagon;1985;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Honda;Prelude;1990;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Honda;Prelude;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1990;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Hyundai;Excel;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Hyundai;Excel;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mitsubishi;Precis;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Precis;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Mitsubishi;Precis;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1990;Premium Gasoline;;;14;0.0;Subcompact Cars
+Maserati;430;1990;Premium Gasoline;;;14;0.0;Subcompact Cars
+Maserati;430;1990;Premium Gasoline;;;15;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mercedes-Benz;300TD;1985;Diesel;;Diesel;19;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;190E 2.6;1990;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;300CE;1990;Premium Gasoline;;;17;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1990;Premium Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Mirage;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mitsubishi;Mirage;1990;Regular Gasoline;;;29;0.0;Subcompact Cars
+Mercedes-Benz;300TD;1985;Diesel;;Diesel;21;0.0;Midsize-Large Station Wagons
+Mitsubishi;Mirage;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Mitsubishi;Mirage;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Mirage;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;Justy;1990;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1990;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1990;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy 4WD;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Subaru;Justy 4WD;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;XT;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;XT;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Subaru;XT;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Subaru;XT 4WD;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;XT 4WD;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;XT 4WD;1990;Regular Gasoline;;;19;0.0;Subcompact Cars
+Subaru;XT 4WD;1990;Regular Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Celica;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Celica;1990;Premium Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Celica;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Celica;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Corolla;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+Toyota;Corolla;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Corolla;1990;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1990;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Corolla;1990;Premium Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Supra;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1990;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1990;Premium Gasoline;;;17;0.0;Subcompact Cars
+Toyota;Tercel;1990;Regular Gasoline;;;27;0.0;Subcompact Cars
+Toyota;Tercel;1990;Regular Gasoline;;;29;0.0;Subcompact Cars
+Toyota;Tercel;1990;Regular Gasoline;;;28;0.0;Subcompact Cars
+Toyota;Tercel;1990;Regular Gasoline;;;25;0.0;Subcompact Cars
+Volkswagen;Corrado;1990;Regular Gasoline;;;21;0.0;Subcompact Cars
+Volkswagen;Fox;1990;Regular Gasoline;;;24;0.0;Subcompact Cars
+Volkswagen;Fox;1990;Regular Gasoline;;;23;0.0;Subcompact Cars
+BMW;525i;1990;Regular Gasoline;;;18;0.0;Compact Cars
+BMW;525i;1990;Regular Gasoline;;;18;0.0;Compact Cars
+BMW;535i;1990;Regular Gasoline;;;16;0.0;Compact Cars
+BMW;535i;1990;Regular Gasoline;;;16;0.0;Compact Cars
+Nissan;Stanza;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Nissan;Stanza;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;Escort;1990;Regular Gasoline;;;26;0.0;Compact Cars
+Ford;Escort;1990;Regular Gasoline;;;32;0.0;Compact Cars
+Ford;Escort;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Escort;1990;Regular Gasoline;;;27;0.0;Compact Cars
+Ford;Probe;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1990;Premium Gasoline;;;19;0.0;Compact Cars
+Ford;Probe;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Probe;1990;Premium Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Tempo;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Tempo;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo AWD;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Honda;Accord;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1990;Regular Gasoline;;;23;0.0;Compact Cars
+Jaguar;XJ6;1990;Premium Gasoline;;;17;0.0;Compact Cars
+Lexus;ES 250;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Lexus;ES 250;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;28;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;23;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;27;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;323/323 Protege;1990;Regular Gasoline;;;23;0.0;Compact Cars
+Mercedes-Benz;300D 2.5 Turbo;1990;Diesel;;Diesel;26;0.0;Compact Cars
+Mercedes-Benz;300E;1990;Premium Gasoline;;;18;0.0;Compact Cars
+Mercedes-Benz;300E 2.6;1990;Premium Gasoline;;;18;0.0;Compact Cars
+Mercedes-Benz;300E 4Matic;1990;Premium Gasoline;;;17;0.0;Compact Cars
+Mercedes-Benz;300SE;1990;Premium Gasoline;;;16;0.0;Compact Cars
+Mercedes-Benz;560SEC;1990;Premium Gasoline;;;14;0.0;Compact Cars
+Mitsubishi;Galant;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Mitsubishi;Galant;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Mitsubishi;Galant;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Mitsubishi;Sigma;1990;Regular Gasoline;;;18;0.0;Compact Cars
+Subaru;Legacy;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Subaru;Legacy;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Legacy 4WD;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Legacy 4WD;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Loyale;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Loyale;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Loyale;1990;Regular Gasoline;;;25;0.0;Compact Cars
+Toyota;Cressida Wagon;1985;Premium Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Subaru;Loyale 4WD Turbo;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;24;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;26;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Camry;1990;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Cressida;1990;Premium Gasoline;;;19;0.0;Compact Cars
+Volkswagen;Golf/GTI;1990;Regular Gasoline;;;23;0.0;Compact Cars
+Volvo;240 DL/GL/turbo Wagon;1985;Regular Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Volkswagen;Golf/GTI;1990;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;GTI 16v;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Volkswagen;Jetta;1990;Diesel;;Diesel;34;0.0;Compact Cars
+Volkswagen;Jetta;1990;Regular Gasoline;;;23;0.0;Compact Cars
+Volkswagen;Jetta;1990;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;Jetta GLI 16v;1990;Regular Gasoline;;;22;0.0;Compact Cars
+Volvo;240;1990;Regular Gasoline;;;20;0.0;Compact Cars
+Volvo;240;1990;Regular Gasoline;;;21;0.0;Compact Cars
+Volvo;780;1990;Regular Gasoline;;;18;0.0;Compact Cars
+Volvo;780;1990;Regular Gasoline;;;17;0.0;Compact Cars
+Volvo;240 DL/GL/turbo Wagon;1985;Regular Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Audi;V8;1990;Regular Gasoline;;;14;0.0;Midsize Cars
+Audi;V8;1990;Regular Gasoline;;;15;0.0;Midsize Cars
+Audi;100;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;100;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;100 quattro;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200 quattro;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+BMW;735i;1990;Regular Gasoline;;;16;0.0;Midsize Cars
+Volvo;240 DL/GL/turbo Wagon;1985;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+BMW;735i;1990;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735il;1990;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;750il;1990;Regular Gasoline;;;13;0.0;Midsize Cars
+Volvo;240 DL/GL/turbo Wagon;1985;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Nissan;Maxima;1990;Premium Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima;1990;Premium Gasoline;;;20;0.0;Midsize Cars
+Ford;Taurus;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Taurus;1990;Regular Gasoline;;;21;0.0;Midsize Cars
+Ford;Taurus SHO;1990;Premium Gasoline;;;19;0.0;Midsize Cars
+Ford;Taurus;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1990;Premium Gasoline;;;18;0.0;Midsize Cars
+Ford;Thunderbird;1990;Premium Gasoline;;;18;0.0;Midsize Cars
+Hyundai;Sonata;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Hyundai;Sonata;1990;Regular Gasoline;;;21;0.0;Midsize Cars
+Hyundai;Sonata;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Lexus;LS 400;1990;Premium Gasoline;;;18;0.0;Midsize Cars
+Maserati;228;1990;Premium Gasoline;;;14;0.0;Midsize Cars
+Maserati;228;1990;Premium Gasoline;;;14;0.0;Midsize Cars
+Mazda;626/MX-6;1990;Regular Gasoline;;;22;0.0;Midsize Cars
+Mazda;626/MX-6;1990;Premium Gasoline;;;19;0.0;Midsize Cars
+Mazda;626/MX-6;1990;Regular Gasoline;;;24;0.0;Midsize Cars
+Mazda;626/MX-6;1990;Premium Gasoline;;;21;0.0;Midsize Cars
+Mazda;929;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Mazda;929;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Mercedes-Benz;300SEL;1990;Premium Gasoline;;;16;0.0;Midsize Cars
+Mercedes-Benz;350SDL Turbo;1990;Diesel;;Diesel;21;0.0;Midsize Cars
+Mercedes-Benz;420SEL;1990;Premium Gasoline;;;15;0.0;Midsize Cars
+Ford;LTD Crown Victoria Wagon;1985;Regular Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;560SEL;1990;Premium Gasoline;;;13;0.0;Midsize Cars
+Volkswagen;Passat;1990;Regular Gasoline;;;21;0.0;Midsize Cars
+Volkswagen;Passat;1990;Regular Gasoline;;;21;0.0;Midsize Cars
+Volvo;740;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1990;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1990;Regular Gasoline;;;21;0.0;Midsize Cars
+Volvo;740 16-Valve;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740 16-Valve;1990;Regular Gasoline;;;19;0.0;Midsize Cars
+Volvo;760;1990;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;760;1990;Regular Gasoline;;;17;0.0;Midsize Cars
+Ford;LTD Crown Victoria;1990;Regular Gasoline;;;18;0.0;Large Cars
+Ford;LTD Crown Victoria;1990;Regular Gasoline;;;14;0.0;Large Cars
+Nissan;Sentra Wagon;1990;Regular Gasoline;;;25;0.0;Small Station Wagons
+Nissan;Sentra Wagon;1990;Regular Gasoline;;;27;0.0;Small Station Wagons
+Ford;Escort Wagon;1990;Regular Gasoline;;;25;0.0;Small Station Wagons
+Ford;Escort Wagon;1990;Regular Gasoline;;;27;0.0;Small Station Wagons
+Honda;Civic Wagon;1990;Regular Gasoline;;;26;0.0;Small Station Wagons
+Honda;Civic Wagon;1990;Regular Gasoline;;;29;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1990;Regular Gasoline;;;22;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1990;Regular Gasoline;;;22;0.0;Small Station Wagons
+Mitsubishi;Mirage Wagon;1990;Regular Gasoline;;;25;0.0;Small Station Wagons
+Mitsubishi;Mirage Wagon;1990;Regular Gasoline;;;27;0.0;Small Station Wagons
+Mitsubishi;Space Wagon;1990;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1990;Regular Gasoline;;;21;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1990;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Legacy Wagon 4WD;1990;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon 4WD;1990;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1990;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1990;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1990;Regular Gasoline;;;24;0.0;Small Station Wagons
+Subaru;Loyale Wagon 4WD Turbo;1990;Regular Gasoline;;;20;0.0;Small Station Wagons
+Toyota;Camry Wagon;1990;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Camry Wagon;1990;Regular Gasoline;;;19;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1990;Regular Gasoline;;;23;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1990;Regular Gasoline;;;22;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1990;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1990;Regular Gasoline;;;26;0.0;Small Station Wagons
+Volkswagen;Fox Wagon;1990;Regular Gasoline;;;24;0.0;Small Station Wagons
+Audi;200 quattro Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1990;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon V6 A/C;1990;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE;1990;Premium Gasoline;;;16;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE 4Matic;1990;Premium Gasoline;;;16;0.0;Midsize-Large Station Wagons
+Volkswagen;Passat Wagon;1990;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volkswagen;Passat Wagon;1990;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1990;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1990;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1990;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1990;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1990;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;740 16-Valve Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;740 16-Valve Wagon;1990;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volvo;760 Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;LTD Crown Victoria Wagon;1990;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Nissan;Hardbody 2WD;1990;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Nissan;Hardbody 2WD;1990;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Nissan;Hardbody 2WD;1990;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Hardbody 2WD;1990;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1990;Regular Gasoline;;;23;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1990;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1990;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Nissan;300ZX;1985;Regular Gasoline;;;17;0.0;Two Seaters
+Nissan;Truck 2WD;1985;Regular Gasoline;;;25;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1990;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1990;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1990;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1990;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1990;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1985;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1990;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1985;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1985;Diesel;;Diesel;27;0.0;Small Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;22;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1985;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;23;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1985;Diesel;;Diesel;27;0.0;Small Pickup Trucks
+Toyota;1-Ton Truck 2WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1985;Regular Gasoline;;;25;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1985;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Hardbody 4WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Nissan;Hardbody 4WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Nissan;Hardbody 4WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1990;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1990;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1990;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1990;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1990;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;Aerostar Van;1990;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Van;1990;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Van;1990;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Van AWD;1990;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Econoline 2WD;1990;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Econoline 2WD;1990;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Econoline 2WD;1990;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Econoline 2WD;1990;Regular Gasoline;;;12;0.0;Vans
+Ford;E250 Econoline 2WD;1990;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1990;Regular Gasoline;;;14;0.0;Vans
+Ford;E250 Econoline 2WD;1990;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1990;Regular Gasoline;;;11;0.0;Vans
+Mitsubishi;Van;1990;Regular Gasoline;;;19;0.0;Vans
+Nissan;Van (passenger);1990;Regular Gasoline;;;16;0.0;Vans
+Nissan;Van (passenger);1990;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Wagon;1990;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1990;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1990;Regular Gasoline;;;16;0.0;Vans
+Ford;Aerostar Wagon AWD;1990;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Club Wagon;1990;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Club Wagon;1990;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1990;Regular Gasoline;;;12;0.0;Vans
+Mitsubishi;Wagon;1990;Regular Gasoline;;;17;0.0;Vans
+Volkswagen;Vanagon Syncro 4WD;1990;Regular Gasoline;;;14;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1990;Regular Gasoline;;;15;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1990;Regular Gasoline;;;17;0.0;Vans
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Nissan;Axxess;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Nissan;Axxess;1990;Regular Gasoline;;;21;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 2WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 2WD;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicle 2WD
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Jeep;Cherokee 2WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1990;Regular Gasoline;;;20;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Ford;Bronco II 2WD;1990;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Ford;Bronco II 2WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1990;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Mazda;MPV;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Mitsubishi;Truck 2WD;1985;Diesel;;Diesel;28;0.0;Small Pickup Trucks
+Toyota;4Runner 2WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Toyota;4Runner 2WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Nissan;Axxess AWD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Nissan;Axxess AWD;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Jeep;Cherokee 4WD;1990;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Grand Wagoneer 4WD;1990;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Jeep;Wagoneer 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1990;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1990;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Ford;Bronco II 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Ford;Bronco II 4WD;1990;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Mitsubishi;Truck 2WD;1985;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Bronco 4WD;1990;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1990;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Toyota;Truck 2WD;1985;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Truck 2WD;1985;Regular Gasoline;;;26;0.0;Small Pickup Trucks
+Land Rover;Range Rover;1990;Premium Gasoline;;;13;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Toyota;Truck 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Subaru;Loyale Wagon 4WD;1990;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale Wagon 4WD;1990;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Subaru;Loyale 4WD;1990;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale 4WD;1990;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Toyota;Truck 2WD;1985;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Toyota;Land Cruiser Wagon 4WD;1990;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1990;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1990;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1990;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;Truck 2WD;1985;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Cab/Chassis 2WD;1990;Regular Gasoline;;;10;0.0;Special Purpose Vehicle 2WD
+Toyota;Cab/Chassis 2WD;1990;Regular Gasoline;;;11;0.0;Special Purpose Vehicle 2WD
+Alfa Romeo;Spider;1991;Premium Gasoline;;;21;0.0;Two Seaters
+Alfa Romeo;Spider;1991;Premium Gasoline;;;22;0.0;Two Seaters
+Toyota;Truck 2WD;1985;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Nissan;300ZX;1991;Premium Gasoline;;;19;0.0;Two Seaters
+Nissan;300ZX;1991;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1991;Premium Gasoline;;;18;0.0;Two Seaters
+Toyota;Truck 2WD;1985;Diesel;;Diesel;30;0.0;Small Pickup Trucks
+Nissan;300ZX;1991;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;Carrera 4;1991;Premium Gasoline;;;14;0.0;Two Seaters
+Mercedes-Benz;500SL;1991;Regular Gasoline;;;13;0.0;Two Seaters
+Toyota;Truck 2WD;1985;Diesel;;Diesel;28;0.0;Small Pickup Trucks
+Honda;Civic CRX;1991;Regular Gasoline;;;27;0.0;Two Seaters
+Honda;Civic CRX;1991;Regular Gasoline;;;29;0.0;Two Seaters
+Honda;Civic CRX;1991;Regular Gasoline;;;27;0.0;Two Seaters
+Honda;Civic CRX HF;1991;Regular Gasoline;;;43;0.0;Two Seaters
+Honda;Civic CRX HF;1991;Regular Gasoline;;;39;0.0;Two Seaters
+Mercedes-Benz;300SL;1991;Regular Gasoline;;;15;0.0;Two Seaters
+Jaguar;XJS Convertible;1991;Premium Gasoline;;;13;0.0;Two Seaters
+Porsche;Carrera;1991;Regular Gasoline;;;16;0.0;Two Seaters
+Maserati;Spyder;1991;Premium Gasoline;;;15;0.0;Two Seaters
+Maserati;Spyder;1991;Premium Gasoline;;;14;0.0;Two Seaters
+Mazda;RX-7;1991;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;RX-7;1991;Regular Gasoline;;;18;0.0;Two Seaters
+Mazda;RX-7;1991;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;MX-5 Miata;1991;Regular Gasoline;;;23;0.0;Two Seaters
+Mazda;MX-5 Miata;1991;Regular Gasoline;;;24;0.0;Two Seaters
+Mercedes-Benz;300SL;1991;Premium Gasoline;;;17;0.0;Two Seaters
+Mercedes-Benz;300SL;1991;Premium Gasoline;;;16;0.0;Two Seaters
+Mercedes-Benz;500SL;1991;Premium Gasoline;;;14;0.0;Two Seaters
+Toyota;MR2;1991;Premium Gasoline;;;20;0.0;Two Seaters
+Toyota;MR2;1991;Regular Gasoline;;;22;0.0;Two Seaters
+Toyota;MR2;1991;Regular Gasoline;;;22;0.0;Two Seaters
+Nissan;NX Coupe;1991;Regular Gasoline;;;27;0.0;Minicompact Cars
+Nissan;NX Coupe;1991;Regular Gasoline;;;28;0.0;Minicompact Cars
+Nissan;NX Coupe;1991;Regular Gasoline;;;22;0.0;Minicompact Cars
+Nissan;NX Coupe;1991;Regular Gasoline;;;23;0.0;Minicompact Cars
+Nissan;240SX;1991;Premium Gasoline;;;21;0.0;Minicompact Cars
+Nissan;240SX;1991;Premium Gasoline;;;22;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1991;Premium Gasoline;;;17;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1991;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1991;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;911 Turbo;1991;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;928 S4;1991;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 S4;1991;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;944 S2;1991;Premium Gasoline;;;18;0.0;Minicompact Cars
+Toyota;Celica Convertible;1991;Regular Gasoline;;;23;0.0;Minicompact Cars
+Toyota;Celica Convertible;1991;Regular Gasoline;;;22;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1991;Regular Gasoline;;;23;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1991;Regular Gasoline;;;25;0.0;Minicompact Cars
+Audi;Coupe quattro;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+Audi;80 quattro;1991;Regular Gasoline;;;19;0.0;Subcompact Cars
+Audi;80/90;1991;Regular Gasoline;;;19;0.0;Subcompact Cars
+Audi;80/90;1991;Regular Gasoline;;;20;0.0;Subcompact Cars
+Audi;90 quattro 20v;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;M3;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+BMW;318is;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+Ford;Ranger Pickup 4WD;1985;Regular Gasoline;;;23;0.0;Small Pickup Trucks
+BMW;318is;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+BMW;318is Convertible;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+BMW;325i Convertible;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i Convertible;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325ix;1991;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;850i;1991;Regular Gasoline;;;13;0.0;Subcompact Cars
+BMW;850i;1991;Regular Gasoline;;;13;0.0;Subcompact Cars
+Ford;Ranger Pickup 4WD;1985;Diesel;;Diesel;25;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1985;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1985;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Sentra;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;29;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;Sentra;1991;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Jeep;Scrambler;1985;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Festiva;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Ford;Festiva;1991;Regular Gasoline;;;33;0.0;Subcompact Cars
+Jeep;Scrambler;1985;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Mustang;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Ford;Mustang;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Ford;Mustang;1991;Regular Gasoline;;;19;0.0;Subcompact Cars
+Ford;Mustang;1991;Regular Gasoline;;;17;0.0;Subcompact Cars
+Jeep;Scrambler;1985;Regular Gasoline;;;15;0.0;Small Pickup Trucks
+Honda;Civic;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Civic;1991;Regular Gasoline;;;30;0.0;Subcompact Cars
+Honda;Civic;1991;Regular Gasoline;;;29;0.0;Subcompact Cars
+Jeep;Scrambler;1985;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Honda;Civic;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Honda;Civic;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;20;0.0;Subcompact Cars
+Honda;Prelude;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Hyundai;Excel;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Jeep;Scrambler;1985;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Hyundai;Excel;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1991;Regular Gasoline;;;27;0.0;Subcompact Cars
+Hyundai;Excel;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Hyundai;Scoupe;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Hyundai;Scoupe;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1991;Premium Gasoline;;;14;0.0;Subcompact Cars
+Mitsubishi;Truck 4WD;1985;Diesel;;Diesel;26;0.0;Small Pickup Trucks
+BMW;318i;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+BMW;318is;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mercedes-Benz;190E;1991;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;230TE;1991;Premium Gasoline;;;20;0.0;Subcompact Cars
+Maserati;430;1991;Premium Gasoline;;;14;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1991;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;300CE;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Truck 4WD;1985;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Mitsubishi;Eclipse;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Regular Gasoline;;;24;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1991;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mitsubishi;Truck 4WD;1985;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Mitsubishi;Mirage;1991;Regular Gasoline;;;29;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Mirage;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Subaru;Justy;1991;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1991;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1991;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy 4WD;1991;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;Justy 4WD;1991;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;XT;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;XT;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Subaru;XT;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Subaru;XT 4WD;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Subaru;XT 4WD;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Subaru;XT 4WD;1991;Regular Gasoline;;;19;0.0;Subcompact Cars
+Subaru;XT 4WD;1991;Regular Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Celica;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Celica;1991;Premium Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Celica;1991;Regular Gasoline;;;23;0.0;Subcompact Cars
+Toyota;Celica;1991;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1991;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Corolla;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Corolla;1991;Premium Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Corolla;1991;Regular Gasoline;;;26;0.0;Subcompact Cars
+Toyota;Supra;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1991;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Tercel;1991;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Tercel;1991;Regular Gasoline;;;31;0.0;Subcompact Cars
+Toyota;Tercel;1991;Regular Gasoline;;;28;0.0;Subcompact Cars
+Volkswagen;Corrado;1991;Regular Gasoline;;;20;0.0;Subcompact Cars
+Volkswagen;Corrado;1991;Regular Gasoline;;;21;0.0;Subcompact Cars
+Volkswagen;Fox;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Volkswagen;Fox;1991;Regular Gasoline;;;25;0.0;Subcompact Cars
+Alfa Romeo;164;1991;Premium Gasoline;;;18;0.0;Compact Cars
+Alfa Romeo;164;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Alfa Romeo;164;1991;Premium Gasoline;;;18;0.0;Compact Cars
+BMW;M5;1991;Premium Gasoline;;;13;0.0;Compact Cars
+BMW;525i;1991;Premium Gasoline;;;18;0.0;Compact Cars
+BMW;525i;1991;Premium Gasoline;;;18;0.0;Compact Cars
+BMW;535i;1991;Regular Gasoline;;;16;0.0;Compact Cars
+BMW;535i;1991;Regular Gasoline;;;16;0.0;Compact Cars
+Nissan;Stanza;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Nissan;Stanza;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;Escort;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Ford;Escort;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Escort;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Escort;1991;Regular Gasoline;;;28;0.0;Compact Cars
+Ford;Escort FS;1991;Regular Gasoline;;;30;0.0;Compact Cars
+Ford;Probe;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Ford;Probe;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1991;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Probe;1991;Premium Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Probe;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Tempo;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Ford;Tempo;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo AWD;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Honda;Accord;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Mitsubishi;Precis;1991;Regular Gasoline;;;26;0.0;Compact Cars
+Mitsubishi;Precis;1991;Regular Gasoline;;;27;0.0;Compact Cars
+Mitsubishi;Precis;1991;Regular Gasoline;;;28;0.0;Compact Cars
+BMW;325i;1991;Premium Gasoline;;;15;0.0;Compact Cars
+BMW;325ic;1991;Premium Gasoline;;;15;0.0;Compact Cars
+BMW;325is;1991;Premium Gasoline;;;15;0.0;Compact Cars
+Jaguar;XJ6;1991;Premium Gasoline;;;17;0.0;Compact Cars
+Mercedes-Benz;190E;1991;Regular Gasoline;;;17;0.0;Compact Cars
+Lexus;ES 250;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Lexus;ES 250;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Mercedes-Benz;200E;1991;Premium Gasoline;;;20;0.0;Compact Cars
+Mercedes-Benz;230E;1991;Premium Gasoline;;;20;0.0;Compact Cars
+Mazda;323 Protege 4x4;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Mazda;323 Protege 4x4;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;28;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;27;0.0;Compact Cars
+Mazda;323/323 Protege;1991;Regular Gasoline;;;24;0.0;Compact Cars
+Mercedes-Benz;300D 2.5 Turbo;1991;Diesel;;Diesel;26;0.0;Compact Cars
+Mercedes-Benz;300E;1991;Premium Gasoline;;;18;0.0;Compact Cars
+Mercedes-Benz;300E 2.6;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Mercedes-Benz;300E 4Matic;1991;Premium Gasoline;;;17;0.0;Compact Cars
+Mercedes-Benz;300SE;1991;Premium Gasoline;;;16;0.0;Compact Cars
+Mercedes-Benz;350SD Turbo;1991;Diesel;;Diesel;21;0.0;Compact Cars
+Mercedes-Benz;560SEC;1991;Premium Gasoline;;;14;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;20;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Mitsubishi;Galant;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Subaru;Legacy;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Subaru;Legacy;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Legacy Turbo;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Subaru;Legacy 4WD;1991;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Legacy 4WD;1991;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Legacy 4WD Turbo;1991;Premium Gasoline;;;18;0.0;Compact Cars
+Subaru;Legacy 4WD Turbo;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Subaru;Loyale;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Loyale;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;24;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;20;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;24;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;26;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Camry;1991;Regular Gasoline;;;19;0.0;Compact Cars
+Toyota;Cressida;1991;Premium Gasoline;;;19;0.0;Compact Cars
+Volkswagen;Golf/GTI;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Volkswagen;Golf/GTI;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;GTI 16v;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Volkswagen;Jetta;1991;Diesel;;Diesel;34;0.0;Compact Cars
+Volkswagen;Jetta;1991;Diesel;;Diesel;33;0.0;Compact Cars
+Volkswagen;Jetta;1991;Regular Gasoline;;;23;0.0;Compact Cars
+Volkswagen;Jetta;1991;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;Jetta GLI 16v;1991;Regular Gasoline;;;22;0.0;Compact Cars
+Volvo;Coupe;1991;Regular Gasoline;;;18;0.0;Compact Cars
+Volvo;240;1991;Regular Gasoline;;;20;0.0;Compact Cars
+Volvo;240;1991;Regular Gasoline;;;21;0.0;Compact Cars
+Audi;V8;1991;Regular Gasoline;;;15;0.0;Midsize Cars
+Audi;V8;1991;Regular Gasoline;;;15;0.0;Midsize Cars
+Audi;100;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;100 quattro;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Audi;200 quattro 20v;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+BMW;735i;1991;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735i;1991;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735il;1991;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;750il;1991;Regular Gasoline;;;13;0.0;Midsize Cars
+Nissan;Maxima;1991;Premium Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima;1991;Premium Gasoline;;;20;0.0;Midsize Cars
+Ford;Taurus;1991;Regular Gasoline;;;21;0.0;Midsize Cars
+Ford;Taurus SHO;1991;Premium Gasoline;;;19;0.0;Midsize Cars
+Ford;Taurus;1991;Regular Gasoline;;;19;0.0;Midsize Cars
+Ford;Thunderbird;1991;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1991;Premium Gasoline;;;18;0.0;Midsize Cars
+Ford;Thunderbird;1991;Premium Gasoline;;;18;0.0;Midsize Cars
+Ford;Thunderbird;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Mercedes-Benz;300SEL;1991;Regular Gasoline;;;15;0.0;Midsize Cars
+BMW;735i Luxury;1991;Regular Gasoline;;;13;0.0;Midsize Cars
+Hyundai;Sonata;1991;Regular Gasoline;;;20;0.0;Midsize Cars
+Hyundai;Sonata;1991;Regular Gasoline;;;21;0.0;Midsize Cars
+Hyundai;Sonata;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+BMW;525i;1991;Premium Gasoline;;;15;0.0;Midsize Cars
+BMW;735il;1991;Regular Gasoline;;;14;0.0;Midsize Cars
+Mercedes-Benz;260E;1991;Regular Gasoline;;;16;0.0;Midsize Cars
+Mercedes-Benz;300E;1991;Regular Gasoline;;;15;0.0;Midsize Cars
+Porsche;928 S4;1991;Regular Gasoline;;;15;0.0;Midsize Cars
+Mercedes-Benz;230E;1991;Regular Gasoline;;;17;0.0;Midsize Cars
+Mercedes-Benz;420 SE;1991;Premium Gasoline;;;13;0.0;Midsize Cars
+Lexus;LS 400;1991;Premium Gasoline;;;18;0.0;Midsize Cars
+Mazda;626/MX-6;1991;Premium Gasoline;;;19;0.0;Midsize Cars
+Mazda;626/MX-6;1991;Regular Gasoline;;;22;0.0;Midsize Cars
+Mazda;626/MX-6;1991;Premium Gasoline;;;21;0.0;Midsize Cars
+Mazda;626/MX-6;1991;Regular Gasoline;;;24;0.0;Midsize Cars
+Mazda;929;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Mazda;929;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Mercedes-Benz;300SEL;1991;Premium Gasoline;;;16;0.0;Midsize Cars
+Mercedes-Benz;350SDL Turbo;1991;Diesel;;Diesel;21;0.0;Midsize Cars
+Mercedes-Benz;420SEL;1991;Premium Gasoline;;;15;0.0;Midsize Cars
+Mercedes-Benz;560SEL;1991;Premium Gasoline;;;14;0.0;Midsize Cars
+Nissan;300ZX;1985;Regular Gasoline;;;19;0.0;Two Seaters
+Volkswagen;Passat;1991;Regular Gasoline;;;21;0.0;Midsize Cars
+Volkswagen;Passat;1991;Regular Gasoline;;;21;0.0;Midsize Cars
+Volvo;740;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740;1991;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1991;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;740;1991;Regular Gasoline;;;22;0.0;Midsize Cars
+Volvo;940 GLE 16-Valve;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;940 SE;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;940 Turbo;1991;Regular Gasoline;;;18;0.0;Midsize Cars
+Ford;LTD Crown Victoria;1991;Regular Gasoline;;;18;0.0;Large Cars
+Ford;LTD Crown Victoria;1991;Regular Gasoline;;;14;0.0;Large Cars
+Mercedes-Benz;300SEL;1991;Regular Gasoline;;;15;0.0;Large Cars
+Mercedes-Benz;300SEL;1991;Premium Gasoline;;;15;0.0;Large Cars
+BMW;750i;1991;Premium Gasoline;;;12;0.0;Large Cars
+BMW;750il;1991;Premium Gasoline;;;12;0.0;Large Cars
+Ford;Escort Wagon;1991;Regular Gasoline;;;25;0.0;Small Station Wagons
+Ford;Escort Wagon;1991;Regular Gasoline;;;28;0.0;Small Station Wagons
+Honda;Accord Wagon;1991;Regular Gasoline;;;20;0.0;Small Station Wagons
+Honda;Accord Wagon;1991;Regular Gasoline;;;22;0.0;Small Station Wagons
+Honda;Civic Wagon;1991;Regular Gasoline;;;26;0.0;Small Station Wagons
+Honda;Civic Wagon;1991;Regular Gasoline;;;29;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1991;Regular Gasoline;;;23;0.0;Small Station Wagons
+Honda;Civic Wagon 4WD;1991;Regular Gasoline;;;22;0.0;Small Station Wagons
+Mitsubishi;Space Wagon;1991;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1991;Regular Gasoline;;;21;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1991;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Legacy Wagon 4WD;1991;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon 4WD;1991;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1991;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1991;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Camry Wagon;1991;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Camry Wagon;1991;Regular Gasoline;;;19;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1991;Regular Gasoline;;;23;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1991;Regular Gasoline;;;21;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1991;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1991;Regular Gasoline;;;26;0.0;Small Station Wagons
+Audi;200 quattro 20v Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1991;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;230CE;1991;Premium Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE;1991;Premium Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE 4Matic;1991;Premium Gasoline;;;16;0.0;Midsize-Large Station Wagons
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Volkswagen;Passat Wagon;1991;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volkswagen;Passat Wagon;1991;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1991;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1991;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1991;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1991;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1991;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Volvo;940 GLE 16-Valve Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;940 SE Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;940 Turbo Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;LTD Crown Victoria Wagon;1991;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Nissan;Truck 2WD;1991;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1991;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1991;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1991;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;23;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1991;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 2WD;1991;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1991;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1991;Regular Gasoline;;;21;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1991;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1991;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1991;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 4WD;1991;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1985;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1991;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1991;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;22;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1991;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1991;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1991;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1991;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1991;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1991;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1991;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1991;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1991;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1991;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1991;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1991;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;Aerostar Van;1991;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Van;1991;Regular Gasoline;;;19;0.0;Vans
+Ford;Aerostar Van;1991;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Van AWD;1991;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Econoline 2WD;1991;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1991;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Econoline 2WD;1991;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Econoline 2WD;1991;Regular Gasoline;;;12;0.0;Vans
+Ford;E250 Econoline 2WD;1991;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1991;Regular Gasoline;;;14;0.0;Vans
+Ford;E250 Econoline 2WD;1991;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1991;Regular Gasoline;;;11;0.0;Vans
+Ford;Aerostar Wagon;1991;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1991;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Wagon;1991;Regular Gasoline;;;16;0.0;Vans
+Ford;Aerostar Wagon AWD;1991;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Club Wagon;1991;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Club Wagon;1991;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1991;Regular Gasoline;;;11;0.0;Vans
+Toyota;Previa;1991;Regular Gasoline;;;18;0.0;Vans
+Toyota;Previa;1991;Regular Gasoline;;;18;0.0;Vans
+Toyota;Previa All-Trac;1991;Regular Gasoline;;;17;0.0;Vans
+Toyota;Previa All-Trac;1991;Regular Gasoline;;;17;0.0;Vans
+Volkswagen;Vanagon Syncro 4WD;1991;Regular Gasoline;;;14;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1991;Regular Gasoline;;;15;0.0;Vans
+Volkswagen;Vanagon/Camper 2WD;1991;Regular Gasoline;;;17;0.0;Vans
+Nissan;Axxess;1991;Regular Gasoline;;;19;0.0;Special Purpose Vehicle 2WD
+Nissan;Axxess;1991;Regular Gasoline;;;21;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 2WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Nissan;Pathfinder 2WD;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Jeep;Cherokee 2WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicle 2WD
+Ford;Explorer 2WD;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicle 2WD
+Ford;Explorer 2WD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicle 2WD
+Mazda;MPV;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Mazda;MPV;1991;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Mazda;MPV;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Toyota;4Runner 2WD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Toyota;4Runner 2WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Toyota;1-Ton Truck 2WD;1985;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Nissan;Axxess AWD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Nissan;Axxess AWD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;1-Ton Truck 2WD;1985;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Jeep;Cherokee 4WD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Grand Wagoneer 4WD;1991;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1991;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1991;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1991;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1991;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1991;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1991;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Explorer 4WD;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Ford;Explorer 4WD;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Land Rover;Range Rover;1991;Premium Gasoline;;;13;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;Navajo;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;Navajo;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;Navajo;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;Navajo;1991;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Subaru;Loyale Wagon 4WD;1991;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale Wagon 4WD;1991;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Subaru;Loyale 4WD;1991;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale 4WD;1991;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Toyota;Land Cruiser Wagon 4WD;1991;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1991;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1991;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1991;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1991;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Toyota;Cab/Chassis 2WD;1991;Regular Gasoline;;;10;0.0;Special Purpose Vehicles
+Toyota;Cab/Chassis 2WD;1991;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Alfa Romeo;Spider;1992;Premium Gasoline;;;21;0.0;Two Seaters
+Alfa Romeo;Spider;1992;Premium Gasoline;;;22;0.0;Two Seaters
+Nissan;300ZX;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Jaguar;XJS Convertible;1992;Premium Gasoline;;;13;0.0;Two Seaters
+Mazda;MX-5 Miata;1992;Regular Gasoline;;;23;0.0;Two Seaters
+Mazda;MX-5 Miata;1992;Regular Gasoline;;;24;0.0;Two Seaters
+Mazda;RX-7;1992;Regular Gasoline;;;17;0.0;Two Seaters
+Mazda;RX-7;1992;Regular Gasoline;;;18;0.0;Two Seaters
+Mercedes-Benz;300SL;1992;Premium Gasoline;;;17;0.0;Two Seaters
+Mercedes-Benz;300SL;1992;Premium Gasoline;;;17;0.0;Two Seaters
+Mercedes-Benz;500SL;1992;Premium Gasoline;;;14;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;16;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;17;0.0;Two Seaters
+Porsche;968;1992;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;968;1992;Premium Gasoline;;;17;0.0;Two Seaters
+Toyota;MR2;1992;Premium Gasoline;;;20;0.0;Two Seaters
+Toyota;MR2;1992;Regular Gasoline;;;22;0.0;Two Seaters
+Toyota;MR2;1992;Regular Gasoline;;;22;0.0;Two Seaters
+Nissan;NX;1992;Regular Gasoline;;;27;0.0;Minicompact Cars
+Nissan;NX;1992;Regular Gasoline;;;28;0.0;Minicompact Cars
+Nissan;NX;1992;Regular Gasoline;;;22;0.0;Minicompact Cars
+Nissan;NX;1992;Regular Gasoline;;;23;0.0;Minicompact Cars
+Nissan;240SX;1992;Premium Gasoline;;;20;0.0;Minicompact Cars
+Nissan;Pulsar/Pulsar-NX;1985;Regular Gasoline;;;25;0.0;Subcompact Cars
+Nissan;240SX;1992;Premium Gasoline;;;21;0.0;Minicompact Cars
+Mercedes-Benz;500SL;1992;Premium Gasoline;;;11;0.0;Minicompact Cars
+Mercedes-Benz;560SL;1992;Premium Gasoline;;;11;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1992;Premium Gasoline;;;17;0.0;Minicompact Cars
+Porsche;911 Turbo;1992;Premium Gasoline;;;14;0.0;Minicompact Cars
+Porsche;968;1992;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;968;1992;Premium Gasoline;;;17;0.0;Minicompact Cars
+Toyota;Celica Convertible;1992;Regular Gasoline;;;21;0.0;Minicompact Cars
+Toyota;Celica Convertible;1992;Regular Gasoline;;;22;0.0;Minicompact Cars
+Toyota;Celica Convertible;1992;Regular Gasoline;;;22;0.0;Minicompact Cars
+Toyota;Paseo;1992;Regular Gasoline;;;25;0.0;Minicompact Cars
+Toyota;Paseo;1992;Regular Gasoline;;;27;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1992;Regular Gasoline;;;23;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1992;Regular Gasoline;;;25;0.0;Minicompact Cars
+Audi;80;1992;Regular Gasoline;;;19;0.0;Subcompact Cars
+Audi;80;1992;Regular Gasoline;;;20;0.0;Subcompact Cars
+Audi;80 quattro;1992;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;318i Convertible;1992;Premium Gasoline;;;20;0.0;Subcompact Cars
+BMW;325i Convertible;1992;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i Convertible;1992;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;850i;1992;Regular Gasoline;;;13;0.0;Subcompact Cars
+BMW;850i;1992;Regular Gasoline;;;13;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;29;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;Sentra;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Nissan;Truck 4WD;1985;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Ford;Festiva;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Ford;Festiva;1992;Regular Gasoline;;;33;0.0;Subcompact Cars
+Ford;Mustang;1992;Regular Gasoline;;;21;0.0;Subcompact Cars
+Ford;Mustang;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Ford;Mustang;1992;Regular Gasoline;;;19;0.0;Subcompact Cars
+Ford;Mustang;1992;Regular Gasoline;;;17;0.0;Subcompact Cars
+Nissan;Pulsar/Pulsar-NX;1985;Regular Gasoline;;;29;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;29;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;38;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;37;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;32;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Civic;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Honda;Civic HB VX;1992;Regular Gasoline;;;43;0.0;Subcompact Cars
+Honda;Civic HB VX;1992;Regular Gasoline;;;40;0.0;Subcompact Cars
+Honda;Prelude;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Honda;Prelude;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Honda;Prelude;1992;Premium Gasoline;;;21;0.0;Subcompact Cars
+Honda;Prelude;1992;Premium Gasoline;;;21;0.0;Subcompact Cars
+Hyundai;Excel;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Hyundai;Excel;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1992;Regular Gasoline;;;27;0.0;Subcompact Cars
+Hyundai;Excel;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Hyundai;Scoupe;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Hyundai;Scoupe;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1992;Premium Gasoline;;;14;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mazda;MX-3;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mazda;MX-3;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mazda;MX-3;1992;Regular Gasoline;;;20;0.0;Subcompact Cars
+Mazda;MX-3;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1992;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1992;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1992;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1992;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;300CE;1992;Premium Gasoline;;;17;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1992;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;29;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Mirage;1992;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1992;Premium Gasoline;;;19;0.0;Subcompact Cars
+Subaru;Justy;1992;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1992;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1992;Regular Gasoline;;;30;0.0;Subcompact Cars
+Nissan;Sentra;1985;Regular Gasoline;;;25;0.0;Subcompact Cars
+Subaru;Justy AWD;1992;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;Justy AWD;1992;Regular Gasoline;;;26;0.0;Subcompact Cars
+Subaru;SVX;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Celica;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Celica;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Toyota;Celica;1992;Premium Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1992;Regular Gasoline;;;21;0.0;Subcompact Cars
+Toyota;Celica;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Celica;1992;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Corolla;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Corolla;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Corolla;1992;Regular Gasoline;;;27;0.0;Subcompact Cars
+Toyota;Supra;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Supra;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Toyota;Supra;1992;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Tercel;1992;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Tercel;1992;Regular Gasoline;;;30;0.0;Subcompact Cars
+Toyota;Tercel;1992;Regular Gasoline;;;28;0.0;Subcompact Cars
+Volkswagen;Corrado;1992;Regular Gasoline;;;20;0.0;Subcompact Cars
+Volkswagen;Corrado;1992;Regular Gasoline;;;21;0.0;Subcompact Cars
+Volkswagen;Corrado SLC;1992;Regular Gasoline;;;17;0.0;Subcompact Cars
+Volkswagen;Corrado SLC;1992;Regular Gasoline;;;19;0.0;Subcompact Cars
+Volkswagen;Fox;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Volkswagen;Fox;1992;Regular Gasoline;;;25;0.0;Subcompact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Alfa Romeo;164;1992;Premium Gasoline;;;18;0.0;Compact Cars
+Alfa Romeo;164;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Alfa Romeo;164;1992;Premium Gasoline;;;18;0.0;Compact Cars
+BMW;M5;1992;Premium Gasoline;;;14;0.0;Compact Cars
+BMW;535i;1992;Regular Gasoline;;;17;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+BMW;535i;1992;Regular Gasoline;;;16;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Nissan;Stanza;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Nissan;Stanza;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;Escort;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Ford;Escort;1992;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;Escort;1992;Regular Gasoline;;;26;0.0;Compact Cars
+Ford;Escort;1992;Regular Gasoline;;;29;0.0;Compact Cars
+Ford;Escort FS;1992;Regular Gasoline;;;30;0.0;Compact Cars
+Ford;Probe;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Ford;Probe;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Probe;1992;Premium Gasoline;;;21;0.0;Compact Cars
+Ford;Probe;1992;Regular Gasoline;;;18;0.0;Compact Cars
+Ford;Probe;1992;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Tempo;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Ford;Tempo;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Tempo;1992;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Tempo;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo FS;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Honda;Accord;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Honda;Accord;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Hyundai;J-Car/Elantra;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Hyundai;J-Car/Elantra;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Ford;F150 Pickup 4WD;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Mitsubishi;Precis;1992;Regular Gasoline;;;26;0.0;Compact Cars
+Mitsubishi;Precis;1992;Regular Gasoline;;;27;0.0;Compact Cars
+Mitsubishi;Precis;1992;Regular Gasoline;;;28;0.0;Compact Cars
+Mercedes-Benz;500SEC;1992;Premium Gasoline;;;11;0.0;Compact Cars
+Mercedes-Benz;560SEC;1992;Premium Gasoline;;;11;0.0;Compact Cars
+Nissan;Sentra;1985;Regular Gasoline;;;29;0.0;Subcompact Cars
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Jaguar;XJ6;1992;Premium Gasoline;;;17;0.0;Compact Cars
+Lexus;ES 300;1992;Regular Gasoline;;;18;0.0;Compact Cars
+Lexus;ES 300;1992;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Mazda;Protege;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;Protege;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Mazda;Protege;1992;Regular Gasoline;;;27;0.0;Compact Cars
+Mazda;Protege;1992;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;323;1992;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323;1992;Regular Gasoline;;;28;0.0;Compact Cars
+Mercedes-Benz;300D 2.5 Turbo;1992;Diesel;;Diesel;25;0.0;Compact Cars
+Mercedes-Benz;300E;1992;Premium Gasoline;;;18;0.0;Compact Cars
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Mercedes-Benz;300E 2.6;1992;Premium Gasoline;;;20;0.0;Compact Cars
+Mercedes-Benz;300E 4Matic;1992;Premium Gasoline;;;16;0.0;Compact Cars
+Mercedes-Benz;400E;1992;Premium Gasoline;;;16;0.0;Compact Cars
+Mercedes-Benz;500E;1992;Premium Gasoline;;;14;0.0;Compact Cars
+Mitsubishi;Diamante;1992;Premium Gasoline;;;18;0.0;Compact Cars
+Mitsubishi;Diamante;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Mitsubishi;Galant;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1992;Regular Gasoline;;;19;0.0;Compact Cars
+Mitsubishi;Galant;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Mitsubishi;Galant;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Mitsubishi;Galant;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Mitsubishi;Galant;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;10;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 4WD;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Subaru;Legacy;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Legacy;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Subaru;Legacy AWD;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Legacy AWD;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Subaru;Legacy AWD Turbo;1992;Premium Gasoline;;;18;0.0;Compact Cars
+Subaru;Legacy AWD Turbo;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Subaru;Loyale;1992;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Loyale;1992;Regular Gasoline;;;25;0.0;Compact Cars
+Toyota;Cressida;1992;Premium Gasoline;;;19;0.0;Compact Cars
+Volkswagen;Golf/GTI;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Volkswagen;Golf/GTI;1992;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;GTI 16v;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Volkswagen;Jetta;1992;Diesel;;Diesel;33;0.0;Compact Cars
+Volkswagen;Jetta;1992;Regular Gasoline;;;23;0.0;Compact Cars
+Volkswagen;Jetta;1992;Regular Gasoline;;;25;0.0;Compact Cars
+Volkswagen;Jetta GLI 16v;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Volvo;240;1992;Regular Gasoline;;;20;0.0;Compact Cars
+Volvo;240;1992;Regular Gasoline;;;21;0.0;Compact Cars
+Audi;S4;1992;Premium Gasoline;;;18;0.0;Midsize Cars
+Audi;V8;1992;Premium Gasoline;;;15;0.0;Midsize Cars
+Audi;100;1992;Premium Gasoline;;;18;0.0;Midsize Cars
+Audi;100;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Audi;100;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Audi;100 quattro;1992;Premium Gasoline;;;17;0.0;Midsize Cars
+Audi;100 quattro;1992;Premium Gasoline;;;18;0.0;Midsize Cars
+BMW;735i;1992;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;735il;1992;Regular Gasoline;;;16;0.0;Midsize Cars
+BMW;750il;1992;Regular Gasoline;;;13;0.0;Midsize Cars
+Nissan;300ZX;1985;Regular Gasoline;;;18;0.0;Two Seaters
+Nissan;Sentra;1985;Diesel;;Diesel;40;0.0;Subcompact Cars
+BMW;735il;1992;Regular Gasoline;;;13;0.0;Midsize Cars
+Nissan;Maxima;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Nissan;Maxima;1992;Premium Gasoline;;;20;0.0;Midsize Cars
+Ford;Taurus;1992;Regular Gasoline;;;21;0.0;Midsize Cars
+Ford;Taurus SHO;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Ford;Taurus;1992;Regular Gasoline;;;19;0.0;Midsize Cars
+Ford;Thunderbird;1992;Regular Gasoline;;;20;0.0;Midsize Cars
+Ford;Thunderbird;1992;Premium Gasoline;;;17;0.0;Midsize Cars
+Ford;Thunderbird;1992;Premium Gasoline;;;18;0.0;Midsize Cars
+Ford;Thunderbird;1992;Regular Gasoline;;;18;0.0;Midsize Cars
+Hyundai;Sonata;1992;Regular Gasoline;;;20;0.0;Midsize Cars
+Hyundai;Sonata;1992;Regular Gasoline;;;20;0.0;Midsize Cars
+Hyundai;Sonata;1992;Regular Gasoline;;;18;0.0;Midsize Cars
+Mercedes-Benz;500SE;1992;Premium Gasoline;;;11;0.0;Midsize Cars
+Mercedes-Benz;500SEL 5.6L;1992;Premium Gasoline;;;11;0.0;Midsize Cars
+Mercedes-Benz;560SE;1992;Premium Gasoline;;;11;0.0;Midsize Cars
+Mercedes-Benz;560SEL;1992;Premium Gasoline;;;11;0.0;Midsize Cars
+Lexus;LS 400;1992;Premium Gasoline;;;18;0.0;Midsize Cars
+Mazda;626/MX-6;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Mazda;626/MX-6;1992;Regular Gasoline;;;22;0.0;Midsize Cars
+Mazda;626/MX-6;1992;Premium Gasoline;;;21;0.0;Midsize Cars
+Mazda;626/MX-6;1992;Regular Gasoline;;;24;0.0;Midsize Cars
+Mazda;929;1992;Premium Gasoline;;;19;0.0;Midsize Cars
+Toyota;Camry;1992;Regular Gasoline;;;21;0.0;Midsize Cars
+Toyota;Camry;1992;Regular Gasoline;;;22;0.0;Midsize Cars
+Toyota;Camry;1992;Regular Gasoline;;;22;0.0;Midsize Cars
+Toyota;Camry;1992;Regular Gasoline;;;19;0.0;Midsize Cars
+Toyota;Camry;1992;Regular Gasoline;;;19;0.0;Midsize Cars
+Volkswagen;Passat;1992;Regular Gasoline;;;21;0.0;Midsize Cars
+Volkswagen;Passat;1992;Regular Gasoline;;;22;0.0;Midsize Cars
+Volvo;740;1992;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;740;1992;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;940;1992;Regular Gasoline;;;18;0.0;Midsize Cars
+Volvo;940;1992;Regular Gasoline;;;20;0.0;Midsize Cars
+Volvo;960;1992;Regular Gasoline;;;19;0.0;Midsize Cars
+Ford;LTD Crown Victoria;1992;Regular Gasoline;;;20;0.0;Large Cars
+Ford;LTD Crown Victoria;1992;Regular Gasoline;;;19;0.0;Large Cars
+Nissan;200SX;1985;Regular Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;300SD;1992;Diesel;;Diesel;19;0.0;Large Cars
+Mercedes-Benz;300SE;1992;Premium Gasoline;;;15;0.0;Large Cars
+Mercedes-Benz;400SE;1992;Premium Gasoline;;;14;0.0;Large Cars
+Mercedes-Benz;500SEL 5.0L;1992;Premium Gasoline;;;13;0.0;Large Cars
+Mercedes-Benz;600SEL;1992;Premium Gasoline;;;12;0.0;Large Cars
+Ford;Escort Wagon;1992;Regular Gasoline;;;26;0.0;Small Station Wagons
+Ford;Escort Wagon;1992;Regular Gasoline;;;29;0.0;Small Station Wagons
+Honda;Accord Wagon;1992;Regular Gasoline;;;20;0.0;Small Station Wagons
+Honda;Accord Wagon;1992;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1992;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Legacy Wagon;1992;Regular Gasoline;;;23;0.0;Small Station Wagons
+Subaru;Legacy Wagon AWD;1992;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon AWD;1992;Regular Gasoline;;;20;0.0;Small Station Wagons
+Subaru;Legacy Wagon AWD Turbo;1992;Premium Gasoline;;;18;0.0;Small Station Wagons
+Subaru;Legacy Wagon AWD Turbo;1992;Premium Gasoline;;;19;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1992;Regular Gasoline;;;22;0.0;Small Station Wagons
+Subaru;Loyale Wagon;1992;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1992;Regular Gasoline;;;23;0.0;Small Station Wagons
+Toyota;Corolla All-Trac Wagon;1992;Regular Gasoline;;;21;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1992;Regular Gasoline;;;24;0.0;Small Station Wagons
+Toyota;Corolla Wagon;1992;Regular Gasoline;;;27;0.0;Small Station Wagons
+Jeep;J-10 Pickup Truck;1985;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Ford;Taurus Wagon;1992;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Ford;Taurus Wagon;1992;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE;1992;Premium Gasoline;;;17;0.0;Midsize-Large Station Wagons
+Mercedes-Benz;300TE 4Matic;1992;Premium Gasoline;;;16;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo;1992;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo;1992;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo;1992;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo;1992;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Jeep;J-10 Pickup Truck;1985;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Mitsubishi;Expo.LRV;1992;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo.LRV;1992;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo.LRV;1992;Regular Gasoline;;;23;0.0;Midsize-Large Station Wagons
+Mitsubishi;Expo.LRV;1992;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Jeep;J-10 Pickup Truck;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Toyota;Camry Wagon;1992;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Toyota;Camry Wagon;1992;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Volkswagen;Passat Wagon;1992;Regular Gasoline;;;21;0.0;Midsize-Large Station Wagons
+Jeep;J-20 Pickup Truck;1985;Regular Gasoline;;;11;0.0;Standard Pickup Trucks
+Volkswagen;Passat Wagon;1992;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1992;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;240 Wagon;1992;Regular Gasoline;;;22;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1992;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;740 Wagon;1992;Regular Gasoline;;;20;0.0;Midsize-Large Station Wagons
+Volvo;940 Wagon;1992;Regular Gasoline;;;18;0.0;Midsize-Large Station Wagons
+Volvo;960 Wagon;1992;Regular Gasoline;;;19;0.0;Midsize-Large Station Wagons
+Toyota;Truck 4WD;1985;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Nissan;200SX;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Toyota;Truck 4WD;1985;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Nissan;Truck 2WD;1992;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1992;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1992;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Nissan;Truck 2WD;1992;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;22;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Toyota;Truck 4WD;1985;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 2WD;1992;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Toyota;Truck 4WD;1985;Diesel;;Diesel;23;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 2WD;1992;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Mitsubishi;Truck 2WD;1992;Regular Gasoline;;;19;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1992;Regular Gasoline;;;20;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1992;Regular Gasoline;;;17;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1992;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1992;Regular Gasoline;;;16;0.0;Small Pickup Trucks
+Ford;Ranger Pickup 4WD;1992;Regular Gasoline;;;18;0.0;Small Pickup Trucks
+Jeep;Comanche Pickup 2WD;1992;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1992;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1992;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 2WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 2WD;1992;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F250 Pickup 2WD;1992;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Nissan;200SX;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;22;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Mazda;B2200/B2600i;1992;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1992;Regular Gasoline;;;20;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1992;Regular Gasoline;;;21;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 2WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;1-Ton Truck 2WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1992;Regular Gasoline;;;16;0.0;Standard Pickup Trucks
+Nissan;Truck 4WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1992;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1992;Regular Gasoline;;;19;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Jeep;Comanche Pickup 4WD;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;14;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Ford;F150 Pickup 4WD;1992;Regular Gasoline;;;12;0.0;Standard Pickup Trucks
+Nissan;200SX;1985;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Truck 4WD;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Mitsubishi;Truck 4WD;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Mazda;B2600i 4x4;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1992;Regular Gasoline;;;17;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1992;Regular Gasoline;;;18;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1992;Regular Gasoline;;;13;0.0;Standard Pickup Trucks
+Toyota;Truck 4WD;1992;Regular Gasoline;;;15;0.0;Standard Pickup Trucks
+Nissan;Pathfinder Van (cargo);1992;Regular Gasoline;;;15;0.0;Vans
+Ford;Aerostar Van;1992;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Van;1992;Regular Gasoline;;;20;0.0;Vans
+Ford;Aerostar Van;1992;Regular Gasoline;;;16;0.0;Vans
+Ford;Aerostar Van AWD;1992;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Econoline 2WD;1992;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1992;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Econoline 2WD;1992;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Econoline 2WD;1992;Regular Gasoline;;;12;0.0;Vans
+Ford;E250 Econoline 2WD;1992;Regular Gasoline;;;13;0.0;Vans
+Ford;E250 Econoline 2WD;1992;Regular Gasoline;;;14;0.0;Vans
+Ford;E250 Econoline 2WD;1992;Regular Gasoline;;;11;0.0;Vans
+Ford;Aerostar Wagon;1992;Regular Gasoline;;;17;0.0;Vans
+Ford;Aerostar Wagon;1992;Regular Gasoline;;;18;0.0;Vans
+Ford;Aerostar Wagon;1992;Regular Gasoline;;;16;0.0;Vans
+Ford;Aerostar Wagon AWD;1992;Regular Gasoline;;;15;0.0;Vans
+Ford;E150 Club Wagon;1992;Regular Gasoline;;;14;0.0;Vans
+Ford;E150 Club Wagon;1992;Regular Gasoline;;;13;0.0;Vans
+Ford;E150 Club Wagon;1992;Regular Gasoline;;;12;0.0;Vans
+Toyota;Previa;1992;Regular Gasoline;;;17;0.0;Vans
+Toyota;Previa;1992;Regular Gasoline;;;18;0.0;Vans
+Toyota;Previa All-Trac;1992;Regular Gasoline;;;17;0.0;Vans
+Toyota;Previa All-Trac;1992;Regular Gasoline;;;17;0.0;Vans
+Nissan;Axxess;1992;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Nissan;Axxess;1992;Regular Gasoline;;;21;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 2WD;1992;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 2WD;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Nissan;300ZX 2x2;1985;Regular Gasoline;;;17;0.0;Subcompact Cars
+Jeep;Cherokee 2WD;1992;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee 2WD;1992;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Jeep;Cherokee 2WD;1992;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Ford;Explorer 2WD;1992;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Ford;Explorer 2WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;14;0.0;Vans
+Mazda;MPV;1992;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Mazda;MPV;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Mazda;Navajo;1992;Regular Gasoline;;;16;0.0;Special Purpose Vehicles
+Mazda;Navajo;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;16;0.0;Vans
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;16;0.0;Vans
+Toyota;4Runner 2WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Nissan;Axxess AWD;1992;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;18;0.0;Vans
+Nissan;Axxess AWD;1992;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Nissan;Pathfinder 4WD;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;12;0.0;Vans
+Jeep;Cherokee 4WD;1992;Regular Gasoline;;;19;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Jeep;Cherokee 4WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1992;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Jeep;Wrangler 4WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1992;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1992;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1992;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;E150 Econoline 2WD;1985;Regular Gasoline;;;11;0.0;Vans
+Ford;Bronco 4WD;1992;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Ford;Bronco 4WD;1992;Regular Gasoline;;;12;0.0;Special Purpose Vehicles
+Ford;Explorer 4WD;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Ford;Explorer 4WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Ford;E250 Econoline 2WD;1985;Regular Gasoline;;;14;0.0;Vans
+Ford;E250 Econoline 2WD;1985;Regular Gasoline;;;13;0.0;Vans
+Land Rover;Range Rover;1992;Premium Gasoline;;;13;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mitsubishi;Montero;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;MPV 4x4;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;Navajo 4x4;1992;Regular Gasoline;;;15;0.0;Special Purpose Vehicles
+Mazda;Navajo 4x4;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Nissan;300ZX 2x2;1985;Regular Gasoline;;;19;0.0;Subcompact Cars
+Ford;E250 Econoline 2WD;1985;Regular Gasoline;;;12;0.0;Vans
+Subaru;Loyale AWD;1992;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale AWD;1992;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Subaru;Loyale Wagon AWD;1992;Regular Gasoline;;;20;0.0;Special Purpose Vehicles
+Subaru;Loyale Wagon AWD;1992;Regular Gasoline;;;23;0.0;Special Purpose Vehicles
+Ford;E250 Econoline 2WD;1985;Regular Gasoline;;;11;0.0;Vans
+Toyota;Land Cruiser Wagon 4WD;1992;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1992;Regular Gasoline;;;17;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1992;Regular Gasoline;;;18;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1992;Regular Gasoline;;;13;0.0;Special Purpose Vehicles
+Toyota;4Runner 4WD;1992;Regular Gasoline;;;14;0.0;Special Purpose Vehicles
+Toyota;Cab/Chassis 2WD;1992;Regular Gasoline;;;10;0.0;Special Purpose Vehicles
+Toyota;Cab/Chassis 2WD;1992;Regular Gasoline;;;11;0.0;Special Purpose Vehicles
+Alfa Romeo;Spider;1993;Premium Gasoline;;;21;0.0;Two Seaters
+Alfa Romeo;Spider;1993;Premium Gasoline;;;22;0.0;Two Seaters
+Nissan;300ZX;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Nissan;300ZX;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Honda;Civic Del Sol;1993;Regular Gasoline;;;28;0.0;Two Seaters
+Honda;Civic Del Sol;1993;Regular Gasoline;;;31;0.0;Two Seaters
+Honda;Civic Del Sol;1993;Regular Gasoline;;;26;0.0;Two Seaters
+Honda;Civic Del Sol;1993;Regular Gasoline;;;27;0.0;Two Seaters
+Jaguar;XJS Convertible;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Jaguar;XJS Convertible;1993;Premium Gasoline;;;15;0.0;Two Seaters
+Jaguar;XJRS Convertble;1993;Premium Gasoline;;;12;0.0;Two Seaters
+Mazda;MX-5 Miata;1993;Regular Gasoline;;;23;0.0;Two Seaters
+Mazda;MX-5 Miata;1993;Regular Gasoline;;;24;0.0;Two Seaters
+Mazda;RX-7;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Mazda;RX-7;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;16;0.0;Two Seaters
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;17;0.0;Two Seaters
+Porsche;968;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Porsche;968;1993;Premium Gasoline;;;18;0.0;Two Seaters
+Toyota;MR2;1993;Premium Gasoline;;;20;0.0;Two Seaters
+Toyota;MR2;1993;Regular Gasoline;;;21;0.0;Two Seaters
+Toyota;MR2;1993;Regular Gasoline;;;22;0.0;Two Seaters
+Nissan;NX;1993;Regular Gasoline;;;27;0.0;Minicompact Cars
+Nissan;NX;1993;Regular Gasoline;;;28;0.0;Minicompact Cars
+Nissan;NX;1993;Regular Gasoline;;;22;0.0;Minicompact Cars
+Nissan;NX;1993;Regular Gasoline;;;23;0.0;Minicompact Cars
+Nissan;240SX;1993;Premium Gasoline;;;20;0.0;Minicompact Cars
+Nissan;240SX;1993;Premium Gasoline;;;22;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;16;0.0;Minicompact Cars
+Porsche;911 Carrera 4/2;1993;Premium Gasoline;;;17;0.0;Minicompact Cars
+Porsche;928 GTS;1993;Premium Gasoline;;;15;0.0;Minicompact Cars
+Porsche;928 GTS;1993;Premium Gasoline;;;13;0.0;Minicompact Cars
+Porsche;968;1993;Premium Gasoline;;;18;0.0;Minicompact Cars
+Porsche;968;1993;Premium Gasoline;;;18;0.0;Minicompact Cars
+Toyota;Celica Convertible;1993;Regular Gasoline;;;21;0.0;Minicompact Cars
+Toyota;Celica Convertible;1993;Regular Gasoline;;;22;0.0;Minicompact Cars
+Toyota;Paseo;1993;Regular Gasoline;;;25;0.0;Minicompact Cars
+Toyota;Paseo;1993;Regular Gasoline;;;27;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1993;Regular Gasoline;;;22;0.0;Minicompact Cars
+Volkswagen;Cabriolet;1993;Regular Gasoline;;;24;0.0;Minicompact Cars
+Audi;90 quattro;1993;Premium Gasoline;;;17;0.0;Subcompact Cars
+BMW;318i/318is;1993;Premium Gasoline;;;22;0.0;Subcompact Cars
+BMW;318i/318is;1993;Premium Gasoline;;;22;0.0;Subcompact Cars
+BMW;325i Convertible;1993;Regular Gasoline;;;18;0.0;Subcompact Cars
+BMW;325i/325is;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+BMW;325i/325is;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+BMW;850ci;1993;Regular Gasoline;;;13;0.0;Subcompact Cars
+BMW;850ci;1993;Regular Gasoline;;;13;0.0;Subcompact Cars
+Nissan;Sentra;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Nissan;Sentra;1993;Regular Gasoline;;;29;0.0;Subcompact Cars
+Nissan;Sentra;1993;Regular Gasoline;;;23;0.0;Subcompact Cars
+Nissan;Sentra;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Nissan;300ZX 2x2;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Ford;Festiva;1993;Regular Gasoline;;;28;0.0;Subcompact Cars
+Ford;Festiva;1993;Regular Gasoline;;;33;0.0;Subcompact Cars
+Ford;Mustang;1993;Regular Gasoline;;;22;0.0;Subcompact Cars
+Ford;Mustang;1993;Regular Gasoline;;;22;0.0;Subcompact Cars
+Ford;Mustang;1993;Regular Gasoline;;;17;0.0;Subcompact Cars
+Ford;Mustang;1993;Regular Gasoline;;;18;0.0;Subcompact Cars
+Ford;Probe;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Ford;Probe;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Ford;Probe;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Ford;Probe;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;29;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;38;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;32;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;36;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Honda;Civic;1993;Regular Gasoline;;;28;0.0;Subcompact Cars
+Honda;Civic HB VX;1993;Regular Gasoline;;;43;0.0;Subcompact Cars
+Honda;Civic HB VX;1993;Regular Gasoline;;;40;0.0;Subcompact Cars
+Honda;Prelude;1993;Regular Gasoline;;;23;0.0;Subcompact Cars
+Honda;Prelude;1993;Premium Gasoline;;;21;0.0;Subcompact Cars
+Honda;Prelude;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Honda;Prelude;1993;Premium Gasoline;;;21;0.0;Subcompact Cars
+Honda;Prelude;1993;Premium Gasoline;;;21;0.0;Subcompact Cars
+Hyundai;Excel;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Hyundai;Excel;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Hyundai;Excel;1993;Regular Gasoline;;;28;0.0;Subcompact Cars
+Hyundai;Scoupe;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Hyundai;Scoupe;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Hyundai;Scoupe;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Jaguar;XJS Coupe;1993;Premium Gasoline;;;16;0.0;Subcompact Cars
+Jaguar;XJRS Coupe;1993;Premium Gasoline;;;12;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Lexus;SC 300/SC 400;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mazda;MX-3;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Mazda;MX-3;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Toyota;Cargo Van 2WD;1985;Regular Gasoline;;;20;0.0;Vans
+Mazda;MX-3;1993;Regular Gasoline;;;20;0.0;Subcompact Cars
+Mazda;MX-3;1993;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mazda;MX-6;1993;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mazda;MX-6;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mazda;MX-6;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mazda;MX-6;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.3;1993;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mercedes-Benz;190E 2.6;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Toyota;Cargo Van 2WD;1985;Regular Gasoline;;;21;0.0;Vans
+Mitsubishi;Eclipse;1993;Regular Gasoline;;;23;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Regular Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Premium Gasoline;;;20;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Premium Gasoline;;;21;0.0;Subcompact Cars
+Mitsubishi;Eclipse;1993;Regular Gasoline;;;22;0.0;Subcompact Cars
+Mitsubishi;Mirage;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Mitsubishi;Mirage;1993;Regular Gasoline;;;31;0.0;Subcompact Cars
+Mitsubishi;Mirage;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;Mirage;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Mitsubishi;3000 GT;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Subaru;Justy;1993;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy;1993;Regular Gasoline;;;30;0.0;Subcompact Cars
+Subaru;Justy AWD;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Subaru;Justy AWD;1993;Regular Gasoline;;;26;0.0;Subcompact Cars
+Subaru;SVX;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Subaru;SVX AWD;1993;Premium Gasoline;;;18;0.0;Subcompact Cars
+Toyota;Celica;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Celica;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Toyota;Celica;1993;Premium Gasoline;;;19;0.0;Subcompact Cars
+Toyota;Celica;1993;Regular Gasoline;;;20;0.0;Subcompact Cars
+Toyota;Celica;1993;Regular Gasoline;;;22;0.0;Subcompact Cars
+Toyota;Tercel;1993;Regular Gasoline;;;24;0.0;Subcompact Cars
+Toyota;Tercel;1993;Regular Gasoline;;;29;0.0;Subcompact Cars
+Toyota;Tercel;1993;Regular Gasoline;;;27;0.0;Subcompact Cars
+Volkswagen;Corrado SLC;1993;Regular Gasoline;;;17;0.0;Subcompact Cars
+Volkswagen;Corrado SLC;1993;Regular Gasoline;;;19;0.0;Subcompact Cars
+Volkswagen;Fox;1993;Regular Gasoline;;;25;0.0;Subcompact Cars
+Alfa Romeo;164;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Alfa Romeo;164;1993;Premium Gasoline;;;19;0.0;Compact Cars
+Alfa Romeo;164;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Audi;S4;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Audi;100 quattro;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Audi;100 quattro;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Audi;90;1993;Premium Gasoline;;;17;0.0;Compact Cars
+Audi;90;1993;Premium Gasoline;;;20;0.0;Compact Cars
+BMW;525i;1993;Premium Gasoline;;;19;0.0;Compact Cars
+BMW;525i;1993;Premium Gasoline;;;20;0.0;Compact Cars
+BMW;M5;1993;Premium Gasoline;;;14;0.0;Compact Cars
+BMW;535i;1993;Regular Gasoline;;;17;0.0;Compact Cars
+BMW;535i;1993;Regular Gasoline;;;16;0.0;Compact Cars
+Nissan;Altima / Stanza;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Nissan;Altima / Stanza;1993;Regular Gasoline;;;23;0.0;Compact Cars
+Ford;Escort;1993;Regular Gasoline;;;23;0.0;Compact Cars
+Ford;Escort;1993;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Escort;1993;Regular Gasoline;;;25;0.0;Compact Cars
+Ford;Escort;1993;Regular Gasoline;;;29;0.0;Compact Cars
+Ford;Escort FS;1993;Regular Gasoline;;;30;0.0;Compact Cars
+Ford;Tempo;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Ford;Tempo;1993;Regular Gasoline;;;24;0.0;Compact Cars
+Ford;Tempo;1993;Regular Gasoline;;;19;0.0;Compact Cars
+Ford;Tempo;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Honda;Accord;1993;Regular Gasoline;;;22;0.0;Compact Cars
+Honda;Accord;1993;Regular Gasoline;;;24;0.0;Compact Cars
+Hyundai;Elantra;1993;Regular Gasoline;;;22;0.0;Compact Cars
+Hyundai;Elantra;1993;Regular Gasoline;;;22;0.0;Compact Cars
+Hyundai;Elantra;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Precis;1993;Regular Gasoline;;;26;0.0;Compact Cars
+Mitsubishi;Precis;1993;Regular Gasoline;;;27;0.0;Compact Cars
+Jaguar;XJ6;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Lexus;ES 300;1993;Regular Gasoline;;;18;0.0;Compact Cars
+Lexus;ES 300;1993;Regular Gasoline;;;18;0.0;Compact Cars
+Mazda;Protege;1993;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;Protege;1993;Regular Gasoline;;;23;0.0;Compact Cars
+Mazda;Protege;1993;Regular Gasoline;;;24;0.0;Compact Cars
+Mazda;Protege;1993;Regular Gasoline;;;27;0.0;Compact Cars
+Mazda;323;1993;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323;1993;Regular Gasoline;;;25;0.0;Compact Cars
+Mazda;323;1993;Regular Gasoline;;;27;0.0;Compact Cars
+Mazda;323;1993;Regular Gasoline;;;28;0.0;Compact Cars
+Mercedes-Benz;400E;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Mitsubishi;Diamante;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Mitsubishi;Diamante;1993;Premium Gasoline;;;18;0.0;Compact Cars
+Mitsubishi;Galant;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Mitsubishi;Galant;1993;Premium Gasoline;;;20;0.0;Compact Cars
+Mitsubishi;Galant;1993;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Legacy;1993;Regular Gasoline;;;22;0.0;Compact Cars
+Subaru;Legacy;1993;Regular Gasoline;;;23;0.0;Compact Cars
+Subaru;Legacy AWD;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Subaru;Legacy AWD;1993;Regular Gasoline;;;21;0.0;Compact Cars
+Subaru;Legacy AWD Turbo;1993;Premium Gasoline;;;18;0.0;Compact Cars

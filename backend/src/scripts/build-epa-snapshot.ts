@@ -78,12 +78,36 @@ const ALLOWLIST_MAKES = new Set<string>([
  * Inline quote-aware RFC-4180 parser. Reads the full CSV text and yields one
  * string[] per record (handles commas + newlines inside double-quoted fields,
  * and "" escaped quotes). Good enough for a one-time multi-MB download.
+ *
+ * CR-03 hardening — the previous version lost record boundaries at EOF and
+ * collapsed dozens of records into one 30 KB field. Three fixes:
+ *   1. A `"` only OPENS a quoted field at the START of a field. A `"` appearing
+ *      mid-field (e.g. an inch mark like `18"`) is a LITERAL character — not a
+ *      quote opener. The old code treated EVERY `"` as a quote toggle, so a
+ *      stray inch-mark flipped `inQuotes` on and swallowed every subsequent
+ *      record until EOF (the root cause of the corrupted mega-row).
+ *   2. Bare `\r` (CR-only) line endings terminate a record; CRLF (`\r\n`) is
+ *      handled by consuming the paired `\n`.
+ *   3. EOF reached while still `inQuotes` means malformed input → THROW (abort
+ *      the build) rather than emit a giant collapsed field.
  */
 function parseCsv(text: string): string[][] {
   const records: string[][] = [];
   let field = '';
   let row: string[] = [];
   let inQuotes = false;
+  let fieldStart = true; // at the very beginning of the current field?
+
+  const endField = (): void => {
+    row.push(field);
+    field = '';
+    fieldStart = true;
+  };
+  const endRow = (): void => {
+    endField();
+    records.push(row);
+    row = [];
+  };
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -94,7 +118,7 @@ function parseCsv(text: string): string[][] {
           field += '"';
           i++; // skip escaped quote
         } else {
-          inQuotes = false;
+          inQuotes = false; // closing quote
         }
       } else {
         field += ch;
@@ -102,25 +126,32 @@ function parseCsv(text: string): string[][] {
       continue;
     }
 
-    if (ch === '"') {
-      inQuotes = true;
+    if (ch === '"' && fieldStart) {
+      inQuotes = true; // opening quote — only valid at field start (fix #1)
+      fieldStart = false;
     } else if (ch === ',') {
-      row.push(field);
-      field = '';
+      endField();
     } else if (ch === '\n') {
-      row.push(field);
-      records.push(row);
-      row = [];
-      field = '';
+      endRow();
     } else if (ch === '\r') {
-      // ignore; the \n that follows finalizes the row
+      endRow(); // bare CR or CRLF — terminate the record (fix #2)
+      if (text[i + 1] === '\n') i++; // consume the paired \n of a CRLF
     } else {
       field += ch;
+      fieldStart = false;
     }
   }
+
+  if (inQuotes) {
+    // fix #3 — never emit a collapsed mega-field from an unterminated quote.
+    throw new Error(
+      'EPA CSV parse error: unterminated quoted field at EOF (malformed input)',
+    );
+  }
+
   // trailing record without a final newline
   if (field.length > 0 || row.length > 0) {
-    row.push(field);
+    endField();
     records.push(row);
   }
   return records;
@@ -173,14 +204,30 @@ async function main(): Promise<void> {
   // Column header line.
   outLines.push(KEEP_COLUMNS.join(';'));
 
+  // Sanity bound: a real EPA model name is short; anything longer signals a
+  // mis-aligned/corrupted record (CR-03). Reject + log rather than emit garbage.
+  const MAX_MODEL_LENGTH = 120;
+  const modelOutIdx = KEEP_COLUMNS.indexOf('model');
+
   let kept = 0;
+  let rejected = 0;
   for (let r = 1; r < records.length; r++) {
     const rec = records[r];
     const make = (rec[makeIdx] ?? '').trim();
     if (!ALLOWLIST_MAKES.has(make)) continue;
     const fields = KEEP_COLUMNS.map((col) => sanitize(rec[colIndex[col]] ?? ''));
+    if (fields[modelOutIdx].length > MAX_MODEL_LENGTH) {
+      rejected++;
+      console.warn(
+        `Rejecting suspiciously long model row (make=${make}, model length=${fields[modelOutIdx].length}) — likely a parse mis-alignment.`,
+      );
+      continue;
+    }
     outLines.push(fields.join(';'));
     kept++;
+  }
+  if (rejected > 0) {
+    console.warn(`Rejected ${rejected} suspicious row(s) by the model-length guard.`);
   }
 
   const outDir = path.join(__dirname, '..', 'data');

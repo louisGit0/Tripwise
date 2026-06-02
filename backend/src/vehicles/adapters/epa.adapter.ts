@@ -10,7 +10,7 @@ import {
   epaFuelToType,
   mpgToLper100km,
 } from './conversions';
-import { normalizeModel } from './ademe.adapter';
+import { normalizeBrand, normalizeModel } from './ademe.adapter';
 
 /**
  * EPA source adapter (US, fueleconomy.gov). Streams the committed, trimmed,
@@ -85,6 +85,20 @@ const TRAILING_NOISE = new Set([
 const DISPLACEMENT = /^\d\.\d[a-z]?$/i; // 2.0, 2.0T, 3.0 — NOT 4-digit years
 const DRIVETRAIN_PREFIX = /^(xdrive|sdrive)/i; // xDrive30i, sDrive18i
 
+/** Parse the snapshot `year` for newest-first sorting; missing/invalid → oldest. */
+function yearOf(row: EpaSnapshotRow): number {
+  const y = parseInt(row.year, 10);
+  return Number.isNaN(y) ? -Infinity : y;
+}
+
+/**
+ * Defensive bound on a canonical model name (CR-03 (c)). Real EPA model names
+ * after trim-strip are short (well under this); anything longer signals a
+ * corrupted/mis-aligned snapshot row (e.g. the collapsed mega-row CR-03) and is
+ * skipped rather than ingested as a garbage catalog entry.
+ */
+const MAX_MODEL_LENGTH = 120;
+
 function stripTrim(model: string): string {
   const tokens = model.trim().split(/\s+/);
   while (tokens.length > 1) {
@@ -120,6 +134,13 @@ export class EpaAdapter implements CatalogSourceAdapter {
    * Stream the committed `;`-delimited snapshot → raw column objects. Skips the
    * provenance comment line (`#…`) and the column-header line. Mirrors the
    * `import-ademe.ts` readline + split(';') idiom — no parser dependency.
+   *
+   * WR-02: the committed snapshot is sorted oldest-first, so a naive
+   * first-writer-wins merge would keep the OLDEST model-year's consumption per
+   * canonical key. We sort the loaded rows by `year` DESCENDING here so the
+   * merge (first-writer-wins, both across AND within a source) keeps the
+   * NEWEST year's consumption — the most representative figure. Equal years
+   * keep file order (Array.sort is stable) → deterministic.
    */
   async load(): Promise<EpaSnapshotRow[]> {
     const rows: EpaSnapshotRow[] = [];
@@ -142,6 +163,9 @@ export class EpaAdapter implements CatalogSourceAdapter {
       });
       rows.push(row);
     }
+
+    // Newest-year-first so first-writer-wins keeps the most recent consumption.
+    rows.sort((a, b) => yearOf(b) - yearOf(a));
     return rows;
   }
 
@@ -149,8 +173,12 @@ export class EpaAdapter implements CatalogSourceAdapter {
     const row = raw as EpaSnapshotRow;
 
     const make = (row.make ?? '').trim();
-    const brand = EPA_BRAND_ALLOWLIST[make];
-    if (!brand) return null; // not an FR-relevant make → skip (CAT-04)
+    const aliased = EPA_BRAND_ALLOWLIST[make];
+    if (!aliased) return null; // not an FR-relevant make → skip (CAT-04)
+    // WR-01: run the allow-list alias through the SAME normalizeBrand ADEME uses
+    // so display casing is consistent across sources (e.g. EPA "Kia" → "KIA"
+    // matching ADEME's UPPERCASE_BRANDS output, not a drifting "Kia").
+    const brand = normalizeBrand(aliased);
 
     const mapped = epaFuelToType(row.fuelType1, row.atvType, row.fuelType2);
     if (!mapped) return null; // unmapped fuel (CNG/Hydrogen) → skip
@@ -165,7 +193,7 @@ export class EpaAdapter implements CatalogSourceAdapter {
     if (consumption === null) return null; // missing/<=0 metric → never fabricate
 
     const model = normalizeModel(stripTrim(row.model ?? ''));
-    if (!model) return null;
+    if (!model || model.length > MAX_MODEL_LENGTH) return null; // CR-03 (c)
 
     // NOTE: the locked CanonicalVehicle contract carries no `year` (the canonical
     // key excludes year — all model-years collapse to one entry). EPA's per-row
