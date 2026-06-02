@@ -12,6 +12,7 @@ import { FuelBadge } from '@/components/ui/FuelBadge';
 import { Pill } from '@/components/ui/Pill';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { DataBar } from '@/components/ui/DataBar';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useCountUp } from '@/hooks/useCountUp';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useToast } from '@/providers/ToastProvider';
@@ -26,6 +27,10 @@ import type {
 } from '@/types/api';
 
 const SESSION_KEY = 'verygoodtrip.pendingTrip';
+
+// Standardized focus ring (mirrors CTAButton) — applied to every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 function isFuelCost(cost: FuelCostResult | ElectricCostResult): cost is FuelCostResult {
   return cost.type === 'fuel';
@@ -46,16 +51,17 @@ function energyFillVar(fuelType: FuelType): string {
   return 'var(--c-fuel-gas)'; // SP95 / SP95_E10 / SP98 / E85
 }
 
-function categoryColor(category: EnergyComparison['category']): string {
+// Energy fill var by comparison category (Variant B comparison bars).
+function categoryFillVar(category: EnergyComparison['category']): string {
   switch (category) {
     case 'ev':
-      return 'bg-emerald-500';
+      return 'var(--c-ev)';
     case 'diesel':
-      return 'bg-sky-500';
+      return 'var(--c-fuel-die)';
     case 'gpl':
-      return 'bg-violet-500';
+      return 'var(--c-fuel-gpl)';
     default:
-      return 'bg-amber-500';
+      return 'var(--c-fuel-gas)'; // gas
   }
 }
 
@@ -154,11 +160,48 @@ export default function TripResultPage() {
   }
 
   if (!session) {
+    // Layout-mirroring skeleton — matches the redesigned structure so the
+    // skeleton→content swap produces no layout shift (CLS-safe).
     return (
-      <div className="flex flex-col gap-4 animate-pulse">
-        <div className="h-8 w-32 bg-carbon-surface2 rounded" />
-        <div className="h-40 bg-carbon-surface2 rounded-card" />
-        <div className="h-32 bg-carbon-surface2 rounded-card" />
+      <div className="flex flex-col gap-6">
+        {/* Header */}
+        <div className="flex flex-col gap-2">
+          <Skeleton width="20%" height={11} />
+          <Skeleton width="55%" height={32} rounded="rounded-lg" />
+        </div>
+        {/* Hero plate */}
+        <div className="rounded-card bg-carbon-surface3 border border-carbon-hairline p-5 flex flex-col gap-5">
+          <Skeleton width="30%" height={11} />
+          <Skeleton width="65%" height={88} rounded="rounded-card" />
+          {/* breakdown bar + legend */}
+          <div className="flex flex-col gap-2.5">
+            <Skeleton width="100%" height={10} rounded="rounded-full" />
+            <div className="flex gap-5">
+              <Skeleton width={96} height={11} />
+              <Skeleton width={80} height={11} />
+            </div>
+          </div>
+          {/* 2×2 tiles */}
+          <div className="grid grid-cols-2 gap-3">
+            {[0, 1, 2, 3].map((k) => (
+              <Skeleton key={k} height={52} rounded="rounded-xl" />
+            ))}
+          </div>
+        </div>
+        {/* Comparison rows */}
+        <div className="rounded-card bg-carbon-surface border border-carbon-hairline p-5 flex flex-col gap-3">
+          {[0, 1, 2, 3].map((k) => (
+            <div key={k} className="flex flex-col gap-1.5">
+              <Skeleton width="40%" height={14} />
+              <Skeleton width="100%" height={6} rounded="rounded-full" />
+            </div>
+          ))}
+        </div>
+        {/* CTAs */}
+        <div className="flex flex-col gap-3">
+          <Skeleton width="100%" height={44} rounded="rounded-xl" />
+          <Skeleton width="100%" height={44} rounded="rounded-xl" />
+        </div>
       </div>
     );
   }
@@ -353,40 +396,38 @@ export default function TripResultPage() {
           <div className="flex flex-col gap-3 mt-2">
             {[...comparisons]
               .sort((a, b) => a.totalCost - b.totalCost)
-              .map((comp) => {
-                const barPct = maxCost > 0 ? (comp.totalCost / maxCost) * 100 : 0;
-                return (
-                  <div key={comp.category} className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-xs font-semibold text-carbon-ink2 ${comp.isCurrent ? 'text-carbon-ink' : ''}`}
-                        >
-                          {comp.label}
-                        </span>
-                        {comp.isCurrent && (
-                          <span className="text-[10px] text-carbon-accent font-medium">
-                            ← actuel
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
-                        {fmtEur.format(comp.totalCost)}
+              .map((comp, i) => (
+                <div key={comp.category} style={revealStyle(i)} className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-body ${comp.isCurrent ? 'font-bold text-carbon-ink' : 'font-normal text-carbon-ink2'}`}
+                      >
+                        {comp.label}
                       </span>
+                      {comp.isCurrent && (
+                        <span className="text-caption text-carbon-accent font-bold">
+                          ← actuel
+                        </span>
+                      )}
                     </div>
-                    <div className="h-1.5 bg-carbon-surface2 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all ${categoryColor(comp.category)} ${comp.isCurrent ? 'opacity-100' : 'opacity-50'}`}
-                        style={{ width: `${barPct}%` }}
-                      />
-                    </div>
-                    <p className="text-[10px] font-mono text-carbon-muted">
-                      {comp.consumption.toFixed(comp.consumptionUnit === 'kWh' ? 1 : 2)}{' '}
-                      {comp.consumptionUnit} · {comp.unitPrice.toFixed(4)} €/{comp.consumptionUnit}
-                    </p>
+                    <span className="text-body font-bold font-mono text-carbon-ink tabular-nums">
+                      {fmtEur.format(comp.totalCost)}
+                    </span>
                   </div>
-                );
-              })}
+                  <DataBar
+                    height="sm"
+                    value={comp.totalCost}
+                    max={maxCost}
+                    fillVar={categoryFillVar(comp.category)}
+                    muted={!comp.isCurrent}
+                  />
+                  <p className="text-caption font-mono text-carbon-muted">
+                    {comp.consumption.toFixed(comp.consumptionUnit === 'kWh' ? 1 : 2)}{' '}
+                    {comp.consumptionUnit} · {comp.unitPrice.toFixed(4)} €/{comp.consumptionUnit}
+                  </p>
+                </div>
+              ))}
           </div>
         </SectionCard>
       )}
@@ -401,23 +442,25 @@ export default function TripResultPage() {
         padding="md"
       >
         <div className="flex items-center justify-between mt-2">
-          <p className="text-sm text-carbon-ink2">Passager ×{passengers}</p>
+          <p className="text-body text-carbon-ink2">Passager ×{passengers}</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
+              aria-label="Retirer un passager"
               onClick={() => setPassengers((p) => Math.max(1, p - 1))}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors disabled:opacity-30"
+              className={`w-8 h-8 flex items-center justify-center rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 active:bg-carbon-hairline transition-all disabled:opacity-30 ${FOCUS_RING}`}
               disabled={passengers <= 1}
             >
               <Minus size={13} />
             </button>
-            <span className="w-8 text-center text-sm font-bold font-mono text-carbon-ink tabular-nums">
+            <span className="w-8 text-center text-body font-bold font-mono text-carbon-ink tabular-nums">
               {passengers}
             </span>
             <button
               type="button"
+              aria-label="Ajouter un passager"
               onClick={() => setPassengers((p) => Math.min(9, p + 1))}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors disabled:opacity-30"
+              className={`w-8 h-8 flex items-center justify-center rounded-lg border border-carbon-hairline text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 active:bg-carbon-hairline transition-all disabled:opacity-30 ${FOCUS_RING}`}
               disabled={passengers >= 9}
             >
               <Plus size={13} />
