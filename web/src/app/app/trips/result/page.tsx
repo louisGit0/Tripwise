@@ -275,7 +275,7 @@ export default function TripResultPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <Eyebrow className="mb-0.5">Résultat</Eyebrow>
-        <h1 className="font-serif font-normal text-display text-carbon-ink">
+        <h1 className="font-display font-bold text-display text-carbon-ink">
           {session.origin?.label?.split(',')[0] ?? '—'}
           <span className="text-carbon-muted mx-2">→</span>
           {session.destination?.label?.split(',')[0] ?? '—'}

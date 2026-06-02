@@ -51,8 +51,6 @@ const config: Config = {
         // automatically benefit from the new display font.
         sans:    ['var(--font-display)', '-apple-system', 'system-ui', 'sans-serif'],
         display: ['var(--font-display)', '-apple-system', 'system-ui', 'sans-serif'],
-        // Editorial display serif (Instrument Serif) — h1/h2 / display tier only.
-        serif:   ['var(--font-serif)', 'Georgia', 'serif'],
         mono:    ['var(--font-mono)', "'JetBrains Mono'", "'Courier New'", 'monospace'],
         // Legacy: existing pages that hard-code font-inter still compile
         inter:   ['var(--font-display)', 'sans-serif'],

@@ -1,19 +1,7 @@
 import type { Metadata, Viewport } from 'next';
-import { Space_Grotesk, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/providers/Providers';
 import './globals.css';
-
-// Editorial display serif — Instrument Serif (ships weight 400 only → it IS
-// the critical/preloaded weight). Used by h1/h2 display tier.
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  variable: '--font-serif',
-  display: 'swap',
-  preload: true,
-  fallback: ['Georgia', 'serif'],
-});
 
 // UI & body font — Space Grotesk (2-weight system: 400 / 700)
 const spaceGrotesk = Space_Grotesk({
@@ -77,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
-        className={`${instrumentSerif.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} font-display`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-display`}
       >
         <Providers>{children}</Providers>
       </body>
