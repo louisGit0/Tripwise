@@ -160,6 +160,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               'flex items-center gap-2 w-full h-8 px-2 rounded-lg',
               'text-[10px] font-mono uppercase tracking-widest text-carbon-muted',
               'hover:text-carbon-ink2 hover:bg-carbon-faint transition-colors',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg',
               collapsed ? 'justify-center' : '',
             ].join(' ')}
           >
@@ -201,7 +202,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             type="button"
             onClick={() => setDrawerOpen(true)}
             aria-label="Ouvrir le menu"
-            className="lg:hidden p-2 rounded-lg text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint transition-colors"
+            className="lg:hidden p-2 rounded-lg text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
           >
             <Menu size={18} />
           </button>
@@ -210,7 +211,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={() => setTripModalOpen(true)}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-carbon-accent text-white text-[10px] font-mono uppercase tracking-widest font-semibold hover:brightness-110 active:brightness-90 transition-all"
+            aria-label="Nouveau trajet"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-carbon-accent text-white text-[10px] font-mono uppercase tracking-widest font-bold hover:brightness-110 active:brightness-90 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
           >
             <Plus size={12} aria-hidden="true" />
             <span className="hidden sm:inline">Nouveau trajet</span>
@@ -242,7 +244,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={closeDrawer}
                 aria-label="Fermer le menu"
-                className="p-1.5 rounded-lg text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint transition-colors"
+                className="p-1.5 rounded-lg text-carbon-muted hover:text-carbon-ink2 hover:bg-carbon-faint transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
               >
                 <X size={16} />
               </button>
