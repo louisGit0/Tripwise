@@ -126,14 +126,14 @@ export default function LoginPage() {
           <div className="flex flex-col gap-2">
             <a
               href={`${API_URL}/auth/google`}
-              className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors"
+              className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-normal text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
             >
               <GoogleIcon />
               Continuer avec Google
             </a>
             <a
               href={`${API_URL}/auth/apple`}
-              className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-medium text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors"
+              className="flex items-center justify-center gap-2.5 h-9 px-4 border border-carbon-hairline rounded-xl text-sm font-normal text-carbon-ink2 bg-carbon-surface2 hover:bg-carbon-faint transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
             >
               <AppleIcon />
               Continuer avec Apple
@@ -143,7 +143,10 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-carbon-muted mt-6">
           Pas encore de compte ?{' '}
-          <Link href="/register" className="text-carbon-accent font-medium hover:underline">
+          <Link
+            href="/register"
+            className="text-carbon-accent font-normal hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
+          >
             S&apos;inscrire
           </Link>
         </p>
