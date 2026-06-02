@@ -32,6 +32,7 @@ const config: Config = {
           bg:       'var(--c-bg)',
           surface:  'var(--c-surface)',
           surface2: 'var(--c-surface2)',
+          surface3: 'var(--c-surface3)', // NEW — elev 3 (hero plate / modal / tooltip)
           ink:      'var(--c-ink)',
           ink2:     'var(--c-ink2)',
           muted:    'var(--c-muted)',
@@ -41,6 +42,8 @@ const config: Config = {
           ev:       'var(--c-ev)',
           fuelGas:  'var(--c-fuel-gas)',
           fuelDie:  'var(--c-fuel-die)',
+          fuelGpl:  'var(--c-fuel-gpl)', // NEW — GPL data-viz (violet)
+          toll:     'var(--c-toll)',     // NEW — toll segment (warm taupe)
         },
       },
       fontFamily: {
@@ -48,9 +51,26 @@ const config: Config = {
         // automatically benefit from the new display font.
         sans:    ['var(--font-display)', '-apple-system', 'system-ui', 'sans-serif'],
         display: ['var(--font-display)', '-apple-system', 'system-ui', 'sans-serif'],
+        // Editorial display serif (Instrument Serif) — h1/h2 / display tier only.
+        serif:   ['var(--font-serif)', 'Georgia', 'serif'],
         mono:    ['var(--font-mono)', "'JetBrains Mono'", "'Courier New'", 'monospace'],
         // Legacy: existing pages that hard-code font-inter still compile
         inter:   ['var(--font-display)', 'sans-serif'],
+      },
+      fontSize: {
+        // Disciplined 4-size scale (PD-2) — resolve to --text-* CSS vars.
+        // Usable as text-hero / text-display / text-body / text-caption.
+        hero:    'var(--text-hero)',    // hero cost figure only
+        display: 'var(--text-display)', // serif title / large heading
+        body:    'var(--text-body)',    // body, inline numerics, labels
+        caption: 'var(--text-caption)', // eyebrow, caption, meta
+      },
+      spacing: {
+        // Documented 8-point spacing aliases (UI-SPEC "Spacing Scale").
+        // Named tokens only — Tailwind's numeric scale (1,2,3…) is untouched.
+        // The two recurring ad-hoc values are pinned as design tokens here:
+        'tile-gap': '12px', // metric-tile / intra-card row gap (was ad-hoc gap-3)
+        'card-pad': '20px', // SectionCard default inset (was ad-hoc p-5)
       },
       letterSpacing: {
         // Tight tracking for large display headings
