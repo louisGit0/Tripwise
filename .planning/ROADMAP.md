@@ -16,7 +16,7 @@ breadth, not the foundation.
 ## Phases
 
 - [x] **Phase 1: Precise Tolls End-to-End (Web)** - Estimate-primary tolls (re-scoped D-07: TollGuru paid/no key), graceful heuristic fallback as the live mode, broken out and persisted, shown clearly on web trip results. Precise TollGuru path built + dormant pending a key.
-- [ ] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result).
+- [x] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result). (completed 2026-06-02)
 - [ ] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets.
 - [ ] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom.
 - [ ] **Phase 5: Mobile Tolls + Editorial Redesign** - Precise tolls, the editorial-dark language, and the scaled server-side catalog brought to the Expo app with shared tokens.
@@ -77,7 +77,7 @@ Plans:
 - [x] 02-02-PLAN.md — Motion hooks: useReducedMotion (SSR-safe gate) + useCountUp (700ms easeOutCubic rAF counter, reduced-motion-aware) (Wave 1)
 - [x] 02-03-PLAN.md — Data-viz primitives: DataBar (Variant A segmented Énergie/Péage + Variant B single, scaleX reveal, token-driven) + Skeleton atom (Wave 2)
 - [x] 02-04-PLAN.md — Trip result redesign: serif title + animated mono hero counter + segmented breakdown bar + comparison bars + interaction states + stepper a11y + layout-mirroring skeleton (Wave 3)
-- [ ] 02-05-PLAN.md — Visual + motion human-verify checkpoint (hero count-up, hide-when-toll-0, reduced-motion, theme parity) (Wave 4)
+- [x] 02-05-PLAN.md — Visual + motion human-verify checkpoint (hero count-up, hide-when-toll-0, reduced-motion, theme parity) (Wave 4)
 
 ### Phase 3: Web Redesign Rollout
 **Goal**: Every remaining web screen wears the editorial-dark language consistently, with existing flows intact and Core Web Vitals preserved, so the whole web app feels like one premium product.
@@ -124,7 +124,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
-| 2. Editorial Dark Design System + Trip Result Redesign | 4/5 | In Progress|  |
+| 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 0/0 | Not started | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |

@@ -50,6 +50,7 @@ Mono (numerics), `next-themes` data-theme dark/light, existing UI atoms in
   demoted — researcher/planner to decide based on pairing quality. Respect the perf
   budget: max ~2 active families + the mono; `font-display: swap`; preload only the
   critical weight.
+  - **REVISED (D-11, 2026-06-02, post-checkpoint):** The serif display face (Instrument Serif) was implemented and reviewed live — the user preferred the previous font. The editorial serif is DROPPED; titles/headings use **Space Grotesk bold (700)**. JetBrains Mono kept for numerics. The editorial character comes from the refined palette + 4-size/2-weight scale + data-viz + motion, not a new font. **Phase 3 must NOT reintroduce a serif display.**
 - **PD-3 — Trip-result layout: hero + breakdown bars (DES-02, WEB-02).** Total cost as
   a designed hero figure, then horizontal breakdown bars (Énergie vs Péage) and
   multi-energy comparison bars (the existing `calculate-multi` data — gas/diesel/EV).

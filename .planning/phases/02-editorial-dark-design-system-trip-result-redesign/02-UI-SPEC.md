@@ -71,6 +71,13 @@ desktop-primary web; do not shrink below 32px.
 
 ## Typography
 
+> **REVISED post-checkpoint (D-11, 2026-06-02):** The editorial SERIF display (Instrument Serif)
+> below was implemented, reviewed live, and **dropped** at the user's request. Titles/headings use
+> **Space Grotesk bold (700)** — there is NO serif family. The `--text-display` size token stays;
+> only the serif font-family was reverted. Read the size scale + 2-weight rules below as still
+> authoritative; ignore the "Instrument Serif"/serif rows (now Space Grotesk). Phase 3 must not
+> reintroduce a serif display.
+
 PD-2: editorial serif display + Space Grotesk UI + JetBrains Mono numerics. **2 families + mono.**
 Words use serif/sans; **all numbers use mono** (PD-2). Serif is reserved for the `display` tier
 only (≥24px) — never small labels (editorial serifs read as weak at small sizes).
