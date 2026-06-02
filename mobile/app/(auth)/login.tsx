@@ -19,7 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/src/components/ui/Input';
 import { Button } from '@/src/components/ui/Button';
 import { Wordmark } from '@/src/components/ui/Wordmark';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { Eyebrow } from '@/src/components/ui/Eyebrow';
+import { Colors, Fonts, FontSize, Spacing } from '@/constants/theme';
 import { useAuth } from '@/src/context/AuthContext';
 import client from '@/src/api/client';
 import { saveToken } from '@/src/auth/storage';
@@ -37,7 +38,7 @@ const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v
 export default function LoginScreen() {
   const { t } = useTranslation();
   const { signIn } = useAuth();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const [loading, setLoading] = useState(false);
 
@@ -74,12 +75,12 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={[styles.container, { backgroundColor: c.background }]}
+        contentContainerStyle={[styles.container, { backgroundColor: c.bg }]}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Wordmark size={32} color={c.text} />
-          <Text style={[styles.subtitle, { color: c.textSecondary }]}>{t('auth.login')}</Text>
+          <Wordmark size={32} color={c.ink} />
+          <Eyebrow>{t('auth.login')}</Eyebrow>
         </View>
 
         <View style={styles.form}>
@@ -123,9 +124,9 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.dividerRow}>
-          <View style={[styles.divider, { backgroundColor: c.border }]} />
-          <Text style={[styles.dividerText, { color: c.mutedFg }]}>ou</Text>
-          <View style={[styles.divider, { backgroundColor: c.border }]} />
+          <View style={[styles.divider, { backgroundColor: c.hairline }]} />
+          <Text style={[styles.dividerText, { color: c.mutedText }]}>ou</Text>
+          <View style={[styles.divider, { backgroundColor: c.hairline }]} />
         </View>
 
         <View style={styles.oauthButtons}>
@@ -138,7 +139,7 @@ export default function LoginScreen() {
 
         <Link href="/(auth)/register" asChild>
           <TouchableOpacity style={styles.switchLink}>
-            <Text style={[styles.switchText, { color: c.primary }]}>{t('auth.noAccount')}</Text>
+            <Text style={[styles.switchText, { color: c.accent }]}>{t('auth.noAccount')}</Text>
           </TouchableOpacity>
         </Link>
       </ScrollView>
@@ -148,15 +149,13 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, padding: Spacing[6], justifyContent: 'center', gap: Spacing[6] },
-  header: { alignItems: 'center', gap: Spacing[1] },
-  title: { fontSize: 32, fontWeight: '800' },
-  subtitle: { fontSize: FontSizes.lg },
+  header: { alignItems: 'center', gap: Spacing[2] },
   form: { gap: Spacing[4] },
   submitBtn: { marginTop: Spacing[2] },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing[3] },
   divider: { flex: 1, height: 1 },
-  dividerText: { fontSize: FontSizes.sm },
+  dividerText: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.caption },
   oauthButtons: { gap: Spacing[3] },
   switchLink: { alignItems: 'center', paddingVertical: Spacing[2] },
-  switchText: { fontSize: FontSizes.sm },
+  switchText: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.body },
 });

@@ -18,7 +18,8 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/src/components/ui/Input';
 import { Button } from '@/src/components/ui/Button';
 import { Wordmark } from '@/src/components/ui/Wordmark';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { Eyebrow } from '@/src/components/ui/Eyebrow';
+import { Colors, Fonts, FontSize, Spacing } from '@/constants/theme';
 import { useAuth } from '@/src/context/AuthContext';
 import client from '@/src/api/client';
 
@@ -40,7 +41,7 @@ type FormData = z.infer<typeof schema>;
 export default function RegisterScreen() {
   const { t } = useTranslation();
   const { signIn } = useAuth();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const [loading, setLoading] = useState(false);
 
@@ -69,12 +70,12 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={[styles.container, { backgroundColor: c.background }]}
+        contentContainerStyle={[styles.container, { backgroundColor: c.bg }]}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Wordmark size={32} color={c.text} />
-          <Text style={[styles.subtitle, { color: c.textSecondary }]}>{t('auth.register')}</Text>
+          <Wordmark size={32} color={c.ink} />
+          <Eyebrow>{t('auth.register')}</Eyebrow>
         </View>
 
         <View style={styles.form}>
@@ -141,7 +142,7 @@ export default function RegisterScreen() {
 
         <Link href="/(auth)/login" asChild>
           <TouchableOpacity style={styles.switchLink}>
-            <Text style={[styles.switchText, { color: c.primary }]}>{t('auth.alreadyAccount')}</Text>
+            <Text style={[styles.switchText, { color: c.accent }]}>{t('auth.alreadyAccount')}</Text>
           </TouchableOpacity>
         </Link>
       </ScrollView>
@@ -151,11 +152,9 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, padding: Spacing[6], justifyContent: 'center', gap: Spacing[6] },
-  header: { alignItems: 'center', gap: Spacing[1] },
-  title: { fontSize: 32, fontWeight: '800' },
-  subtitle: { fontSize: FontSizes.lg },
+  header: { alignItems: 'center', gap: Spacing[2] },
   form: { gap: Spacing[4] },
   submitBtn: { marginTop: Spacing[2] },
   switchLink: { alignItems: 'center', paddingVertical: Spacing[2] },
-  switchText: { fontSize: FontSizes.sm },
+  switchText: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.body },
 });
