@@ -12,35 +12,61 @@ import { Pill } from '@/components/ui/Pill';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
-import type { VehicleModel, UserVehicle, CatalogPage, FuelType } from '@/types/api';
+import type { VehicleModel, UserVehicle, CatalogPage } from '@/types/api';
 
 // Canonical focus token — applied to every interactive element.
 const FOCUS_RING =
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
-// ── Fuel filter groups ───────────────────────────────────────────
-const FUEL_FILTERS: { key: string; label: string; types: FuelType[] | null }[] = [
-  { key: 'all', label: 'Tous', types: null },
-  { key: 'ev', label: 'Électrique', types: ['ELECTRIC'] },
-  { key: 'essence', label: 'Essence', types: ['SP95', 'SP95_E10', 'SP98'] },
-  { key: 'diesel', label: 'Diesel', types: ['DIESEL'] },
-  { key: 'gpl', label: 'GPL', types: ['GPL'] },
-  { key: 'e85', label: 'E85', types: ['E85'] },
+// ── Fuel filter chips ────────────────────────────────────────────
+const FUEL_FILTERS: { key: string; label: string }[] = [
+  { key: 'all', label: 'Tous' },
+  { key: 'ev', label: 'Électrique' },
+  { key: 'essence', label: 'Essence' },
+  { key: 'diesel', label: 'Diesel' },
+  { key: 'gpl', label: 'GPL' },
+  { key: 'e85', label: 'E85' },
 ];
 
-const MAX_PAGES = 30; // safety cap: 30 × 100 = 3000 models
+// Map the active chip → a SINGLE server-side fuel param (no client multi-type filter).
+function fuelParams(key: string): Record<string, string> {
+  switch (key) {
+    case 'ev':
+      return { fuelCategory: 'ev' };
+    case 'essence':
+      return { fuelCategory: 'gas' };
+    case 'diesel':
+      return { fuelCategory: 'diesel' };
+    case 'gpl':
+      return { fuelCategory: 'gpl' };
+    case 'e85':
+      return { fuelType: 'E85' };
+    default:
+      return {};
+  }
+}
+
+const PAGE_SIZE = 60;
 const brandSlug = (brand: string) => `brand-${brand.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`;
 
 export default function AddVehiclePage() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [allModels, setAllModels] = useState<VehicleModel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [fuelFilter, setFuelFilter] = useState('all');
+  const debounced = useDebounce(search, 300);
+
+  // ── Server-side search + pagination state ───────────────────────
+  const [items, setItems] = useState<VehicleModel[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // ── Config (step 2) state ───────────────────────────────────────
   const [selectedModel, setSelectedModel] = useState<VehicleModel | null>(null);
@@ -50,62 +76,69 @@ export default function AddVehiclePage() {
   const [publicPrice, setPublicPrice] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 
-  // ── Load the full catalogue once (paginated, parallel) ──────────
+  // ── Reset to page 1 whenever the query (search / filter) changes ─
+  useEffect(() => {
+    setPage(1);
+  }, [debounced, fuelFilter]);
+
+  // ── Server-side loader: page 1 REPLACES, page > 1 APPENDS ───────
+  // Deps include `page`; when search/filter change, the reset effect
+  // sets page→1, which re-runs this effect and cancels any in-flight
+  // higher-page fetch (so a lingering page>1 never wrongly appends).
   useEffect(() => {
     let cancelled = false;
+    const isFirstPage = page === 1;
+    if (isFirstPage) setIsLoading(true);
+    else setIsLoadingMore(true);
+
     (async () => {
-      setIsLoading(true);
       try {
-        const first = await apiClient.get<CatalogPage>('/vehicles/catalog', {
-          params: { page: 1, limit: 100 },
+        const { data } = await apiClient.get<CatalogPage>('/vehicles/catalog', {
+          params: {
+            search: debounced || undefined,
+            page,
+            limit: PAGE_SIZE,
+            ...fuelParams(fuelFilter),
+          },
         });
-        const totalPages = Math.min(first.data.totalPages ?? 1, MAX_PAGES);
-        let models = first.data.items ?? [];
-        if (totalPages > 1) {
-          const rest = await Promise.all(
-            Array.from({ length: totalPages - 1 }, (_, i) =>
-              apiClient.get<CatalogPage>('/vehicles/catalog', {
-                params: { page: i + 2, limit: 100 },
-              }),
-            ),
-          );
-          models = models.concat(...rest.map((r) => r.data.items ?? []));
-        }
-        if (!cancelled) setAllModels(models);
+        if (cancelled) return;
+        const fetched = data.items ?? [];
+        setItems((prev) => (isFirstPage ? fetched : [...prev, ...fetched]));
+        setTotalPages(data.totalPages ?? 1);
+        setTotal(data.total ?? 0);
       } catch {
         if (!cancelled) showToast('error', 'Impossible de charger le catalogue');
       } finally {
-        if (!cancelled) setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [showToast]);
+  }, [debounced, fuelFilter, page, showToast]);
 
-  // ── Filter + group by brand ─────────────────────────────────────
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    const types = FUEL_FILTERS.find((f) => f.key === fuelFilter)?.types ?? null;
-    return allModels.filter((m) => {
-      if (types && !types.includes(m.fuelType)) return false;
-      if (q && !`${m.brand} ${m.model}`.toLowerCase().includes(q)) return false;
-      return true;
-    });
-  }, [allModels, search, fuelFilter]);
-
+  // ── Group the accumulated items by brand ────────────────────────
   const grouped = useMemo(() => {
     const map = new Map<string, VehicleModel[]>();
-    for (const m of filtered) {
+    for (const m of items) {
       const list = map.get(m.brand);
       if (list) list.push(m);
       else map.set(m.brand, [m]);
     }
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0], 'fr'));
-  }, [filtered]);
+  }, [items]);
 
   function jumpToBrand(brand: string) {
     document.getElementById(brandSlug(brand))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function loadMore() {
+    if (isLoadingMore) return;
+    setPage((p) => p + 1);
   }
 
   function openConfig(model: VehicleModel) {
@@ -145,6 +178,7 @@ export default function AddVehiclePage() {
     }
   }
 
+  const loadedCount = items.length;
   const brandCount = grouped.length;
 
   return (
@@ -164,7 +198,9 @@ export default function AddVehiclePage() {
         <p className="text-sm text-carbon-muted mt-1">
           {isLoading
             ? 'Chargement du catalogue…'
-            : `${filtered.length} modèle${filtered.length > 1 ? 's' : ''} · ${brandCount} marque${brandCount > 1 ? 's' : ''}`}
+            : `${loadedCount} modèle${loadedCount > 1 ? 's' : ''}${
+                total > loadedCount ? ` sur ${total}` : ''
+              } · ${brandCount} marque${brandCount > 1 ? 's' : ''}`}
         </p>
       </div>
 
@@ -233,7 +269,7 @@ export default function AddVehiclePage() {
             </div>
           ))}
         </div>
-      ) : filtered.length === 0 ? (
+      ) : loadedCount === 0 ? (
         <SectionCard padding="lg">
           <p className="text-sm text-carbon-muted text-center py-8">
             Aucun modèle ne correspond à votre recherche.
@@ -279,6 +315,15 @@ export default function AddVehiclePage() {
               </section>
             ))}
           </div>
+
+          {/* ── Load more (server-side pagination, no load-all) ── */}
+          {page < totalPages && (
+            <div className="flex justify-center pt-2">
+              <CTAButton variant="ghost" size="sm" onClick={loadMore} loading={isLoadingMore}>
+                Charger plus ({total - loadedCount})
+              </CTAButton>
+            </div>
+          )}
         </>
       )}
 

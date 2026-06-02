@@ -31,6 +31,8 @@ export interface VehicleModel {
   consumption: number;
   batteryCapacityKwh?: number | null;
   tankCapacityLiters?: number | null;
+  /** Provenance de la donnée (ADEME, EPA, …) — optionnel, ajouté par le catalogue multi-source */
+  source?: 'ademe' | 'epa' | string;
 }
 
 export interface UserVehicle {
