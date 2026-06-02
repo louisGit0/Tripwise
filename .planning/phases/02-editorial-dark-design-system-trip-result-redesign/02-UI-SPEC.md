@@ -72,34 +72,53 @@ desktop-primary web; do not shrink below 32px.
 ## Typography
 
 PD-2: editorial serif display + Space Grotesk UI + JetBrains Mono numerics. **2 families + mono.**
-Words use serif/sans; **all numbers use mono** (PD-2). Serif is reserved for ≥28px display
-text only — never small labels (editorial serifs read as weak at small sizes).
+Words use serif/sans; **all numbers use mono** (PD-2). Serif is reserved for the `display` tier
+only (≥24px) — never small labels (editorial serifs read as weak at small sizes).
 
-| Role | Family | Size | Weight | Line Height | Tracking |
-|------|--------|------|--------|-------------|----------|
-| Hero numeric (cost €) | JetBrains Mono | `clamp(64px, 14vw, 112px)` | 700 | 1.0 | -0.02em, `tabular-nums` |
-| Display title (page/route h1) | Instrument Serif | `clamp(28px, 5vw, 40px)` | 400 | 1.05 | 0 |
-| Heading (section h2) | Space Grotesk | 18px | 600 | 1.2 | -0.01em |
-| Eyebrow / label | Space Grotesk | 11px | 600 | 1.2 | 0.14em, UPPERCASE |
-| Body | Space Grotesk | 14px | 400 | 1.5 | 0 |
-| Body-lg | Space Grotesk | 16px | 400 | 1.5 | 0 |
-| Numeric (inline figures) | JetBrains Mono | 14px | 500 | 1.4 | 0, `tabular-nums` |
-| Caption / meta | Space Grotesk | 11–12px | 400 | 1.4 | 0 |
+**Disciplined scale: exactly 4 sizes + exactly 2 weights (400 regular, 700 bold).** Hierarchy is
+carried by size + family + the 2 weights — not by a long weight ramp. Section structure uses the
+`eyebrow` style (caption size, 700, uppercase, tracked) rather than a separate mid heading tier —
+a deliberate editorial choice that removes the redundant 16/18px tiers.
 
-**next/font wiring (`web/src/app/layout.tsx`):**
+**4 size tokens:**
+
+| Token | Value | Role |
+|-------|-------|------|
+| `--text-hero` | `clamp(64px, 14vw, 112px)` | Hero cost figure only |
+| `--text-display` | `clamp(24px, 5vw, 40px)` | Serif route/page title (h1); large section headings |
+| `--text-body` | `14px` | Body copy, inline numerics, breakdown labels/values |
+| `--text-caption` | `11px` | Eyebrow labels, captions, meta |
+
+**2 weights only:** `400` (regular) and `700` (bold). No `500`, no `600`.
+
+| Role | Family | Size token | Weight | Line Height | Tracking |
+|------|--------|------------|--------|-------------|----------|
+| Hero numeric (cost €) | JetBrains Mono | `--text-hero` | 700 | 1.0 | -0.02em, `tabular-nums` |
+| Display title (route/page h1) | Instrument Serif | `--text-display` | 400 | 1.05 | 0 |
+| Section heading (h2) | Instrument Serif | `--text-display` (low end ~24px) | 400 | 1.1 | 0 |
+| Eyebrow / label / section kicker | Space Grotesk | `--text-caption` | 700 | 1.2 | 0.14em, UPPERCASE |
+| Body | Space Grotesk | `--text-body` | 400 | 1.5 | 0 |
+| Numeric (inline figures) | JetBrains Mono | `--text-body` | 400 | 1.4 | 0, `tabular-nums` |
+| Caption / meta | Space Grotesk | `--text-caption` | 400 | 1.4 | 0 |
+
+Emphasis within body uses weight `700` (not a larger size). Existing pages' `16px`/`18px` usages
+map to `--text-body` (14px) or `--text-display` for true headings — Phase 3 migrates them.
+
+**next/font wiring (`web/src/app/layout.tsx`) — 2 weights system-wide:**
 - Add `Instrument_Serif` → `weight: ['400']`, `style: ['normal','italic']`, `variable: '--font-serif'`,
   `display: 'swap'`, `preload: true`, latin subset. (Only 400 exists → it IS the critical weight.)
-- Space Grotesk: reduce to `weight: ['400','500','600']` (drop 700 — headings are now serif/600),
-  keep `--font-display`, `display: 'swap'`.
-- JetBrains Mono: `weight: ['400','500','700']` (drop 600 to stay lean), `--font-mono`, `display: 'swap'`.
+- Space Grotesk: `weight: ['400','700']` (drop 500 + 600), keep `--font-display`, `display: 'swap'`.
+- JetBrains Mono: `weight: ['400','700']` (drop 500 + 600), `--font-mono`, `display: 'swap'`.
 - Add `${instrumentSerif.variable}` to the `<body>` className.
 
-**Tailwind (`tailwind.config.ts`):** add `fontFamily.serif: ['var(--font-serif)','Georgia','serif']`.
-Keep `display`/`sans` → `var(--font-display)` (Space Grotesk) for back-compat with existing pages.
+**Tailwind (`tailwind.config.ts`):** add `fontFamily.serif: ['var(--font-serif)','Georgia','serif']`;
+add `fontSize.{hero,display,body,caption}` mapped to the 4 tokens above. Keep `display`/`sans` →
+`var(--font-display)` (Space Grotesk) for back-compat with existing pages.
 
 **globals.css change:** `h1` (display title) → `font-family: var(--font-serif)`, `font-weight: 400`,
-`letter-spacing: 0`, `line-height: 1.05`. `h2–h6` stay Space Grotesk 600. `body` stays
-`var(--font-display)`. Perf budget honored: swap on all, no blocking weights, ≤2 families + mono.
+`letter-spacing: 0`, `line-height: 1.05`. `h2` → serif 400 at `--text-display` low end. `body` stays
+`var(--font-display)` 400. Perf budget honored: swap on all, preload only the critical weight,
+≤2 families + mono, **exactly 2 weights**.
 
 ---
 
