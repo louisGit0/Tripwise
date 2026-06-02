@@ -11,9 +11,14 @@ import { BrandAvatar } from '@/components/ui/BrandAvatar';
 import { Pill } from '@/components/ui/Pill';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { VehicleModel, UserVehicle, CatalogPage, FuelType } from '@/types/api';
+
+// Canonical focus token — applied to every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 // ── Fuel filter groups ───────────────────────────────────────────
 const FUEL_FILTERS: { key: string; label: string; types: FuelType[] | null }[] = [
@@ -149,7 +154,7 @@ export default function AddVehiclePage() {
         <button
           type="button"
           onClick={() => router.push('/app/garage')}
-          className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
+          className={`flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3 rounded ${FOCUS_RING}`}
         >
           <ChevronLeft size={13} />
           Retour au garage
@@ -169,21 +174,22 @@ export default function AddVehiclePage() {
           <div className="relative">
             <Search
               size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-carbon-muted pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-carbon-muted pointer-events-none"
             />
-            <input
+            <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher une marque ou un modèle…"
-              className="w-full h-10 pl-9 pr-9 bg-carbon-surface border border-carbon-hairline rounded-xl text-sm text-carbon-ink placeholder:text-carbon-muted outline-none focus:border-carbon-accent transition-colors"
+              aria-label="Rechercher une marque ou un modèle"
+              className="pl-9 pr-9"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                aria-label="Effacer"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors"
+                aria-label="Effacer la recherche"
+                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors ${FOCUS_RING}`}
               >
                 <X size={14} />
               </button>
@@ -198,7 +204,8 @@ export default function AddVehiclePage() {
                   type="button"
                   onClick={() => setFuelFilter(f.key)}
                   className={[
-                    'shrink-0 h-7 px-3 rounded-full text-xs font-medium border transition-colors',
+                    'shrink-0 h-7 px-3 rounded-full text-xs font-bold border transition-colors',
+                    FOCUS_RING,
                     active
                       ? 'bg-carbon-accent text-white border-transparent'
                       : 'bg-carbon-surface text-carbon-ink2 border-carbon-hairline hover:border-carbon-accent hover:text-carbon-ink',
@@ -217,10 +224,10 @@ export default function AddVehiclePage() {
         <div className="flex flex-col gap-6">
           {[...Array(2)].map((_, s) => (
             <div key={s} className="flex flex-col gap-3">
-              <div className="h-5 w-32 bg-carbon-surface2 rounded animate-pulse" />
+              <Skeleton width={128} height={20} />
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-20 bg-carbon-surface2 rounded-card animate-pulse" />
+                  <Skeleton key={i} height={80} rounded="rounded-card" />
                 ))}
               </div>
             </div>
@@ -242,7 +249,8 @@ export default function AddVehiclePage() {
                   key={brand}
                   type="button"
                   onClick={() => jumpToBrand(brand)}
-                  className="inline-flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.06] transition-colors"
+                  aria-label={`Aller à la marque ${brand}`}
+                  className={`inline-flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.06] transition-colors ${FOCUS_RING}`}
                 >
                   <BrandAvatar brand={brand} size={18} />
                   <span className="text-xs text-carbon-ink2">{brand}</span>
@@ -295,7 +303,7 @@ export default function AddVehiclePage() {
             <div className="flex items-center gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
               <BrandAvatar brand={selectedModel.brand} size={40} />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-carbon-ink truncate">
+                <p className="text-sm font-bold text-carbon-ink truncate">
                   {selectedModel.brand} {selectedModel.model}
                   {selectedModel.year ? ` (${selectedModel.year})` : ''}
                 </p>
@@ -367,11 +375,12 @@ function ModelCard({
     <button
       type="button"
       onClick={() => onSelect(model)}
-      className="group flex flex-col gap-2.5 p-3.5 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.04] transition-colors"
+      aria-label={`Ajouter ${model.brand} ${model.model}${model.year ? ` (${model.year})` : ''} au garage`}
+      className="group flex flex-col gap-2.5 p-3.5 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-carbon-ink truncate">{model.model}</p>
+          <p className="text-sm font-bold text-carbon-ink truncate">{model.model}</p>
           {model.year ? (
             <p className="text-[11px] text-carbon-muted font-mono">{model.year}</p>
           ) : null}
