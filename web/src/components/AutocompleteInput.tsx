@@ -87,7 +87,7 @@ export function AutocompleteInput({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-8 pr-8 py-2.5 bg-carbon-surface border border-carbon-hairline rounded-xl text-sm text-carbon-ink placeholder:text-carbon-muted focus:outline-none focus:ring-2 focus:ring-carbon-accent focus:border-carbon-accent transition-colors"
+          className="w-full pl-8 pr-8 py-2.5 bg-carbon-surface border border-carbon-hairline rounded-xl text-sm text-carbon-ink placeholder:text-carbon-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg transition-colors"
         />
         {isLoading && (
           <LoaderCircle

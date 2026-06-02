@@ -8,6 +8,10 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Skeleton } from '@/components/ui/Skeleton';
 
+import { useToast } from '@/providers/ToastProvider';
+import { apiClient } from '@/lib/api';
+import type { DefaultPrices } from '@/types/api';
+
 // Canonical focus token (PD3-1) — every interactive element.
 const FOCUS_RING =
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
@@ -16,9 +20,6 @@ const SOURCE_META: Record<PriceSource, { label: string; icon: ReactNode }> = {
   api:    { label: 'Prix officiels', icon: <RadioTower size={14} aria-hidden="true" /> },
   custom: { label: 'Mes prix',       icon: <Pencil size={14} aria-hidden="true" /> },
 };
-import { useToast } from '@/providers/ToastProvider';
-import { apiClient } from '@/lib/api';
-import type { DefaultPrices } from '@/types/api';
 
 const STORAGE_KEY = 'verygoodtrip.userPrices';
 const API_CACHE_KEY = 'verygoodtrip.apiPricesCache';
