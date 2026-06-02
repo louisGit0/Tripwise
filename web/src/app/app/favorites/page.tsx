@@ -8,9 +8,14 @@ import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Modal } from '@/components/ui/Modal';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { Favorite } from '@/types/api';
+
+// Canonical focus ring (mirrors result/page.tsx) — every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 export default function FavoritesPage() {
   const { showToast } = useToast();
@@ -66,11 +71,24 @@ export default function FavoritesPage() {
       {/* Header */}
       <div>
         <Eyebrow className="mb-1">Mes favoris</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">Mes favoris</h1>
+        <h1 className="font-display font-bold text-display text-carbon-ink">Mes favoris</h1>
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-carbon-muted">Chargement…</p>
+        <div className="flex flex-col gap-2">
+          {[...Array(4)].map((_, i) => (
+            <SectionCard key={i} padding="none">
+              <div className="flex items-center gap-4 px-4 py-3.5">
+                <Skeleton width={24} height={24} rounded="rounded-full" />
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <Skeleton width="50%" height={14} />
+                  <Skeleton width="70%" height={11} />
+                </div>
+                <Skeleton width={80} height={32} rounded="rounded-lg" />
+              </div>
+            </SectionCard>
+          ))}
+        </div>
       ) : favorites.length === 0 ? (
         <SectionCard padding="lg">
           <p className="text-center text-carbon-muted py-6 text-sm">
@@ -81,7 +99,7 @@ export default function FavoritesPage() {
         <div className="flex flex-col gap-2">
           {favorites.map((fav, index) => (
             <SectionCard key={fav.id} padding="none">
-              <div className="flex items-center gap-4 px-4 py-3.5">
+              <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-carbon-surface2 transition-colors rounded-card">
                 {/* Index badge */}
                 <span className="shrink-0 w-6 h-6 rounded-full bg-carbon-surface2 border border-carbon-hairline flex items-center justify-center text-[10px] font-mono text-carbon-muted">
                   {index + 1}
@@ -89,7 +107,7 @@ export default function FavoritesPage() {
 
                 {/* Route info */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-carbon-ink truncate text-sm">{fav.name}</p>
+                  <p className="font-bold text-carbon-ink truncate text-sm">{fav.name}</p>
                   <div className="flex items-center gap-1 mt-0.5 text-[11px] text-carbon-muted">
                     <span className="truncate max-w-[110px]">{fav.originLabel}</span>
                     <ArrowRight size={9} className="shrink-0" aria-hidden="true" />
@@ -110,10 +128,10 @@ export default function FavoritesPage() {
                   <button
                     type="button"
                     onClick={() => setDeleteTarget(fav)}
-                    aria-label="Supprimer"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    aria-label="Supprimer ce favori"
+                    className={`w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors ${FOCUS_RING}`}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={14} aria-hidden="true" />
                   </button>
                 </div>
               </div>
