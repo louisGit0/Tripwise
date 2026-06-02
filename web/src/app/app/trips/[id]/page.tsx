@@ -11,20 +11,34 @@ import { Pill } from '@/components/ui/Pill';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { Hairline } from '@/components/ui/Hairline';
 import { Modal } from '@/components/ui/Modal';
+import { DataBar } from '@/components/ui/DataBar';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { useDebounce } from '@/hooks/useDebounce';
 import { apiClient } from '@/lib/api';
-import type { SavedTrip } from '@/types/api';
+import type { SavedTrip, FuelType } from '@/types/api';
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+// Canonical focus ring (mirrors result/page.tsx) — every interactive element.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 function formatDuration(seconds: number): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   if (h > 0) return `${h}h${m > 0 ? String(m).padStart(2, '0') : ''}`;
   return `${m} min`;
+}
+
+// Energy fill var for the trip's own fuel type (breakdown bar Énergie segment).
+function energyFillVar(fuelType: FuelType): string {
+  if (fuelType === 'ELECTRIC') return 'var(--c-ev)';
+  if (fuelType === 'DIESEL') return 'var(--c-fuel-die)';
+  if (fuelType === 'GPL') return 'var(--c-fuel-gpl)';
+  return 'var(--c-fuel-gas)'; // SP95 / SP95_E10 / SP98 / E85
 }
 
 export default function TripDetailPage({ params }: Props) {
@@ -120,14 +134,37 @@ export default function TripDetailPage({ params }: Props) {
     router.push(`/app/dashboard?${params.toString()}`);
   }
 
-  // ── Loading skeleton ──────────────────────────────────────────
+  // ── Loading skeleton — mirrors the title + hero + breakdown + meta layout ──
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6 animate-pulse">
-        <div className="h-6 w-24 bg-carbon-surface2 rounded" />
-        <div className="h-32 bg-carbon-surface2 rounded-card" />
-        <div className="h-24 bg-carbon-surface2 rounded-card" />
-        <div className="h-32 bg-carbon-surface2 rounded-card" />
+      <div className="flex flex-col gap-6">
+        {/* Title block */}
+        <div className="flex flex-col gap-2">
+          <Skeleton width="18%" height={11} />
+          <Skeleton width="60%" height={32} rounded="rounded-lg" />
+        </div>
+        {/* Hero plate */}
+        <div className="rounded-card bg-carbon-surface3 border border-carbon-hairline p-5 flex flex-col gap-5">
+          <Skeleton width="30%" height={11} />
+          <Skeleton width="55%" height={72} rounded="rounded-card" />
+          {/* breakdown bar + legend */}
+          <div className="flex flex-col gap-2.5">
+            <Skeleton width="100%" height={10} rounded="rounded-full" />
+            <div className="flex gap-5">
+              <Skeleton width={96} height={11} />
+              <Skeleton width={80} height={11} />
+            </div>
+          </div>
+          {/* metrics grid */}
+          <div className="grid grid-cols-3 gap-3">
+            {[0, 1, 2].map((k) => (
+              <Skeleton key={k} height={44} rounded="rounded-xl" />
+            ))}
+          </div>
+        </div>
+        {/* Vehicle + note cards */}
+        <Skeleton width="100%" height={88} rounded="rounded-card" />
+        <Skeleton width="100%" height={120} rounded="rounded-card" />
       </div>
     );
   }
@@ -137,7 +174,7 @@ export default function TripDetailPage({ params }: Props) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-carbon-muted">
         <p className="font-mono text-xs tracking-widest uppercase">{"// 404"}</p>
-        <p className="text-base font-semibold text-carbon-ink">Trajet introuvable</p>
+        <p className="text-base font-bold text-carbon-ink">Trajet introuvable</p>
         <p className="text-sm text-center max-w-xs">
           Ce trajet n&apos;existe pas ou vous n&apos;y avez pas accès.
         </p>
@@ -162,16 +199,16 @@ export default function TripDetailPage({ params }: Props) {
         <button
           type="button"
           onClick={() => router.push('/app/trips')}
-          className="flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3"
+          className={`flex items-center gap-1 text-xs text-carbon-muted hover:text-carbon-accent transition-colors mb-3 ${FOCUS_RING}`}
         >
-          <ChevronLeft size={13} />
+          <ChevronLeft size={13} aria-hidden="true" />
           Retour
         </button>
         <Eyebrow className="mb-0.5">
           {isElectric ? '// ÉLECTRIQUE' : '// COMBUSTION'}
         </Eyebrow>
         <div className="flex items-center gap-2 mt-1">
-          <h1 className="text-base font-semibold text-carbon-ink truncate max-w-xs">
+          <h1 className="font-display font-bold text-display text-carbon-ink">
             {trip.originLabel.split(',')[0]}
             <span className="text-carbon-muted mx-1.5">→</span>
             {trip.destinationLabel.split(',')[0]}
@@ -193,19 +230,61 @@ export default function TripDetailPage({ params }: Props) {
       </div>
 
       {/* ── Hero cost ─────────────────────────────────────────── */}
-      <SectionCard padding="md">
-        <p className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted mb-1">
+      <SectionCard padding="md" className="!bg-carbon-surface3">
+        <p className="text-caption font-bold tracking-eye uppercase text-carbon-muted mb-2">
           Coût total
         </p>
-        <p className="text-[56px] font-bold font-display text-carbon-ink leading-none tabular-nums">
-          {trip.totalCost.toFixed(2)}
-          <span className="text-2xl font-medium text-carbon-muted ml-1">€</span>
+        <p className="text-hero font-bold font-mono text-carbon-ink leading-none tabular-nums">
+          {trip.totalCost.toFixed(2).replace('.', ',')}
+          <span className="text-display font-normal text-carbon-muted ml-2">€</span>
         </p>
         {trip.passengersCount > 1 && (
           <p className="text-xs text-carbon-muted mt-1 font-mono">
             {(trip.totalCost / trip.passengersCount).toFixed(2)} € / pers. ·{' '}
             {trip.passengersCount} passagers
           </p>
+        )}
+
+        {/* ── Breakdown bar (Variant A — Énergie vs Péage) ───── */}
+        {/* Mirrors the result page: render the segmented breakdown only when a
+            toll is present; the réel/≈ estimé Pill+Tooltip (Phase 1) is kept
+            verbatim in the péage legend. D-04 hide-when-toll-0. */}
+        {trip.tollsCost > 0 && (
+          <div className="mt-5">
+            <DataBar
+              energyValue={trip.totalCost - trip.tollsCost}
+              tollValue={trip.tollsCost}
+              total={trip.totalCost}
+              energyFillVar={energyFillVar(trip.fuelType)}
+            />
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2.5">
+              <span className="flex items-center gap-1.5 text-caption font-mono text-carbon-ink2">
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ background: energyFillVar(trip.fuelType) }}
+                />
+                Énergie · {fmtEur.format(trip.totalCost - trip.tollsCost)}
+              </span>
+              <span className="flex items-center gap-1.5 text-caption font-mono text-carbon-ink2">
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ background: 'var(--c-toll)' }}
+                />
+                Péage · {fmtEur.format(trip.tollsCost)}
+                <Tooltip
+                  content={
+                    trip.tollIsEstimate
+                      ? 'Estimation indicative (calcul français moyen)'
+                      : 'Prix réel calculé par TollGuru le long de l’itinéraire'
+                  }
+                >
+                  <Pill color={trip.tollIsEstimate ? 'warning' : 'success'} size="sm">
+                    {trip.tollIsEstimate ? '≈ estimé' : 'réel'}
+                  </Pill>
+                </Tooltip>
+              </span>
+            </div>
+          </div>
         )}
 
         {/* ── Metrics grid ──────────────────────────────────── */}
@@ -226,7 +305,7 @@ export default function TripDetailPage({ params }: Props) {
             },
           ].map(({ label, value }) => (
             <div key={label} className="flex flex-col items-center py-1 px-2 gap-0.5">
-              <span className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted">
+              <span className="text-caption font-bold tracking-eye uppercase text-carbon-muted">
                 {label}
               </span>
               <span className="text-sm font-bold font-mono text-carbon-ink tabular-nums">
@@ -263,29 +342,6 @@ export default function TripDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
-        {trip.tollsCost > 0 && (
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-carbon-hairline">
-            <span className="text-xs text-carbon-muted uppercase tracking-widest font-semibold">
-              Péages
-            </span>
-            <div className="flex items-center gap-1.5">
-              <Tooltip
-                content={
-                  trip.tollIsEstimate
-                    ? 'Estimation indicative (calcul français moyen)'
-                    : 'Prix réel calculé par TollGuru le long de l’itinéraire'
-                }
-              >
-                <Pill color={trip.tollIsEstimate ? 'warning' : 'success'} size="sm">
-                  {trip.tollIsEstimate ? '≈ estimé' : 'réel'}
-                </Pill>
-              </Tooltip>
-              <span className="text-sm font-mono font-bold text-carbon-ink tabular-nums">
-                {fmtEur.format(trip.tollsCost)}
-              </span>
-            </div>
-          </div>
-        )}
       </SectionCard>
 
       {/* ── Note ─────────────────────────────────────────────── */}
@@ -294,7 +350,7 @@ export default function TripDetailPage({ params }: Props) {
           <span className="flex items-center gap-1.5">
             <Eyebrow>Note personnelle</Eyebrow>
             {noteSaving && (
-              <span className="text-[10px] text-carbon-muted animate-pulse">…</span>
+              <span className="text-caption text-carbon-muted">Enregistrement…</span>
             )}
           </span>
         }
