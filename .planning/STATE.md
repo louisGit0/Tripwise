@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-02T06:17:43.778Z"
+last_updated: "2026-06-02T07:23:00.000Z"
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 10
-  completed_plans: 9
-  percent: 33
+  completed_phases: 3
+  total_plans: 17
+  completed_plans: 11
+  percent: 65
 ---
 
 # Project State — verygoodtrip
@@ -19,16 +19,16 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 2 COMPLETE (editorial dark DS + result redesign, visual checkpoint approved w/ D-11) → next Phase 3 (web redesign rollout)
+- **Current focus:** Phase 3 — web-redesign-rollout
 
 ## Current Position
 
-Phase: 2 (editorial-dark-design-system-trip-result-redesign) — EXECUTING
-Plan: 5 of 5
+Phase: 3 (web-redesign-rollout) — EXECUTING
+Plan: 2 of 7
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
 - **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
-- **Status:** Ready to execute
+- **Status:** Executing Phase 3
 - **Progress:** [█████████░] 90%
 
 ## Roadmap Snapshot
@@ -45,7 +45,7 @@ Plan: 5 of 5
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 9 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files; 02-03 — DataBar/Skeleton data-viz primitives, ~9min, 2 tasks, 2 files; 02-04 — trip result page editorial-dark redesign, ~13min, 2 tasks, 2 files)
+- Plans executed: 9 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files; 02-03 — DataBar/Skeleton data-viz primitives, ~9min, 2 tasks, 2 files; 02-04 — trip result page editorial-dark redesign, ~13min, 2 tasks, 2 files; 03-01 — atom + AppLayout shell normalization (2-weight 400/700, canonical accent focus ring, accent-color fix), ~9min, 2 tasks, 14 files)
 
 ## Accumulated Context
 
@@ -95,12 +95,14 @@ Plan: 5 of 5
 
 ## Session Continuity
 
-- **Last action:** Phase 2 plan 02-04 complete — trip result page editorial-dark redesign (proof slice; DES-02/03/04 + WEB-02 now user-observable). 2 atomic commits (`9a0d217` hero region — serif `h1` title + `useCountUp` mono hero counter (aria-hidden + sr-only real value, tabular-nums fixed 2dp → no CLS) on `!bg-carbon-surface3` plate + Variant A `DataBar` Énergie/Péage breakdown with dotted legend (hide-when-toll-0, D-04) + metric tiles `reveal` stagger gated by `useReducedMotion`; new `reveal` keyframe in globals.css; `c28043c` comparison Variant B `DataBar` rows (energy/gpl CSS-var fills, current full-opacity + `← actuel` accent, others muted) replacing the deleted `categoryColor()` ad-hoc block + standardized `focus-visible:ring-carbon-accent/50` + stepper aria-labels (FLAG 1) + layout-mirroring `Skeleton`). All existing logic preserved (sessionStorage guard, `handleSave`/`/trips/save` payload, stepper math, multiResult, derivations) — MD-2. Web `tsc` clean + `build` 18/18 green (`/app/trips/result` 7.15 kB); grep gate passes (0 categoryColor/bg-emerald/sky/violet/amber/font-medium/font-semibold; DataBar/Skeleton/useCountUp/useReducedMotion/font-serif/aria-label/var(--c-toll) present). D-10: disclaimer washes neutralized to surface tokens. Not yet pushed — orchestrator pushes after phase verification.
+- **Last action:** Phase 3 plan 03-01 complete — atom + AppLayout shell normalization (Wave 1 BLOCKING foundation; WEB-01/WEB-04). 2 atomic commits (`79b6d07` 13 `ui/` atoms → 2-weight 400/700 + CTAButton accent/surface/ghost focus ring `ring-blue-500/*`→`ring-carbon-accent/50` (accent-color fix #3b82f6→#4d8bff, danger keeps red) + Input/Select canonical `focus-visible` token replacing `focus:ring-offset-0`; `4cf06b4` AppLayout `+ Nouveau trajet` CTA `font-semibold`→`font-bold` (font-mono kept) + canonical focus ring on CTA/burger/collapse/drawer-close + `aria-label` on the icon-only-at-xs CTA, active SidebarItem `bg-blue-500/10 text-carbon-accent` tint kept). API-stable className-only (MD-2). Web `tsc` clean + `build` 18/18 green; grep gate: 0 `font-medium`/`font-semibold`/`font-extrabold`, 0 `ring-blue-500`, 0 `focus:ring-offset-0` across `ui/`+AppLayout. NO serif (D-11). IN-05 useReducedMotion provider hoist deferred (per-component hook works; out of MD-2 scope). Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 2 prior:** plan 02-04 complete — trip result page editorial-dark redesign (proof slice; DES-02/03/04 + WEB-02 now user-observable). 2 atomic commits (`9a0d217` hero region — serif `h1` title + `useCountUp` mono hero counter (aria-hidden + sr-only real value, tabular-nums fixed 2dp → no CLS) on `!bg-carbon-surface3` plate + Variant A `DataBar` Énergie/Péage breakdown with dotted legend (hide-when-toll-0, D-04) + metric tiles `reveal` stagger gated by `useReducedMotion`; new `reveal` keyframe in globals.css; `c28043c` comparison Variant B `DataBar` rows (energy/gpl CSS-var fills, current full-opacity + `← actuel` accent, others muted) replacing the deleted `categoryColor()` ad-hoc block + standardized `focus-visible:ring-carbon-accent/50` + stepper aria-labels (FLAG 1) + layout-mirroring `Skeleton`). All existing logic preserved (sessionStorage guard, `handleSave`/`/trips/save` payload, stepper math, multiResult, derivations) — MD-2. Web `tsc` clean + `build` 18/18 green (`/app/trips/result` 7.15 kB); grep gate passes (0 categoryColor/bg-emerald/sky/violet/amber/font-medium/font-semibold; DataBar/Skeleton/useCountUp/useReducedMotion/font-serif/aria-label/var(--c-toll) present). D-10: disclaimer washes neutralized to surface tokens. Not yet pushed — orchestrator pushes after phase verification.
 - **Phase 2 prior:** plan 02-03 complete — DES-01/02/03 data-viz primitives. 3 atomic commits (1cc5c56 DataBar initial, e3faccb Skeleton, ac1e281 DataBar Variant A refactor). `web/src/components/ui/DataBar.tsx` — token-driven bar: Variant A segmented Énergie/Péage (energy segment passed `energyFillVar`, toll segment internal `var(--c-toll)`, hidden when `tollValue===0` → full-width energy bar, D-04), Variant B single comparison (width value/max, muted non-current at inline opacity 0.45); fills via inline CSS-var `style` only (no Tailwind palette classes); scaleX(0→1) 600ms cubic-bezier reveal via mounted-flag effect, gated by `useReducedMotion` (reduced → scaleX(1)/transition:none); `pct()` clamps 0–100 + guards zero/NaN totals; heights sm=h-1.5/md=h-2.5. `web/src/components/ui/Skeleton.tsx` — bg-carbon-surface2 block, opacity-based animate-pulse dropped under reduced motion, width/height number→px or string, rounded override, aria-hidden. Web `tsc` clean + `build` 18/18 green; plan grep gate passes (scaleX/var(--c-toll)/useReducedMotion present, no bg-emerald/sky/violet/amber). Not yet pushed — orchestrator pushes after phase verification.
 - **Phase 2 prior:** plan 02-02 complete — DES-04 motion hooks. 2 atomic commits (92ed137 useReducedMotion, 538c3a9 useCountUp). `useReducedMotion.ts` SSR-safe matchMedia; `useCountUp.ts` rAF easeOutCubic 0→target 700ms with reduced-motion instant gate.
 - **Phase 2 prior:** plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), serif h1/h2; Instrument Serif via next/font (2 weights 400/700).
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** Phase 2 COMPLETE + deployed (visual checkpoint 02-05 approved; D-11 serif revert applied + pushed). Begin Phase 3 — Web Redesign Rollout (WEB-01/03/04): apply the editorial-dark language (tokens, DataBar, motion, Space Grotesk titles — NO serif) across the remaining web screens (landing, dashboard, garage, showroom, trips/history, favorites, fuel-prices, settings, auth), CWV preserved. Entry: `/gsd:discuss-phase 3` → `/gsd:ui-phase 3` → `/gsd:plan-phase 3` → `/gsd:execute-phase 3`.
+- **Next action:** Phase 3 Wave 1 (BLOCKING atoms+shell) DONE — screens can now inherit the normalized vocabulary. Execute Wave 2 screen clusters (parallel-safe, no shared-file overlap): 03-02 Cluster A (landing + auth), 03-03 Cluster B (dashboard data-viz), 03-04 Cluster C (garage + detail + showroom), 03-05 Cluster D (trips + detail + favorites), 03-06 Cluster E (fuel-prices + settings). Then 03-07 visual+CWV human-verify checkpoint (Wave 3). All apply: canonical focus token, 2-weight, Skeleton atom, Space Grotesk titles — NO serif (D-11).
+- **Watchpoint (Phase 3 screens):** the normalized atoms now carry weight 700 / canonical focus; remaining per-screen `font-semibold`/`font-medium` usages in the page files (~30 files) still need migration in their cluster plans — atoms are no longer the source of the stale weights.
 - **Updated:** 2026-06-02
