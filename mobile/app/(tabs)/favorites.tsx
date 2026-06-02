@@ -11,14 +11,16 @@ import {
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
-import { Card } from '@/src/components/ui/Card';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { Button } from '@/src/components/ui/Button';
+import { SectionCard } from '@/src/components/ui/SectionCard';
+import { Eyebrow } from '@/src/components/ui/Eyebrow';
+import { Colors, Fonts, FontSize, FontSizes, Spacing } from '@/constants/theme';
 import client from '@/src/api/client';
 import type { Favorite } from '@/src/types/api';
 
 export default function FavoritesScreen() {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const router = useRouter();
 
@@ -62,38 +64,40 @@ export default function FavoritesScreen() {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: c.background }} contentContainerStyle={styles.container}>
-      <Text style={[styles.pageTitle, { color: c.text }]}>{t('favorites.title')}</Text>
+    <ScrollView style={{ backgroundColor: c.bg }} contentContainerStyle={styles.container}>
+      <View style={styles.headerTitle}>
+        <Eyebrow>{t('nav.favorites')}</Eyebrow>
+        <Text style={[styles.pageTitle, { color: c.ink }]}>{t('favorites.title')}</Text>
+      </View>
 
       {favorites.length === 0 ? (
-        <Text style={[styles.empty, { color: c.mutedFg }]}>{t('favorites.empty')}</Text>
+        <Text style={[styles.empty, { color: c.mutedText }]}>{t('favorites.empty')}</Text>
       ) : (
         favorites.map((fav) => (
-          <Card key={fav.id}>
+          <SectionCard key={fav.id}>
             <View style={styles.favRow}>
               <View style={styles.favInfo}>
-                <Text style={[styles.favName, { color: c.text }]}>{fav.name}</Text>
-                <Text style={[styles.favSub, { color: c.textSecondary }]} numberOfLines={1}>
+                <Text style={[styles.favName, { color: c.ink }]}>{fav.name}</Text>
+                <Text style={[styles.favSub, { color: c.ink2 }]} numberOfLines={1}>
                   {fav.originLabel}
                 </Text>
-                <Text style={[styles.favArrow, { color: c.mutedFg }]}>↓</Text>
-                <Text style={[styles.favSub, { color: c.textSecondary }]} numberOfLines={1}>
+                <Text style={[styles.favArrow, { color: c.mutedText }]}>↓</Text>
+                <Text style={[styles.favSub, { color: c.ink2 }]} numberOfLines={1}>
                   {fav.destinationLabel}
                 </Text>
               </View>
               <View style={styles.favActions}>
-                <TouchableOpacity
-                  style={[styles.useBtn, { backgroundColor: c.primary }]}
+                <Button
+                  label={t('favorites.useTrip')}
                   onPress={() => handleUseTrip(fav)}
-                >
-                  <Text style={styles.useBtnText}>{t('favorites.useTrip')}</Text>
-                </TouchableOpacity>
+                  size="sm"
+                />
                 <TouchableOpacity onPress={() => handleDelete(fav.id)} style={styles.deleteBtn}>
-                  <Text style={{ color: c.destructive }}>🗑</Text>
+                  <Text style={[styles.deleteLabel, { color: c.fuelGas }]}>{t('common.delete')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          </Card>
+          </SectionCard>
         ))
       )}
     </ScrollView>
@@ -102,19 +106,20 @@ export default function FavoritesScreen() {
 
 const styles = StyleSheet.create({
   container: { padding: Spacing[4], gap: Spacing[3] },
-  pageTitle: { fontSize: FontSizes['2xl'], fontWeight: '700', marginTop: Spacing[2] },
-  empty: { textAlign: 'center', marginTop: Spacing[8], fontSize: FontSizes.base },
+  headerTitle: { gap: 2, marginTop: Spacing[2] },
+  pageTitle: { fontFamily: Fonts.display, fontSize: FontSizes['2xl'], fontWeight: '700' },
+  empty: {
+    textAlign: 'center',
+    marginTop: Spacing[8],
+    fontSize: FontSizes.base,
+    fontFamily: Fonts.displayRegular,
+  },
   favRow: { flexDirection: 'row', gap: Spacing[3] },
   favInfo: { flex: 1, gap: 2 },
-  favName: { fontSize: FontSizes.base, fontWeight: '600', marginBottom: 4 },
-  favSub: { fontSize: FontSizes.sm },
+  favName: { fontFamily: Fonts.display, fontSize: FontSizes.base, fontWeight: '700', marginBottom: 4 },
+  favSub: { fontFamily: Fonts.displayRegular, fontSize: FontSizes.sm },
   favArrow: { fontSize: FontSizes.xs },
   favActions: { gap: Spacing[2], alignItems: 'flex-end' },
-  useBtn: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  useBtnText: { color: '#fff', fontSize: FontSizes.sm, fontWeight: '500' },
-  deleteBtn: { padding: Spacing[1] },
+  deleteBtn: { paddingVertical: Spacing[1], paddingHorizontal: Spacing[2] },
+  deleteLabel: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.caption },
 });
