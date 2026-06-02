@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,24 @@ import {
   Appearance,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import Toast from 'react-native-toast-message';
 import { Colors, Fonts, FontSize, FontSizes, Spacing } from '@/constants/theme';
 import { SectionCard } from '@/src/components/ui/SectionCard';
 import { Eyebrow } from '@/src/components/ui/Eyebrow';
 import { Button } from '@/src/components/ui/Button';
+import { Input } from '@/src/components/ui/Input';
 import { useAuth } from '@/src/context/AuthContext';
+import client from '@/src/api/client';
 import Constants from 'expo-constants';
+
+interface ProfileResponse {
+  id: string;
+  email: string;
+  displayName: string | null;
+  locale: string | null;
+  provider: string;
+  createdAt: string;
+}
 
 type ThemeChoice = 'light' | 'dark' | 'system';
 
@@ -29,6 +41,36 @@ export default function SettingsScreen() {
   const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const [themeChoice, setThemeChoice] = useState<ThemeChoice>('system');
+  const [displayName, setDisplayName] = useState('');
+  const [savingName, setSavingName] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    client
+      .get<ProfileResponse>('/auth/me')
+      .then((r) => {
+        if (active) setDisplayName(r.data.displayName ?? '');
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleSaveName = async () => {
+    const trimmed = displayName.trim();
+    if (!trimmed) return;
+    setSavingName(true);
+    try {
+      const r = await client.patch<ProfileResponse>('/users/me', { displayName: trimmed });
+      setDisplayName(r.data.displayName ?? '');
+      Toast.show({ type: 'success', text1: t('settings.pseudoSaved') });
+    } catch {
+      Toast.show({ type: 'error', text1: t('common.error') });
+    } finally {
+      setSavingName(false);
+    }
+  };
 
   const applyTheme = (choice: ThemeChoice) => {
     setThemeChoice(choice);
@@ -107,6 +149,24 @@ export default function SettingsScreen() {
         </View>
       </SectionCard>
 
+      <SectionCard title={t('settings.pseudo')}>
+        <View style={styles.pseudoGroup}>
+          <Input
+            value={displayName}
+            onChangeText={setDisplayName}
+            maxLength={40}
+            autoCapitalize="words"
+          />
+          <Button
+            label={t('settings.pseudoSave')}
+            onPress={handleSaveName}
+            loading={savingName}
+            disabled={!displayName.trim()}
+            size="sm"
+          />
+        </View>
+      </SectionCard>
+
       <SectionCard title={t('settings.account')}>
         <Button label={t('settings.logout')} onPress={handleLogout} variant="destructive" />
       </SectionCard>
@@ -123,6 +183,7 @@ const styles = StyleSheet.create({
   headerTitle: { gap: 2, marginTop: Spacing[2] },
   pageTitle: { fontFamily: Fonts.display, fontSize: FontSizes['2xl'], fontWeight: '700' },
   row: { flexDirection: 'row', gap: Spacing[2] },
+  pseudoGroup: { gap: Spacing[3] },
   optionBtn: {
     flex: 1,
     borderRadius: 8,
