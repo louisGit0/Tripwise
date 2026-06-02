@@ -8,7 +8,9 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
+import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { useToast } from '@/providers/ToastProvider';
 import { logout } from '@/lib/auth';
 import { apiClient } from '@/lib/api';
 import type { UserProfile } from '@/types/api';
@@ -18,6 +20,7 @@ type Theme = 'light' | 'dark';
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
+  const { showToast } = useToast();
 
   // ── Hydration guard ─────────────────────────────────────────
   // next-themes resolves the active theme only on the client.
@@ -25,11 +28,37 @@ export default function SettingsPage() {
   // Return a neutral skeleton until the component is mounted.
   const [mounted, setMounted] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [displayName, setDisplayName] = useState('');
+  const [isSavingName, setIsSavingName] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    apiClient.get<UserProfile>('/auth/me').then(({ data }) => setUserProfile(data)).catch(() => null);
+    apiClient
+      .get<UserProfile>('/auth/me')
+      .then(({ data }) => {
+        setUserProfile(data);
+        setDisplayName(data.displayName ?? '');
+      })
+      .catch(() => null);
   }, []);
+
+  async function handleSaveName() {
+    const trimmed = displayName.trim();
+    if (!trimmed) return;
+    setIsSavingName(true);
+    try {
+      const { data } = await apiClient.patch<UserProfile>('/users/me', {
+        displayName: trimmed,
+      });
+      setUserProfile(data);
+      setDisplayName(data.displayName ?? '');
+      showToast('success', 'Pseudo mis à jour');
+    } catch {
+      showToast('error', 'Une erreur est survenue');
+    } finally {
+      setIsSavingName(false);
+    }
+  }
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
     { value: 'dark',  label: 'Sombre', icon: <Moon size={15} /> },
@@ -92,12 +121,30 @@ export default function SettingsPage() {
       {/* ── Account ────────────────────────────────────────────── */}
       <SectionCard title="Compte" padding="md">
         <Hairline className="my-3" />
-        {userProfile && (
-          <div className="mb-4 space-y-1">
-            {userProfile.displayName && (
-              <p className="text-sm font-bold text-carbon-ink">{userProfile.displayName}</p>
-            )}
+        {userProfile ? (
+          <div className="mb-4 flex flex-col gap-3">
+            <Input
+              label="Pseudo"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="Votre pseudo"
+              maxLength={40}
+            />
+            <CTAButton
+              variant="accent"
+              size="md"
+              onClick={handleSaveName}
+              loading={isSavingName}
+              disabled={!displayName.trim()}
+              className="w-full"
+            >
+              Enregistrer
+            </CTAButton>
             <p className="text-xs text-carbon-muted">{userProfile.email}</p>
+          </div>
+        ) : (
+          <div className="mb-4">
+            <Skeleton height={64} rounded="rounded-xl" className="w-full" />
           </div>
         )}
         <CTAButton
