@@ -87,7 +87,14 @@ describe('Vehicles (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+    // Mirror the production global ValidationPipe (main.ts) so query-param ints
+    // (page/limit) coerce from strings — otherwise @IsInt rejects them.
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }));
     await app.init();
 
     modelRepo = moduleFixture.get<Repository<VehicleModel>>(getRepositoryToken(VehicleModel));
@@ -101,6 +108,12 @@ describe('Vehicles (e2e)', () => {
     );
     thermalModelId = thermal.id;
     electricModelId = electric.id;
+
+    // Lignes supplémentaires pour les tests de search/brand/fuelCategory/pagination
+    await modelRepo.save([
+      modelRepo.create({ brand: 'Peugeot', model: '308', year: 2023, fuelType: FuelType.DIESEL, consumption: 4.6 }),
+      modelRepo.create({ brand: 'Tesla', model: 'Model Y', year: 2023, fuelType: FuelType.ELECTRIC, consumption: 15.7 }),
+    ]);
   });
 
   afterAll(async () => { await app.close(); });
@@ -137,10 +150,91 @@ describe('Vehicles (e2e)', () => {
       expect(res.body.items[0].brand).toBe('Tesla');
     });
 
+    it('search=clio retourne le Clio avec la forme paginée { items, total, page, limit, totalPages }', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog?search=clio')
+        .expect(200);
+
+      expect(res.body).toHaveProperty('items');
+      expect(res.body).toHaveProperty('total');
+      expect(res.body).toHaveProperty('page', 1);
+      expect(res.body).toHaveProperty('limit');
+      expect(res.body).toHaveProperty('totalPages');
+      expect(Array.isArray(res.body.items)).toBe(true);
+      expect(res.body.items.some((v: VehicleModel) => v.model === 'Clio V')).toBe(true);
+    });
+
+    it('filtre par fuelCategory=ev retourne uniquement des ELECTRIC', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog?fuelCategory=ev')
+        .expect(200);
+
+      expect(res.body.items.length).toBeGreaterThanOrEqual(1);
+      expect(res.body.items.every((v: VehicleModel) => v.fuelType === 'ELECTRIC')).toBe(true);
+    });
+
+    it('filtre par brand=Tesla retourne uniquement des Tesla', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog?brand=Tesla')
+        .expect(200);
+
+      expect(res.body.items.length).toBeGreaterThanOrEqual(1);
+      expect(res.body.items.every((v: VehicleModel) => v.brand === 'Tesla')).toBe(true);
+    });
+
+    it('pagination page=1&limit=1 retourne exactement 1 item avec totalPages cohérent', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog?page=1&limit=1')
+        .expect(200);
+
+      expect(res.body.items.length).toBe(1);
+      expect(res.body.limit).toBe(1);
+      expect(res.body.totalPages).toBeGreaterThanOrEqual(Math.ceil(res.body.total / 1));
+    });
+
     it('retourne 400 pour un fuelType invalide', async () => {
       await request(app.getHttpServer())
         .get('/api/v1/vehicles/catalog?fuelType=HYDROGEN')
         .expect(400);
+    });
+
+    it('retourne 400 pour un fuelCategory invalide', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog?fuelCategory=banana')
+        .expect(400);
+    });
+  });
+
+  describe('GET /api/v1/vehicles/catalog/brands', () => {
+    it('retourne un tableau de { brand, count } trié par brand, counts numériques > 0', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog/brands')
+        .expect(200);
+
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThanOrEqual(1);
+
+      const brands = res.body.map((b: { brand: string }) => b.brand);
+      const sorted = [...brands].sort((a, b) => a.localeCompare(b));
+      expect(brands).toEqual(sorted);
+
+      for (const entry of res.body) {
+        expect(entry).toHaveProperty('brand');
+        expect(typeof entry.brand).toBe('string');
+        expect(typeof entry.count).toBe('number');
+        expect(entry.count).toBeGreaterThan(0);
+      }
+
+      const tesla = res.body.find((b: { brand: string; count: number }) => b.brand === 'Tesla');
+      expect(tesla?.count).toBe(2);
+    });
+
+    it('respecte le filtre fuelCategory=ev', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog/brands?fuelCategory=ev')
+        .expect(200);
+
+      expect(res.body.every((b: { brand: string }) => b.brand === 'Tesla')).toBe(true);
     });
   });
 
