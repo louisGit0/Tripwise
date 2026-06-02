@@ -5,7 +5,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, IsNull } from 'typeorm';
+import { Repository } from 'typeorm';
 import { VehicleModel } from './entities/vehicle-model.entity';
 import {
   CanonicalVehicle,
@@ -99,6 +99,15 @@ export class VehicleSyncService implements OnApplicationBootstrap {
    * background multi-source sync without blocking the NestJS application boot.
    */
   async onApplicationBootstrap(): Promise<void> {
+    // Skip the auto-sync under the test harness: it would hit the live ADEME
+    // network and (now that the upsert uses ON CONFLICT DO UPDATE) overwrite
+    // seeded test fixtures non-deterministically. The merge is unit-proven
+    // (catalog-merge.spec.ts) and the manual `POST /vehicles/sync` covers runtime.
+    if (process.env.NODE_ENV === 'test') {
+      this.logger.log('Test environment — multi-source bootstrap sync skipped');
+      return;
+    }
+
     const count = await this.vehicleModelRepo.count();
     if (count >= STARTUP_THRESHOLD) {
       this.logger.log(
@@ -151,37 +160,55 @@ export class VehicleSyncService implements OnApplicationBootstrap {
       `Merged ${merged.length} unique vehicles across ${adapters.length} sources`,
     );
 
-    // ── Step 2 : load existing null-year keys (single query) ───────────────
-    const existingModels = await this.vehicleModelRepo.find({
-      where: { year: IsNull() },
-      select: { brand: true, model: true, fuelType: true },
-    });
-    const existingSet = new Set(
-      existingModels.map((m) =>
-        `${m.brand}|${m.model}|${m.fuelType}`.toUpperCase(),
-      ),
-    );
+    // ── Step 2 : split by source for the right ON CONFLICT policy ──────────
+    // ADEME is authoritative → DO UPDATE; EPA never overwrites ADEME → DO
+    // NOTHING (belt-and-suspenders: the in-memory merge already dropped EPA
+    // rows that overlap ADEME). The canonical UNIQUE(brand,model,fuel_type)
+    // index is the conflict target and the idempotency safety net (CAT-05) —
+    // this resolves DEF-04-01-01 (legacy `repo.save()` UNIQUE collision).
+    const ademeRows = merged.filter((v) => v.source === 'ademe');
+    const epaRows = merged.filter((v) => v.source !== 'ademe');
 
-    // ── Step 3 : filter to genuinely new keys ──────────────────────────────
-    const toInsert = merged.filter(
-      (v) => !existingSet.has(`${v.brand}|${v.model}|${v.fuelType}`.toUpperCase()),
-    );
-    this.logger.log(`Inserting ${toInsert.length} new vehicle variants...`);
+    const before = await this.vehicleModelRepo.count();
 
-    // ── Step 4 : bulk insert in batches of BATCH_SIZE ──────────────────────
-    for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
-      const batch = toInsert
-        .slice(i, i + BATCH_SIZE)
-        .map((v) => this.vehicleModelRepo.create(toEntityValues(v)));
-      await this.vehicleModelRepo.save(batch);
+    // ADEME batches: refresh consumption/capacities/source on conflict.
+    for (let i = 0; i < ademeRows.length; i += BATCH_SIZE) {
+      const batch = ademeRows.slice(i, i + BATCH_SIZE).map(toEntityValues);
+      await this.vehicleModelRepo
+        .createQueryBuilder()
+        .insert()
+        .into(VehicleModel)
+        .values(batch)
+        .orUpdate(
+          ['consumption', 'battery_capacity_kwh', 'tank_capacity_liters', 'source'],
+          ['brand', 'model', 'fuel_type'],
+        )
+        .execute();
     }
 
+    // EPA batches: ON CONFLICT DO NOTHING — never overwrite ADEME (PD4-1).
+    for (let i = 0; i < epaRows.length; i += BATCH_SIZE) {
+      const batch = epaRows.slice(i, i + BATCH_SIZE).map(toEntityValues);
+      await this.vehicleModelRepo
+        .createQueryBuilder()
+        .insert()
+        .into(VehicleModel)
+        .values(batch)
+        .orIgnore()
+        .execute();
+    }
+
+    const after = await this.vehicleModelRepo.count();
+    const created = after - before;
     const result: SyncResult = {
-      created: toInsert.length,
-      skipped: merged.length - toInsert.length,
+      created,
+      skipped: merged.length - created,
       total: merged.length,
     };
-    this.logger.log(`Multi-source sync complete — ${JSON.stringify(result)}`);
+    this.logger.log(
+      `Multi-source sync complete — ${JSON.stringify(result)} ` +
+        `(ademe=${ademeRows.length}, epa=${epaRows.length})`,
+    );
     return result;
   }
 }
