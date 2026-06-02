@@ -36,6 +36,15 @@ export interface CatalogPage {
   totalPages: number;
 }
 
+/**
+ * GET /vehicles/catalog/image?make=&model= → { imageUrl: string | null }.
+ * `null` when no CARIMAGES_API_KEY, no match, or any failure (07-01) → the
+ * client renders the stylized brand placeholder.
+ */
+export interface CatalogImageResult {
+  imageUrl: string | null;
+}
+
 export interface UserVehicle {
   id: string;
   nickname: string | null;
