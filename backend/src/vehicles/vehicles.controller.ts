@@ -35,6 +35,12 @@ export class VehiclesController {
     return this.vehiclesService.findCatalog(query);
   }
 
+  // NOTE: declared BEFORE `catalog/:id` so Nest does not match 'brands' as an id.
+  @Get('catalog/brands')
+  getCatalogBrands(@Query() query: CatalogQueryDto) {
+    return this.vehiclesService.findCatalogBrands(query);
+  }
+
   @Get('catalog/:id')
   getCatalogItem(@Param('id', ParseUUIDPipe) id: string) {
     return this.vehiclesService.findOneModel(id);

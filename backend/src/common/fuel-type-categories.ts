@@ -32,3 +32,25 @@ export function toCategory(fuelType: FuelType): FuelCategory {
       return 'gpl';
   }
 }
+
+/**
+ * Reverse of {@link toCategory} — expands a {@link FuelCategory} into the set of
+ * {@link FuelType} values it covers. Used to filter the catalog by a functional
+ * category in a single query (no per-chip round-trips).
+ *
+ * @example
+ *   categoryToFuelTypes('gas') // → [SP95, SP95_E10, SP98, E85]
+ *   categoryToFuelTypes('ev')  // → [ELECTRIC]
+ */
+export function categoryToFuelTypes(category: FuelCategory): FuelType[] {
+  switch (category) {
+    case 'gas':
+      return [FuelType.SP95, FuelType.SP95_E10, FuelType.SP98, FuelType.E85];
+    case 'diesel':
+      return [FuelType.DIESEL];
+    case 'ev':
+      return [FuelType.ELECTRIC];
+    case 'gpl':
+      return [FuelType.GPL];
+  }
+}

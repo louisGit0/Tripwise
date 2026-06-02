@@ -12,6 +12,13 @@ import { Trip } from '../trips/entities/trip.entity';
 import { CatalogQueryDto } from './dto/catalog-query.dto';
 import { AddUserVehicleDto } from './dto/add-user-vehicle.dto';
 import { UpdateUserVehicleDto } from './dto/update-user-vehicle.dto';
+import { categoryToFuelTypes } from '../common/fuel-type-categories';
+import { SelectQueryBuilder } from 'typeorm';
+
+export interface BrandCount {
+  brand: string;
+  count: number;
+}
 
 export interface VehicleStats {
   tripsCount: number;
@@ -35,25 +42,65 @@ export class VehiclesService {
   // ── Catalogue ──────────────────────────────────────────────────────────────
 
   async findCatalog(query: CatalogQueryDto) {
-    const { search, fuelType, page = 1, limit = 20 } = query;
+    const { page = 1, limit = 20 } = query;
     const qb = this.modelRepo.createQueryBuilder('vm');
-
-    if (search) {
-      qb.andWhere(
-        '(LOWER(vm.brand) LIKE :search OR LOWER(vm.model) LIKE :search)',
-        { search: `%${search.toLowerCase()}%` },
-      );
-    }
-
-    if (fuelType) {
-      qb.andWhere('vm.fuelType = :fuelType', { fuelType });
-    }
+    this.applyCatalogFilters(qb, query);
 
     qb.orderBy('vm.brand', 'ASC').addOrderBy('vm.model', 'ASC');
     qb.skip((page - 1) * limit).take(limit);
 
     const [items, total] = await qb.getManyAndCount();
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  /**
+   * Brand directory facet — returns `[{ brand, count }]` ordered by brand ASC,
+   * honouring the same search/fuelType/fuelCategory/brand filters as the catalog
+   * listing. Lets the showroom render the brand jump-list without loading all rows.
+   */
+  async findCatalogBrands(query: CatalogQueryDto): Promise<BrandCount[]> {
+    const qb = this.modelRepo
+      .createQueryBuilder('vm')
+      .select('vm.brand', 'brand')
+      .addSelect('COUNT(*)', 'count');
+    this.applyCatalogFilters(qb, query);
+
+    qb.groupBy('vm.brand').orderBy('vm.brand', 'ASC');
+
+    const rows: Array<{ brand: string; count: string }> = await qb.getRawMany();
+    return rows.map((row) => ({ brand: row.brand, count: Number(row.count) }));
+  }
+
+  /**
+   * Shared WHERE-clause builder for the catalog listing + brands facet.
+   * Search matches the trigram index expression `lower(brand || ' ' || model)`
+   * via `LOWER(...) LIKE` (NOT ILIKE — index-eligible in Postgres, runs under
+   * SQLite). All user input is bound as parameters (no SQL string interpolation).
+   */
+  private applyCatalogFilters(
+    qb: SelectQueryBuilder<VehicleModel>,
+    query: CatalogQueryDto,
+  ): void {
+    const { search, fuelType, fuelCategory, brand } = query;
+
+    if (search) {
+      qb.andWhere("LOWER(vm.brand || ' ' || vm.model) LIKE :s", {
+        s: `%${search.toLowerCase()}%`,
+      });
+    }
+
+    if (brand) {
+      qb.andWhere('vm.brand = :brand', { brand });
+    }
+
+    // fuelType (single value) takes precedence; otherwise expand fuelCategory.
+    if (fuelType) {
+      qb.andWhere('vm.fuelType = :fuelType', { fuelType });
+    } else if (fuelCategory) {
+      qb.andWhere('vm.fuelType IN (:...fts)', {
+        fts: categoryToFuelTypes(fuelCategory),
+      });
+    }
   }
 
   async findOneModel(id: string): Promise<VehicleModel> {
