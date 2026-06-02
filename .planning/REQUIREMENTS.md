@@ -100,3 +100,33 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 | MOB-01 | Phase 5 |
 | MOB-02 | Phase 5 |
 | MOB-03 | Phase 5 |
+| POL-01 | Phase 6 |
+| POL-02 | Phase 6 |
+| POL-03 | Phase 6 |
+| SHOW-01 | Phase 7 |
+| SHOW-02 | Phase 7 |
+| SHOW-03 | Phase 7 |
+| ONB-01 | Phase 8 |
+| REL-01 | Phase 9 |
+
+---
+
+## v1.1 Requirements (post-launch refinements + iOS release)
+
+> From user feedback after the v1.0 on-device review. **Every requirement ships web AND mobile** (except REL-01 = iOS).
+
+### Polish & Account (POL)
+- [ ] **POL-01**: The toll "réel/≈ estimé" badge is **removed** from the result/detail (web) and dashboard result (mobile); the toll amount stays in the breakdown (the cost is already labelled estimated).
+- [ ] **POL-02**: A user can **share a calculated trip** from web and mobile (clean shareable summary).
+- [ ] **POL-03**: A user can **edit their pseudo** (`display_name`) from Settings (web + mobile), persisted via `PATCH /users/me` (column already exists — no migration).
+
+### Showroom v2 (SHOW)
+- [ ] **SHOW-01**: Showroom vehicle entries are **designed editorial-dark cards** (not text rows), web + mobile.
+- [ ] **SHOW-02**: Each card shows the **vehicle's photo** — _only if a free, viable image source exists (decided by a spike); otherwise dropped + documented._
+- [ ] **SHOW-03**: Showroom **navigation/search is simplified** and intuitive (today "too complicated"), web + mobile.
+
+### Onboarding (ONB)
+- [ ] **ONB-01**: A **post-signup tutorial** explains the app + each screen (persisted "seen" so it doesn't auto-reshow) and is **replayable from Settings**, web + mobile.
+
+### Release (REL)
+- [ ] **REL-01**: The app is **published to the iOS App Store** (EAS prod build + App Store Connect submission). Apple Developer account/credentials/review owned by the user. Google Play deferred.

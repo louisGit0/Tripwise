@@ -19,7 +19,7 @@ breadth, not the foundation.
 - [x] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result). (completed 2026-06-02)
 - [x] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets. (completed 2026-06-02)
 - [x] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom. (completed 2026-06-02)
-- [ ] **Phase 5: Mobile Tolls + Editorial Redesign** - Precise tolls, the editorial-dark language, and the scaled server-side catalog brought to the Expo app with shared tokens.
+- [x] **Phase 5: Mobile Tolls + Editorial Redesign** - Precise tolls, the editorial-dark language, and the scaled server-side catalog brought to the Expo app with shared tokens. (completed 2026-06-02)
 
 ## Phase Details
 
@@ -143,7 +143,7 @@ Plans:
 - [x] 05-05-PLAN.md — Dashboard + tolls (Wave 3): editorial-dark dashboard + hero AnimatedCounter + Énergie/Péage breakdown + réel/≈ estimé badge (MOB-02)
 - [x] 05-06-PLAN.md — Vehicles + catalog browse (Wave 3): editorial-dark garage + server-side paginated brand-grouped catalog (fix data.items, no client load-all)
 - [x] 05-07-PLAN.md — Favorites + settings restyle (Wave 3): editorial-dark, flows preserved
-- [ ] 05-08-PLAN.md — Visual + tolls + catalog human-verify checkpoint (Wave 4): on-device sign-off (MOB-01/02/03)
+- [x] 05-08-PLAN.md — Visual + tolls + catalog human-verify checkpoint (Wave 4): on-device sign-off (MOB-01/02/03)
 
 ## Progress
 
@@ -154,4 +154,67 @@ Plans:
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 6/6 | Complete   | 2026-06-02 |
-| 5. Mobile Tolls + Editorial Redesign | 7/8 | In Progress|  |
+| 5. Mobile Tolls + Editorial Redesign | 8/8 | Complete   | 2026-06-02 |
+
+---
+
+# Milestone v1.1 — Post-launch refinements + iOS release
+
+Driven by user feedback after the v1.0 on-device review. **Every change ships web AND mobile.**
+v1.0 (Phases 1–5 + 1.1) is delivered. v1.1 refines the result/showroom UX, adds trip share +
+pseudo editing + an onboarding tutorial, and publishes the app to the iOS App Store (Google Play later).
+
+## Phases (v1.1)
+
+- [ ] **Phase 6: Polish & Account** — remove the toll "estimé" badge; trip share; edit pseudo (display_name) in settings.
+- [ ] **Phase 7: Showroom v2** — restyled vehicle cards + simplified navigation/search + vehicle photos (only if a free image source is viable, else dropped). Starts with a free-image-source spike.
+- [ ] **Phase 8: Onboarding** — post-signup tutorial explaining the app + each screen, replayable from Settings.
+- [ ] **Phase 9: iOS App Store Release** — EAS production build + App Store Connect submission (Apple Developer account required; Google Play deferred).
+
+## Phase Details (v1.1)
+
+### Phase 6: Polish & Account
+**Goal**: Three small, high-value refinements live on web + mobile: tolls no longer carry a redundant "≈ estimé" badge (the cost is already labelled estimated), users can share a calculated trip, and users can change their pseudo (display_name) from Settings.
+**Depends on**: v1.0 complete
+**Requirements**: POL-01, POL-02, POL-03
+**Success Criteria**:
+  1. No "réel/≈ estimé" toll badge on the result/detail (web) or dashboard result (mobile) — the toll amount remains in the breakdown.
+  2. A user can share a calculated trip from web and mobile (a clean shareable summary).
+  3. A user can edit their pseudo in Settings (web + mobile) → persisted via `PATCH /users/me` (display_name already exists on the User entity; no migration), reflected immediately.
+**Notes**: First backend touch since Phase 4 — add a guarded `users` update endpoint; `display_name` column already exists.
+
+### Phase 7: Showroom v2
+**Goal**: The vehicle showroom (web `garage/add` + mobile `vehicles`) is materially better: each model is a designed card (not a text row), navigation/search is simpler and intuitive, and — if a free image source is viable — each card shows the vehicle's photo.
+**Depends on**: Phase 4 (catalog API)
+**Requirements**: SHOW-01, SHOW-02, SHOW-03
+**Success Criteria**:
+  1. Vehicle entries render as designed editorial-dark cards (brand/model/consumption/fuel well-composed), web + mobile.
+  2. Browsing/searching the showroom feels simple + intuitive (today it is "too complicated").
+  3. IF a free, viable vehicle-image source exists, each card shows the matching photo; otherwise the feature is dropped and documented (decided by a spike).
+**UI hint**: yes
+
+### Phase 8: Onboarding
+**Goal**: After creating an account, the user gets a tutorial explaining the app and each screen; it can be replayed any time from Settings. Web + mobile.
+**Depends on**: v1.0 screens (stable)
+**Requirements**: ONB-01
+**Success Criteria**:
+  1. First login after signup shows a multi-step walkthrough of the app + each screen; once seen it does not auto-reshow (persisted).
+  2. Settings has a "Revoir le tutoriel" entry that replays it. Web + mobile.
+**UI hint**: yes
+
+### Phase 9: iOS App Store Release
+**Goal**: The Expo app is published to the iOS App Store. All code/config/assets prepared by the agent; the Apple Developer account, credentials, and Apple review are owned by the user.
+**Depends on**: Phases 6–8 (final feature set)
+**Requirements**: REL-01
+**Success Criteria**:
+  1. `app.config.ts`/`eas.json` production-ready (bundle id, version/build, icons, splash, permission usage strings, privacy), an EAS production iOS build succeeds, and the app is submitted to App Store Connect (TestFlight → review).
+**Notes**: Account/payment-gated (Apple Developer Program $99/yr) + Apple review latency; `@rnmapbox/maps` needs the native (EAS) build. Google Play deferred.
+
+## Progress (v1.1)
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 6. Polish & Account | 0/0 | Not started | - |
+| 7. Showroom v2 | 0/0 | Not started | - |
+| 8. Onboarding | 0/0 | Not started | - |
+| 9. iOS App Store Release | 0/0 | Not started | - |
