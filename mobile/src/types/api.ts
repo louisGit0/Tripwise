@@ -20,6 +20,20 @@ export interface VehicleModel {
   model: string;
   fuelType: string;
   consumptionPer100km: number;
+  /** Catalog data origin (e.g. ADEME sync), optional. */
+  source?: string;
+}
+
+/**
+ * Frozen Phase-4 catalog contract: GET /vehicles/catalog →
+ * { items, total, page, limit, totalPages }.
+ */
+export interface CatalogPage {
+  items: VehicleModel[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface UserVehicle {
@@ -83,6 +97,10 @@ export interface TripResult {
     consumption: number;
   };
   cost?: FuelCost | ElectricCost;
+  /** Top-level toll cost from POST /trips/calculate (null when unavailable). */
+  tollCost?: number | null;
+  /** True when tollCost is the French heuristic estimate (not a TollGuru réel value). */
+  tollIsEstimate?: boolean;
 }
 
 // ── Favorites ──────────────────────────────────────────────────────────────────
