@@ -22,7 +22,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 ### Design System (DES)
 
-- [ ] **DES-01**: A documented **"editorial premium dark"** design language exists — typography scale, color, spacing rhythm, surfaces, data-viz primitives — as reusable tokens
+- [x] **DES-01**: A documented **"editorial premium dark"** design language exists — typography scale, color, spacing rhythm, surfaces, data-viz primitives — as reusable tokens
 - [ ] **DES-02**: Cost / consumption / toll figures are presented as **designed data-viz** (hero number + breakdown), not plain text rows
 - [ ] **DES-03**: Components have **designed interaction states** (hover / focus / press) and **loading skeletons**
 - [ ] **DES-04**: Key results use **smooth, compositor-friendly micro-interactions** (animated cost counters, transitions) within performance budgets

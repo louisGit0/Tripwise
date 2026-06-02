@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-01T20:45:10Z"
+last_updated: "2026-06-02T06:00:02.332Z"
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 5
+  total_plans: 10
+  completed_plans: 6
   percent: 33
 ---
 
@@ -19,17 +19,17 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 01.1 — route-aware-free-toll-estimator
+- **Current focus:** Phase 2 — editorial-dark-design-system-trip-result-redesign
 
 ## Current Position
 
-Phase: 01.1 (route-aware-free-toll-estimator) — ✅ COMPLETE
-Plan: 1 of 1 done
+Phase: 2 (editorial-dark-design-system-trip-result-redesign) — EXECUTING
+Plan: 2 of 5
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
 - **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
-- **Status:** Phase 01.1 complete; ready to plan Phase 2
-- **Progress:** [████████░░] phases 1 + 01.1 complete
+- **Status:** Ready to execute
+- **Progress:** [██████░░░░] 60%
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 1 of 1 done
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 5 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files)
+- Plans executed: 6 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files)
 
 ## Accumulated Context
 
@@ -90,7 +90,9 @@ Plan: 1 of 1 done
 
 ## Session Continuity
 
-- **Last action:** Phase 01.1 complete (plan 01.1-01) — route-aware free toll estimator shipped behind the unchanged `TollService` (D-09). 3 atomic commits (d699031 RED, f523620 GREEN, 70be240 wire). Backend `tsc`/`nest build` clean; toll unit 26/26, trips e2e 66/66, full unit 46/46, full e2e 143/143 green. Not yet pushed — orchestrator pushes after phase verification.
-- **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant (auto-activates on key). `migrationsRun: isProd` applies the `1748000000000` toll migration on prod boot.
-- **Next action:** `/gsd:verify-work` on Phase 01.1, then `/gsd:plan-phase 2` — Editorial Dark Design System + Trip Result Redesign (DES-01..04, WEB-02). Re-open precise tolls (TOLL-01/03) as a gap-closure plan only if a TollGuru key is ever obtained.
-- **Updated:** 2026-06-01
+- **Last action:** Phase 2 plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens: `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), 4 `--text-*` size vars, serif h1/h2; Tailwind `carbon.surface3/fuelGpl/toll` + `font-serif` + `text-hero/display/body/caption` + 12/20px spacing aliases; Instrument Serif wired via next/font, fonts trimmed to 2 weights (400/700). Web `tsc` clean + `build` 18/18 routes green. Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
+- **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
+- **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
+- **Next action:** execute Phase 2 plan 02-02 (next in wave) — continue the editorial-dark phase (DataBar/Skeleton primitives, hooks, result-page redesign).
+- **Updated:** 2026-06-02
