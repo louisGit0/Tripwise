@@ -145,6 +145,11 @@ export interface CatalogPage {
   totalPages: number;
 }
 
+/** Result of GET /vehicles/catalog/image — `imageUrl` is null when no key / no match / failure. */
+export interface CatalogImageResult {
+  imageUrl: string | null;
+}
+
 export interface TripStats {
   month?: string;
   totalCost: number;

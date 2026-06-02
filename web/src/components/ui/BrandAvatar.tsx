@@ -8,7 +8,7 @@ interface BrandAvatarProps {
 }
 
 /** Derives a stable hue from a brand name so each brand gets a consistent accent color */
-function brandHue(name: string): number {
+export function brandHue(name: string): number {
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = (hash * 31 + name.charCodeAt(i)) & 0xffff;
