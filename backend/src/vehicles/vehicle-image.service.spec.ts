@@ -174,6 +174,37 @@ describe('VehicleImageService', () => {
 
       await expect(service.resolveImageUrl('Tesla', 'Model 3')).resolves.toBeNull();
     });
+
+    // WR-01: a transient failure must NOT poison the 30-day cache. The next
+    // identical resolve has to retry (fetch called a SECOND time), and once the
+    // upstream recovers the photo "lights up" instead of staying null for 30d.
+    it('does NOT cache a transient failure → retries on the next call (429 then ok)', async () => {
+      fetchSpy
+        .mockResolvedValueOnce(errResponse(429))
+        .mockResolvedValueOnce(okResponse({ url: IMG }));
+      const service = makeService('test-key');
+
+      const first = await service.resolveImageUrl('Tesla', 'Model 3');
+      const second = await service.resolveImageUrl('Tesla', 'Model 3');
+
+      expect(first).toBeNull();
+      expect(second).toBe(IMG); // recovered — not served the poisoned null
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('does NOT cache a network rejection → retries on the next call', async () => {
+      fetchSpy
+        .mockRejectedValueOnce(new DOMException('timeout', 'TimeoutError'))
+        .mockResolvedValueOnce(okResponse({ url: IMG }));
+      const service = makeService('test-key');
+
+      const first = await service.resolveImageUrl('Tesla', 'Model 3');
+      const second = await service.resolveImageUrl('Tesla', 'Model 3');
+
+      expect(first).toBeNull();
+      expect(second).toBe(IMG);
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
   });
 
   // ── Clé en header + jamais dans le retour ──────────────────────────────────

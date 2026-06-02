@@ -24,7 +24,11 @@ const CARIMAGES_BASE_URL = 'https://api.carimagesapi.com/api/v1/images';
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 interface CacheEntry {
-  /** URL photo résolue, ou null (miss) — on cache les deux. */
+  /**
+   * Résultat DÉFINITIF du chemin OK : URL photo résolue (string), ou null
+   * (réponse 200 mais aucune photo). Les échecs transitoires (non-ok / timeout
+   * / réseau / parse) ne sont JAMAIS mis en cache — voir resolveImageUrl.
+   */
   url: string | null;
   expiresAt: number;
 }
@@ -75,7 +79,11 @@ function extractImageUrl(data: unknown): string | null {
 export class VehicleImageService {
   private readonly logger = new Logger(VehicleImageService.name);
 
-  /** Cache image, clé = `${make}|${model}` normalisé. Cache hits ET misses. */
+  /**
+   * Cache image, clé = `${make}|${model}` normalisé. On cache UNIQUEMENT les
+   * résultats définitifs du chemin OK (URL résolue OU 200-sans-photo) et le
+   * cas no-key. Les échecs transitoires ne sont jamais mis en cache.
+   */
   private readonly cache = new Map<string, CacheEntry>();
 
   constructor(private readonly config: ConfigService) {}
@@ -121,19 +129,22 @@ export class VehicleImageService {
         signal: AbortSignal.timeout(IMAGE_TIMEOUT_MS),
       });
 
-      // (5) ok → lecture défensive ; URL https ou null, dans les deux cas cache.
+      // (5) ok → résultat DÉFINITIF (URL https résolue, ou "200 sans photo")
+      //     → on cache (TTL 30j). C'est le SEUL chemin mis en cache.
       if (response.ok) {
         const data: unknown = await response.json();
         return this.cacheAndReturn(cacheKey, extractImageUrl(data));
       }
 
-      // (6) 401/429/5xx → log once + repli silencieux.
+      // (6) 401/429/5xx → échec TRANSITOIRE : repli silencieux SANS cache, pour
+      //     que la prochaine requête réessaie (pas d'empoisonnement 30j — mirroir toll).
       this.logger.warn(`CarImages HTTP ${response.status}, repli placeholder`);
-      return this.cacheAndReturn(cacheKey, null);
+      return null;
     } catch (err) {
-      // Timeout / réseau / parse → repli silencieux (ne jamais throw).
+      // Timeout / réseau / parse → échec TRANSITOIRE : repli silencieux SANS cache
+      //     (ne jamais throw). La prochaine requête réessaie.
       this.logger.warn(`CarImages indisponible, repli placeholder: ${String(err)}`);
-      return this.cacheAndReturn(cacheKey, null);
+      return null;
     }
   }
 

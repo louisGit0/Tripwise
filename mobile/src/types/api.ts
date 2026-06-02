@@ -19,7 +19,8 @@ export interface VehicleModel {
   brand: string;
   model: string;
   fuelType: string;
-  consumptionPer100km: number;
+  /** Entity field returned by GET /vehicles/catalog (matches the web type). */
+  consumption: number;
   /** Catalog data origin (e.g. ADEME sync), optional. */
   source?: string;
 }

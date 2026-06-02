@@ -289,7 +289,7 @@ export default function AddVehiclePage() {
                   type="button"
                   onClick={() => jumpToBrand(brand)}
                   aria-label={`Aller à la marque ${brand}`}
-                  className={`inline-flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.06] transition-colors ${FOCUS_RING}`}
+                  className={`inline-flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-carbon-accent/[0.06] transition-colors ${FOCUS_RING}`}
                 >
                   <BrandAvatar brand={brand} size={18} />
                   <span className="text-xs text-carbon-ink2">{brand}</span>
@@ -432,7 +432,7 @@ function ModelCard({
       type="button"
       onClick={() => onSelect(model)}
       aria-label={`Ajouter ${model.brand} ${model.model}${model.year ? ` (${model.year})` : ''} au garage`}
-      className="group flex flex-col gap-3 p-3 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
+      className="group flex flex-col gap-3 p-3 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-carbon-accent/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
     >
       {/* Photo region — VehicleImage = photo or stylized brand placeholder (fixed frame, no CLS). */}
       <VehicleImage brand={model.brand} model={model.model} fuelType={model.fuelType} />

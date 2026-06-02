@@ -12,6 +12,7 @@ import {
   HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { VehiclesService } from './vehicles.service';
 import { VehicleSyncService } from './vehicle-sync.service';
 import { VehicleImageService } from './vehicle-image.service';
@@ -47,7 +48,12 @@ export class VehiclesController {
   // NOTE: declared BEFORE `catalog/:id` so Nest does not match 'image' as an id.
   // Returns { imageUrl: string | null } — server-side CarImages resolve, key-safe,
   // never-throw (graceful → null → client renders a brand placeholder).
+  // The showroom renders ~60 image cards per page, each hitting this endpoint —
+  // a fan-out that would blow past the global 100 req/min ThrottlerGuard → 429 →
+  // random placeholders. Exempt THIS route only: it is GET-only, key-safe, and
+  // cached server-side, so skipping rate-limiting here is safe. (WR-03)
   @Get('catalog/image')
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   getCatalogImage(@Query() query: CatalogImageQueryDto) {
     return this.vehicleImageService

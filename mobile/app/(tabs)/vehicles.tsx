@@ -106,7 +106,7 @@ export default function VehiclesScreen() {
                 <View style={styles.vehicleMeta}>
                   <FuelPill fuelType={v.vehicleModel.fuelType} />
                   <Text style={[styles.vehicleSub, { color: c.mutedText }]}>
-                    {v.vehicleModel.consumptionPer100km} {unitFor(v.vehicleModel.fuelType)}/100km
+                    {v.vehicleModel.consumption} {unitFor(v.vehicleModel.fuelType)}/100km
                   </Text>
                 </View>
               </View>
@@ -318,7 +318,7 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
                     <View style={styles.catalogMeta}>
                       <FuelPill fuelType={item.fuelType} />
                       <Text style={[styles.catalogSub, { color: c.mutedText }]} numberOfLines={1}>
-                        {item.consumptionPer100km} {unitFor(item.fuelType)}/100km
+                        {item.consumption} {unitFor(item.fuelType)}/100km
                       </Text>
                     </View>
                   </View>
