@@ -8,6 +8,7 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { logout } from '@/lib/auth';
 import { apiClient } from '@/lib/api';
 import type { UserProfile } from '@/types/api';
@@ -45,12 +46,12 @@ export default function SettingsPage() {
   if (!mounted) {
     return (
       <div className="flex flex-col gap-6 max-w-md">
-        <div>
-          <div className="h-3 w-16 rounded bg-carbon-surface2 mb-2" />
-          <div className="h-8 w-32 rounded bg-carbon-surface2" />
+        <div className="flex flex-col gap-2">
+          <Skeleton width={64} height={12} />
+          <Skeleton width={128} height={32} rounded="rounded-lg" />
         </div>
-        <div className="h-[112px] rounded-xl bg-carbon-surface2" />
-        <div className="h-[76px] rounded-xl bg-carbon-surface2" />
+        <Skeleton height={112} rounded="rounded-card" className="w-full" />
+        <Skeleton height={76} rounded="rounded-card" className="w-full" />
       </div>
     );
   }
@@ -60,7 +61,7 @@ export default function SettingsPage() {
       {/* Header */}
       <div>
         <Eyebrow className="mb-1">Paramètres</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">Paramètres</h1>
+        <h1 className="text-display font-bold font-display text-carbon-ink">Paramètres</h1>
       </div>
 
       {/* ── Appearance ─────────────────────────────────────────── */}
@@ -72,8 +73,10 @@ export default function SettingsPage() {
               key={value}
               type="button"
               onClick={() => setTheme(value)}
+              aria-pressed={theme === value}
               className={[
-                'flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-xl border text-xs font-medium transition-all',
+                'flex-1 flex flex-col items-center gap-2 py-3 px-2 rounded-xl border text-xs font-normal transition-all',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg',
                 theme === value
                   ? 'border-carbon-accent bg-blue-500/10 text-carbon-accent'
                   : 'border-carbon-hairline bg-carbon-surface2 text-carbon-muted hover:bg-carbon-faint',
@@ -92,7 +95,7 @@ export default function SettingsPage() {
         {userProfile && (
           <div className="mb-4 space-y-1">
             {userProfile.displayName && (
-              <p className="text-sm font-semibold text-carbon-ink">{userProfile.displayName}</p>
+              <p className="text-sm font-bold text-carbon-ink">{userProfile.displayName}</p>
             )}
             <p className="text-xs text-carbon-muted">{userProfile.email}</p>
           </div>
@@ -109,7 +112,7 @@ export default function SettingsPage() {
       </SectionCard>
 
       {/* Version */}
-      <p className="text-[11px] text-carbon-muted font-mono text-center">
+      <p className="text-caption text-carbon-muted font-mono text-center">
         Version · v2.4 — BUILD 0521
       </p>
     </div>
