@@ -116,7 +116,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Schema foundation: source provenance column + canonical UNIQUE index (dedupe-before-index) + pg_trgm/brand/GIN search indexes (Wave 1)
-- [ ] 04-02-PLAN.md — Ingestion spine: CatalogSourceAdapter contract + verified conversions/EPA→FuelType map + AdemeAdapter + EpaAdapter + committed trimmed EPA snapshot (Wave 2)
+- [x] 04-02-PLAN.md — Ingestion spine: CatalogSourceAdapter contract + verified conversions/EPA→FuelType map + AdemeAdapter + EpaAdapter + committed trimmed EPA snapshot (Wave 2)
 - [ ] 04-03-PLAN.md — Server-side catalog API: extend GET /vehicles/catalog (search/brand/fuelCategory/pagination) + /catalog/brands facet + e2e (Wave 2)
 - [ ] 04-04-PLAN.md — Merge orchestrator: ADEME-precedence first-writer-wins + ON CONFLICT upsert (idempotent, extensible) + merge unit spec (Wave 3)
 - [ ] 04-05-PLAN.md — Showroom rework: garage/add → debounced server-side search + pagination, Phase 3 visuals preserved (Wave 3)
@@ -143,5 +143,5 @@ Plans:
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
-| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 1/6 | In Progress|  |
+| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 2/6 | In Progress|  |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
