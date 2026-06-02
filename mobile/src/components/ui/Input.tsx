@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useColorScheme } from 'react-native';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { Colors, Fonts, FontSizes, Spacing } from '@/constants/theme';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -24,31 +24,31 @@ export function Input({ label, error, hint, containerStyle, ...props }: InputPro
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && <Text style={[styles.label, { color: c.text }]}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: c.ink }]}>{label}</Text>}
       <TextInput
         {...props}
         style={[
           styles.input,
           {
-            backgroundColor: c.inputBg,
-            borderColor: error ? c.destructive : focused ? c.primary : c.inputBorder,
-            color: c.text,
+            backgroundColor: c.surface,
+            borderColor: error ? c.fuelGas : focused ? c.accent : c.hairline,
+            color: c.ink,
           },
           props.style,
         ]}
-        placeholderTextColor={c.placeholder}
+        placeholderTextColor={c.mutedText}
         onFocus={(e) => { setFocused(true); props.onFocus?.(e); }}
         onBlur={(e) => { setFocused(false); props.onBlur?.(e); }}
       />
-      {error && <Text style={[styles.error, { color: c.destructive }]}>{error}</Text>}
-      {hint && !error && <Text style={[styles.hint, { color: c.mutedFg }]}>{hint}</Text>}
+      {error && <Text style={[styles.error, { color: c.fuelGas }]}>{error}</Text>}
+      {hint && !error && <Text style={[styles.hint, { color: c.mutedText }]}>{hint}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { gap: 4 },
-  label: { fontSize: FontSizes.sm, fontWeight: '500', marginBottom: 2 },
+  label: { fontFamily: Fonts.display, fontSize: FontSizes.sm, fontWeight: '700', marginBottom: 2 },
   input: {
     borderWidth: 1,
     borderRadius: 10,

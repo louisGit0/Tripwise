@@ -53,8 +53,8 @@ export function MapboxMap({ result }: MapboxMapProps) {
 
   if (isExpoGo || !MapView || !Camera || !ShapeSource || !LineLayer || !MarkerView) {
     return (
-      <View style={[styles.placeholder, { backgroundColor: c.muted, borderColor: c.border }]}>
-        <Text style={[styles.placeholderText, { color: c.mutedFg }]}>
+      <View style={[styles.placeholder, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
+        <Text style={[styles.placeholderText, { color: c.mutedText }]}>
           {t('dashboard.mapUnavailable')}
         </Text>
       </View>
@@ -75,6 +75,7 @@ export function MapboxMap({ result }: MapboxMapProps) {
   const MV = MapView as React.ComponentType<{
     style: object;
     styleURL: string;
+    children: React.ReactNode;
   }>;
   const Cam = Camera as React.ComponentType<{
     bounds: { ne: [number, number]; sw: [number, number]; paddingLeft: number; paddingRight: number; paddingTop: number; paddingBottom: number };
@@ -111,7 +112,7 @@ export function MapboxMap({ result }: MapboxMapProps) {
         <SS id="route" shape={routeGeoJSON}>
           <LL
             id="routeLine"
-            style={{ lineColor: '#2563eb', lineWidth: 4, lineJoin: 'round', lineCap: 'round' }}
+            style={{ lineColor: '#4d8bff', lineWidth: 4, lineJoin: 'round', lineCap: 'round' }}
           />
         </SS>
         <MkV coordinate={origin as [number, number]}>

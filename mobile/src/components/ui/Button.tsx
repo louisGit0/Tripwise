@@ -4,14 +4,19 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
+  StyleProp,
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { Colors } from '@/constants/theme';
+import { Colors, Fonts, type ThemeColors } from '@/constants/theme';
 import { useColorScheme } from 'react-native';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'destructive';
 type Size = 'sm' | 'md' | 'lg';
+
+// Dark ink used as the LABEL color on the bright accent CTA (matches the web
+// accent-button contrast — never white-on-accent).
+const ACCENT_INK = '#0e0c0a';
 
 interface ButtonProps {
   label: string;
@@ -35,19 +40,16 @@ export function Button({
   const scheme = useColorScheme() ?? 'light';
   const c = Colors[scheme];
 
-  const containerStyle: ViewStyle[] = [
+  const containerStyle: StyleProp<ViewStyle> = [
     styles.base,
     sizeStyles[size],
     variantContainer(variant, c),
     (disabled || loading) && styles.disabled,
-    style ?? {},
+    style,
   ];
 
-  const textStyle: TextStyle[] = [
-    styles.label,
-    sizeLabel[size],
-    variantLabel(variant, c),
-  ];
+  const labelColor = variantLabelColor(variant, c);
+  const textStyle: StyleProp<TextStyle> = [styles.label, sizeLabel[size], { color: labelColor }];
 
   return (
     <TouchableOpacity
@@ -57,7 +59,7 @@ export function Button({
       activeOpacity={0.75}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? '#fff' : c.primary} size="small" />
+        <ActivityIndicator color={labelColor} size="small" />
       ) : (
         <Text style={textStyle}>{label}</Text>
       )}
@@ -65,28 +67,29 @@ export function Button({
   );
 }
 
-function variantContainer(variant: Variant, c: typeof Colors.light): ViewStyle {
+function variantContainer(variant: Variant, c: ThemeColors): ViewStyle {
   switch (variant) {
     case 'primary':
-      return { backgroundColor: c.primary };
+      return { backgroundColor: c.accent };
     case 'secondary':
-      return { backgroundColor: c.muted, borderWidth: 1, borderColor: c.border };
+      return { backgroundColor: c.surface2, borderWidth: 1, borderColor: c.hairline };
     case 'ghost':
       return { backgroundColor: 'transparent' };
     case 'destructive':
-      return { backgroundColor: c.destructive };
+      return { backgroundColor: c.fuelGas };
   }
 }
 
-function variantLabel(variant: Variant, c: typeof Colors.light): TextStyle {
+function variantLabelColor(variant: Variant, c: ThemeColors): string {
   switch (variant) {
     case 'primary':
+      return ACCENT_INK;
     case 'destructive':
-      return { color: '#fff' };
+      return '#ffffff';
     case 'secondary':
-      return { color: c.text };
+      return c.ink;
     case 'ghost':
-      return { color: c.primary };
+      return c.accent;
   }
 }
 
@@ -98,7 +101,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   disabled: { opacity: 0.5 },
-  label: { fontWeight: '600' },
+  // Editorial display font, weight 700 only (D-11 — no 600/semibold).
+  label: { fontFamily: Fonts.display, fontWeight: '700' },
 });
 
 const sizeStyles: Record<Size, ViewStyle> = {

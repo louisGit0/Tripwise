@@ -19,7 +19,7 @@ export function Card({ children, padding = 'md', style }: CardProps) {
     <View
       style={[
         styles.card,
-        { backgroundColor: c.card, borderColor: c.border },
+        { backgroundColor: c.surface, borderColor: c.hairline },
         paddingMap[padding],
         style,
       ]}
@@ -31,7 +31,7 @@ export function Card({ children, padding = 'md', style }: CardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Radius.lg,
+    borderRadius: Radius.card,
     borderWidth: 1,
   },
 });

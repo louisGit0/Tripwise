@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Colors, FontSizes, Radius, Spacing } from '@/constants/theme';
+import { Colors, Fonts, FontSizes, Radius, Spacing } from '@/constants/theme';
 import { useDebounce } from '@/src/hooks/useDebounce';
 import client from '@/src/api/client';
 import type { GeocodeFeature, GeoPoint } from '@/src/types/api';
@@ -75,37 +75,37 @@ export function AutocompleteInput({ label, placeholder, value, onChange }: Autoc
 
   return (
     <View style={styles.wrapper}>
-      <Text style={[styles.label, { color: c.text }]}>{label}</Text>
+      <Text style={[styles.label, { color: c.ink }]}>{label}</Text>
       <View
         style={[
           styles.inputRow,
-          { backgroundColor: c.inputBg, borderColor: c.inputBorder },
+          { backgroundColor: c.surface, borderColor: c.hairline },
         ]}
       >
         <TextInput
-          style={[styles.input, { color: c.text }]}
+          style={[styles.input, { color: c.ink }]}
           placeholder={placeholder}
-          placeholderTextColor={c.placeholder}
+          placeholderTextColor={c.mutedText}
           value={query}
           onChangeText={handleChangeText}
           returnKeyType="search"
           autoCorrect={false}
         />
-        {loading && <ActivityIndicator size="small" color={c.primary} style={styles.spinner} />}
+        {loading && <ActivityIndicator size="small" color={c.accent} style={styles.spinner} />}
       </View>
 
       {showList && results.length > 0 && (
-        <View style={[styles.dropdown, { backgroundColor: c.card, borderColor: c.border }]}>
+        <View style={[styles.dropdown, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
           <FlatList
             data={results}
             keyExtractor={(item) => item.id}
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.item, { borderBottomColor: c.border }]}
+                style={[styles.item, { borderBottomColor: c.hairline }]}
                 onPress={() => handleSelect(item)}
               >
-                <Text style={[styles.itemText, { color: c.text }]} numberOfLines={1}>
+                <Text style={[styles.itemText, { color: c.ink }]} numberOfLines={1}>
                   {item.place_name}
                 </Text>
               </TouchableOpacity>
@@ -115,8 +115,8 @@ export function AutocompleteInput({ label, placeholder, value, onChange }: Autoc
       )}
 
       {showList && results.length === 0 && !loading && (
-        <View style={[styles.dropdown, { backgroundColor: c.card, borderColor: c.border }]}>
-          <Text style={[styles.noResult, { color: c.mutedFg }]}>
+        <View style={[styles.dropdown, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
+          <Text style={[styles.noResult, { color: c.mutedText }]}>
             {t('dashboard.noGeocodeResults')}
           </Text>
         </View>
@@ -127,7 +127,7 @@ export function AutocompleteInput({ label, placeholder, value, onChange }: Autoc
 
 const styles = StyleSheet.create({
   wrapper: { position: 'relative', zIndex: 10 },
-  label: { fontSize: FontSizes.sm, fontWeight: '500', marginBottom: 4 },
+  label: { fontFamily: Fonts.display, fontSize: FontSizes.sm, fontWeight: '700', marginBottom: 4 },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
