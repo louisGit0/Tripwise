@@ -7,8 +7,6 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { FuelBadge } from '@/components/ui/FuelBadge';
-import { Pill } from '@/components/ui/Pill';
-import { Tooltip } from '@/components/ui/Tooltip';
 import { Hairline } from '@/components/ui/Hairline';
 import { Modal } from '@/components/ui/Modal';
 import { DataBar } from '@/components/ui/DataBar';
@@ -247,8 +245,8 @@ export default function TripDetailPage({ params }: Props) {
 
         {/* ── Breakdown bar (Variant A — Énergie vs Péage) ───── */}
         {/* Mirrors the result page: render the segmented breakdown only when a
-            toll is present; the réel/≈ estimé Pill+Tooltip (Phase 1) is kept
-            verbatim in the péage legend. D-04 hide-when-toll-0. */}
+            toll is present (D-04 hide-when-toll-0). The toll-estimate badge was
+            removed (POL-01); tollIsEstimate still flows on the trip object. */}
         {trip.tollsCost > 0 && (
           <div className="mt-5">
             <DataBar
@@ -271,17 +269,6 @@ export default function TripDetailPage({ params }: Props) {
                   style={{ background: 'var(--c-toll)' }}
                 />
                 Péage · {fmtEur.format(trip.tollsCost)}
-                <Tooltip
-                  content={
-                    trip.tollIsEstimate
-                      ? 'Estimation indicative (calcul français moyen)'
-                      : 'Prix réel calculé par TollGuru le long de l’itinéraire'
-                  }
-                >
-                  <Pill color={trip.tollIsEstimate ? 'warning' : 'success'} size="sm">
-                    {trip.tollIsEstimate ? '≈ estimé' : 'réel'}
-                  </Pill>
-                </Tooltip>
               </span>
             </div>
           </div>

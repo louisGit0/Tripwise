@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { ReactNode, CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus, Save, RotateCcw } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -9,8 +9,6 @@ import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { FuelBadge } from '@/components/ui/FuelBadge';
-import { Pill } from '@/components/ui/Pill';
-import { Tooltip } from '@/components/ui/Tooltip';
 import { DataBar } from '@/components/ui/DataBar';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useCountUp } from '@/hooks/useCountUp';
@@ -211,7 +209,6 @@ export default function TripResultPage() {
   const tollCost = result.tollCost ?? 0;
   const totalCost = (cost?.totalCost ?? 0) + tollCost;
   const perPerson = totalCost / passengers;
-  const tollIsEstimate = result.tollIsEstimate ?? false;
   const isElectric = result.vehicle.fuelType === 'ELECTRIC';
   const canSave = mode === 'address' && !!session.origin && !!session.destination && !!cost;
   const energyCost = cost?.totalCost ?? 0;
@@ -229,19 +226,6 @@ export default function TripResultPage() {
 
   // Metrics grid — péage line dropped entirely when there is no toll (D-04)
   const hasToll = result.tollCost !== null && result.tollCost > 0;
-  const tollBadge = hasToll ? (
-    <Tooltip
-      content={
-        tollIsEstimate
-          ? 'Estimation indicative (calcul français moyen)'
-          : 'Prix réel calculé par TollGuru le long de l’itinéraire'
-      }
-    >
-      <Pill color={tollIsEstimate ? 'warning' : 'success'} size="sm">
-        {tollIsEstimate ? '≈ estimé' : 'réel'}
-      </Pill>
-    </Tooltip>
-  ) : undefined;
 
   const metrics = [
     {
@@ -254,7 +238,6 @@ export default function TripResultPage() {
       ? {
           label: 'PÉAGES',
           value: fmtEur.format(result.tollCost as number),
-          badge: tollBadge,
         }
       : false,
     {
@@ -268,7 +251,7 @@ export default function TripResultPage() {
       label: 'PAR PERS.',
       value: fmtEur.format(perPerson),
     },
-  ].filter(Boolean) as Array<{ label: string; value: string; badge?: ReactNode }>;
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (
     <div className="flex flex-col gap-6">
@@ -336,7 +319,6 @@ export default function TripResultPage() {
                   style={{ background: 'var(--c-toll)' }}
                 />
                 Péage · {fmtEur.format(result.tollCost as number)}
-                {tollBadge}
               </span>
             )}
           </div>
@@ -346,7 +328,7 @@ export default function TripResultPage() {
         {/* 2×2 metrics grid */}
         <Hairline className="my-4" />
         <div className="grid grid-cols-2 gap-3">
-          {metrics.map(({ label, value, badge }, i) => (
+          {metrics.map(({ label, value }, i) => (
             <div
               key={label}
               style={revealStyle(i)}
@@ -357,7 +339,6 @@ export default function TripResultPage() {
               </span>
               <span className="flex items-center gap-1.5 text-body font-bold font-mono text-carbon-ink tabular-nums">
                 {value}
-                {badge}
               </span>
             </div>
           ))}
