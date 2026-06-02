@@ -7,9 +7,7 @@ import {
   StyleSheet,
   useColorScheme,
   Share,
-  Alert,
   Modal,
-  TextInput,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -17,17 +15,21 @@ import Toast from 'react-native-toast-message';
 import { AutocompleteInput } from '@/src/components/AutocompleteInput';
 import { MapboxMap } from '@/src/components/MapboxMap';
 import { Button } from '@/src/components/ui/Button';
-import { Card } from '@/src/components/ui/Card';
 import { Input } from '@/src/components/ui/Input';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { SectionCard } from '@/src/components/ui/SectionCard';
+import { Eyebrow } from '@/src/components/ui/Eyebrow';
+import { Colors, Fonts, FontSizes, Spacing, type ThemeColors } from '@/constants/theme';
 import client from '@/src/api/client';
 import type { GeoPoint, UserVehicle, TripResult } from '@/src/types/api';
 
 type ChargingMode = 'home' | 'public' | 'mix';
 
+// Dark ink used on accent (light) fills — mirrors the editorial Button label.
+const ON_ACCENT = '#0e0c0a';
+
 export default function DashboardScreen() {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const params = useLocalSearchParams<{
     originLabel?: string; originLat?: string; originLng?: string;
@@ -128,13 +130,16 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView
-      style={{ backgroundColor: c.background }}
+      style={{ backgroundColor: c.bg }}
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-      <Text style={[styles.pageTitle, { color: c.text }]}>{t('dashboard.title')}</Text>
+      <View style={styles.header}>
+        <Eyebrow>verygoodtrip</Eyebrow>
+        <Text style={[styles.pageTitle, { color: c.ink }]}>{t('dashboard.title')}</Text>
+      </View>
 
-      <Card>
+      <SectionCard>
         <View style={styles.cardInner}>
           <AutocompleteInput
             label={t('dashboard.origin')}
@@ -150,55 +155,61 @@ export default function DashboardScreen() {
           />
 
           {/* Vehicle picker */}
-          <View>
-            <Text style={[styles.label, { color: c.text }]}>{t('dashboard.vehicle')}</Text>
+          <View style={styles.fieldGroup}>
+            <Eyebrow>{t('dashboard.vehicle')}</Eyebrow>
             {vehicles.length === 0 ? (
-              <Text style={[styles.hint, { color: c.mutedFg }]}>{t('dashboard.noVehicle')}</Text>
+              <Text style={[styles.hint, { color: c.mutedText }]}>{t('dashboard.noVehicle')}</Text>
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.vehicleRow}>
-                {vehicles.map((v) => (
-                  <TouchableOpacity
-                    key={v.id}
-                    style={[
-                      styles.vehicleChip,
-                      {
-                        backgroundColor: v.id === selectedVehicleId ? c.primary : c.muted,
-                        borderColor: v.id === selectedVehicleId ? c.primary : c.border,
-                      },
-                    ]}
-                    onPress={() => setSelectedVehicleId(v.id)}
-                  >
-                    <Text style={[styles.vehicleChipText, { color: v.id === selectedVehicleId ? '#fff' : c.text }]}>
-                      {v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                {vehicles.map((v) => {
+                  const active = v.id === selectedVehicleId;
+                  return (
+                    <TouchableOpacity
+                      key={v.id}
+                      style={[
+                        styles.vehicleChip,
+                        {
+                          backgroundColor: active ? c.accent : c.surface2,
+                          borderColor: active ? c.accent : c.hairline,
+                        },
+                      ]}
+                      onPress={() => setSelectedVehicleId(v.id)}
+                    >
+                      <Text style={[styles.chipText, { color: active ? ON_ACCENT : c.ink }]}>
+                        {v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             )}
           </View>
 
           {/* Charging mode (electric only) */}
           {isElectric && (
-            <View style={styles.chargingSection}>
-              <Text style={[styles.label, { color: c.text }]}>{t('dashboard.chargingMode')}</Text>
+            <View style={styles.fieldGroup}>
+              <Eyebrow>{t('dashboard.chargingMode')}</Eyebrow>
               <View style={styles.modeRow}>
-                {(['home', 'public', 'mix'] as ChargingMode[]).map((mode) => (
-                  <TouchableOpacity
-                    key={mode}
-                    style={[
-                      styles.modeBtn,
-                      {
-                        backgroundColor: chargingMode === mode ? c.primary : c.muted,
-                        borderColor: chargingMode === mode ? c.primary : c.border,
-                      },
-                    ]}
-                    onPress={() => setChargingMode(mode)}
-                  >
-                    <Text style={{ color: chargingMode === mode ? '#fff' : c.text, fontSize: FontSizes.sm }}>
-                      {t(`dashboard.charging${mode.charAt(0).toUpperCase() + mode.slice(1)}` as never)}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                {(['home', 'public', 'mix'] as ChargingMode[]).map((mode) => {
+                  const active = chargingMode === mode;
+                  return (
+                    <TouchableOpacity
+                      key={mode}
+                      style={[
+                        styles.modeBtn,
+                        {
+                          backgroundColor: active ? c.accent : c.surface2,
+                          borderColor: active ? c.accent : c.hairline,
+                        },
+                      ]}
+                      onPress={() => setChargingMode(mode)}
+                    >
+                      <Text style={[styles.modeBtnText, { color: active ? ON_ACCENT : c.ink }]}>
+                        {t(`dashboard.charging${mode.charAt(0).toUpperCase() + mode.slice(1)}` as never)}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
           )}
@@ -210,15 +221,14 @@ export default function DashboardScreen() {
             disabled={!canCalculate}
           />
         </View>
-      </Card>
+      </SectionCard>
 
       {result && (
         <>
           <MapboxMap result={result} />
 
-          <Card>
+          <SectionCard title={t('dashboard.cost')}>
             <View style={styles.cardInner}>
-              <Text style={[styles.sectionTitle, { color: c.text }]}>Résultat</Text>
               <View style={styles.statRow}>
                 <StatItem label={t('dashboard.distance')} value={`${result.distance.km} km`} c={c} />
                 <StatItem label={t('dashboard.duration')} value={result.duration.formatted} c={c} />
@@ -228,9 +238,11 @@ export default function DashboardScreen() {
               </View>
 
               {result.cost?.type === 'electric' && (
-                <Text style={[styles.disclaimer, { color: c.mutedFg }]}>
-                  {t('dashboard.disclaimerElectric')}
-                </Text>
+                <View style={[styles.note, { backgroundColor: c.surface2, borderColor: c.hairline }]}>
+                  <Text style={[styles.noteText, { color: c.ink2 }]}>
+                    {t('dashboard.disclaimerElectric')}
+                  </Text>
+                </View>
               )}
 
               <View style={styles.actionRow}>
@@ -238,16 +250,16 @@ export default function DashboardScreen() {
                 <Button label={t('dashboard.share')} onPress={handleShare} variant="ghost" size="sm" />
               </View>
             </View>
-          </Card>
+          </SectionCard>
         </>
       )}
 
       {/* Save favorite modal */}
       <Modal visible={favModal} transparent animationType="fade" onRequestClose={() => setFavModal(false)}>
         <View style={styles.overlay}>
-          <Card style={styles.modalCard}>
+          <SectionCard style={styles.modalCard}>
             <View style={styles.cardInner}>
-              <Text style={[styles.sectionTitle, { color: c.text }]}>{t('dashboard.addFavorite')}</Text>
+              <Text style={[styles.modalTitle, { color: c.ink }]}>{t('dashboard.addFavorite')}</Text>
               <Input
                 label={t('favorites.nameLabel')}
                 placeholder={t('favorites.namePlaceholder')}
@@ -265,27 +277,28 @@ export default function DashboardScreen() {
                 />
               </View>
             </View>
-          </Card>
+          </SectionCard>
         </View>
       </Modal>
     </ScrollView>
   );
 }
 
-function StatItem({ label, value, c }: { label: string; value: string; c: typeof Colors.light }) {
+function StatItem({ label, value, c }: { label: string; value: string; c: ThemeColors }) {
   return (
     <View style={styles.stat}>
-      <Text style={[styles.statLabel, { color: c.mutedFg }]}>{label}</Text>
-      <Text style={[styles.statValue, { color: c.text }]}>{value}</Text>
+      <Text style={[styles.statLabel, { color: c.mutedText }]}>{label}</Text>
+      <Text style={[styles.statValue, { color: c.ink }]}>{value}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { padding: Spacing[4], gap: Spacing[4] },
-  pageTitle: { fontSize: FontSizes['2xl'], fontWeight: '700', marginTop: Spacing[2] },
+  header: { marginTop: Spacing[2], gap: 2 },
+  pageTitle: { fontFamily: Fonts.display, fontSize: FontSizes['2xl'], fontWeight: '700' },
   cardInner: { gap: Spacing[4] },
-  label: { fontSize: FontSizes.sm, fontWeight: '500' },
+  fieldGroup: { gap: Spacing[2] },
   hint: { fontSize: FontSizes.sm },
   vehicleRow: { flexDirection: 'row' },
   vehicleChip: {
@@ -295,8 +308,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginRight: 8,
   },
-  vehicleChipText: { fontSize: FontSizes.sm, fontWeight: '500' },
-  chargingSection: { gap: Spacing[2] },
+  chipText: { fontFamily: Fonts.display, fontSize: FontSizes.sm, fontWeight: '700' },
   modeRow: { flexDirection: 'row', gap: Spacing[2] },
   modeBtn: {
     flex: 1,
@@ -305,12 +317,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
   },
-  sectionTitle: { fontSize: FontSizes.lg, fontWeight: '600' },
+  modeBtnText: { fontFamily: Fonts.display, fontSize: FontSizes.sm, fontWeight: '700' },
+  modalTitle: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
   statRow: { flexDirection: 'row', gap: Spacing[4] },
   stat: { flex: 1, gap: 2 },
   statLabel: { fontSize: FontSizes.xs },
-  statValue: { fontSize: FontSizes.base, fontWeight: '600' },
-  disclaimer: { fontSize: FontSizes.xs, lineHeight: 16 },
+  statValue: { fontFamily: Fonts.mono, fontSize: FontSizes.base, fontWeight: '700' },
+  note: { borderRadius: 8, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
+  noteText: { fontSize: FontSizes.xs, lineHeight: 16 },
   actionRow: { flexDirection: 'row', gap: Spacing[2] },
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: Spacing[6] },
   modalCard: { width: '100%' },
