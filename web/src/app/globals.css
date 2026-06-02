@@ -101,6 +101,15 @@
   50% { opacity: 0.15; }
 }
 
+/* ── Staggered reveal (DES-04) — opacity + translateY only ─────── */
+/* Compositor-friendly: no layout reflow (items hold their final slot;
+   only opacity + transform animate). Gated off under reduced-motion
+   by the consuming component (no `reveal` style applied). */
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* ── Base resets ─────────────────────────────────────────────── */
 *,
 *::before,

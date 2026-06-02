@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus, Save, RotateCcw } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
@@ -11,6 +11,9 @@ import { Hairline } from '@/components/ui/Hairline';
 import { FuelBadge } from '@/components/ui/FuelBadge';
 import { Pill } from '@/components/ui/Pill';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { DataBar } from '@/components/ui/DataBar';
+import { useCountUp } from '@/hooks/useCountUp';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type {
@@ -18,6 +21,7 @@ import type {
   FuelCostResult,
   ElectricCostResult,
   EnergyComparison,
+  FuelType,
   SavedTrip,
 } from '@/types/api';
 
@@ -32,6 +36,14 @@ function formatDuration(seconds: number): string {
   const m = Math.floor((seconds % 3600) / 60);
   if (h > 0) return `${h}h${m > 0 ? String(m).padStart(2, '0') : ''}`;
   return `${m} min`;
+}
+
+// Energy fill var for the trip's own fuel type (breakdown bar Énergie segment).
+function energyFillVar(fuelType: FuelType): string {
+  if (fuelType === 'ELECTRIC') return 'var(--c-ev)';
+  if (fuelType === 'DIESEL') return 'var(--c-fuel-die)';
+  if (fuelType === 'GPL') return 'var(--c-fuel-gpl)';
+  return 'var(--c-fuel-gas)'; // SP95 / SP95_E10 / SP98 / E85
 }
 
 function categoryColor(category: EnergyComparison['category']): string {
@@ -69,6 +81,23 @@ export default function TripResultPage() {
       router.replace('/app/dashboard');
     }
   }, [router]);
+
+  // Hooks must run unconditionally (before the session guard). The hero target is
+  // safe-defaulted to 0 until the session resolves.
+  const heroTarget = session
+    ? ((session.result.cost?.totalCost ?? 0) + (session.result.tollCost ?? 0)) / passengers
+    : 0;
+  const animatedTotal = useCountUp(heroTarget);
+  const reducedMotion = useReducedMotion();
+
+  // Staggered reveal style (gated off under reduced motion).
+  const revealStyle = (index: number): CSSProperties =>
+    reducedMotion
+      ? {}
+      : {
+          animation: 'reveal 360ms ease-out both',
+          animationDelay: `${Math.min(index * 60, 300)}ms`,
+        };
 
   function handleNewTrip() {
     sessionStorage.removeItem(SESSION_KEY);
@@ -138,9 +167,12 @@ export default function TripResultPage() {
   const cost = result.cost;
   const tollCost = result.tollCost ?? 0;
   const totalCost = (cost?.totalCost ?? 0) + tollCost;
+  const perPerson = totalCost / passengers;
   const tollIsEstimate = result.tollIsEstimate ?? false;
   const isElectric = result.vehicle.fuelType === 'ELECTRIC';
   const canSave = mode === 'address' && !!session.origin && !!session.destination && !!cost;
+  const energyCost = cost?.totalCost ?? 0;
+  const energyFill = energyFillVar(result.vehicle.fuelType);
 
   const fmtEur = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -191,7 +223,7 @@ export default function TripResultPage() {
     },
     {
       label: 'PAR PERS.',
-      value: fmtEur.format(totalCost / passengers),
+      value: fmtEur.format(perPerson),
     },
   ].filter(Boolean) as Array<{ label: string; value: string; badge?: ReactNode }>;
 
@@ -200,7 +232,7 @@ export default function TripResultPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <Eyebrow className="mb-0.5">Résultat</Eyebrow>
-        <h1 className="text-2xl font-bold font-display text-carbon-ink">
+        <h1 className="font-serif font-normal text-display text-carbon-ink">
           {session.origin?.label?.split(',')[0] ?? '—'}
           <span className="text-carbon-muted mx-2">→</span>
           {session.destination?.label?.split(',')[0] ?? '—'}
@@ -208,32 +240,71 @@ export default function TripResultPage() {
       </div>
 
       {/* ── Hero cost ─────────────────────────────────────────── */}
-      <SectionCard padding="md">
-        <p className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted mb-2">
+      <SectionCard padding="md" className="!bg-carbon-surface3">
+        <p className="text-caption font-bold tracking-eye uppercase text-carbon-muted mb-2">
           Coût estimé
         </p>
-        <p className="text-[104px] font-bold font-display text-carbon-ink leading-none tabular-nums">
-          {(totalCost / passengers).toFixed(2)}
-          <span className="text-4xl font-medium text-carbon-muted ml-2">€</span>
+        <p className="text-hero font-bold font-mono text-carbon-ink leading-none tabular-nums">
+          <span aria-hidden="true">{animatedTotal.toFixed(2)}</span>
+          <span className="sr-only">{fmtEur.format(perPerson)}</span>
+          <span aria-hidden="true" className="text-display font-normal text-carbon-muted ml-2">
+            €
+          </span>
         </p>
         {passengers > 1 && (
-          <p className="text-xs text-carbon-muted mt-1 font-mono">
+          <p className="text-caption text-carbon-muted mt-1 font-mono">
             {fmtEur.format(totalCost)} total · {passengers} passagers
           </p>
         )}
 
+        {/* ── Breakdown bar (Variant A — Énergie vs Péage) ──────── */}
+        <div className="mt-5">
+          <DataBar
+            energyValue={energyCost}
+            tollValue={tollCost}
+            total={totalCost}
+            energyFillVar={energyFill}
+          />
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2.5">
+            <span
+              style={revealStyle(0)}
+              className="flex items-center gap-1.5 text-caption font-mono text-carbon-ink2"
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ background: energyFill }}
+              />
+              Énergie · {fmtEur.format(energyCost)}
+            </span>
+            {hasToll && (
+              <span
+                style={revealStyle(1)}
+                className="flex items-center gap-1.5 text-caption font-mono text-carbon-ink2"
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ background: 'var(--c-toll)' }}
+                />
+                Péage · {fmtEur.format(result.tollCost as number)}
+                {tollBadge}
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* 2×2 metrics grid */}
         <Hairline className="my-4" />
         <div className="grid grid-cols-2 gap-3">
-          {metrics.map(({ label, value, badge }) => (
+          {metrics.map(({ label, value, badge }, i) => (
             <div
               key={label}
+              style={revealStyle(i)}
               className="flex flex-col gap-0.5 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline"
             >
-              <span className="text-[10px] font-semibold tracking-widest uppercase text-carbon-muted">
+              <span className="text-caption font-bold tracking-eye uppercase text-carbon-muted">
                 {label}
               </span>
-              <span className="flex items-center gap-1.5 text-sm font-bold font-mono text-carbon-ink tabular-nums">
+              <span className="flex items-center gap-1.5 text-body font-bold font-mono text-carbon-ink tabular-nums">
                 {value}
                 {badge}
               </span>
@@ -244,11 +315,11 @@ export default function TripResultPage() {
         {/* Metadata row */}
         <div className="flex items-center gap-3 mt-3 flex-wrap">
           <FuelBadge fuelType={result.vehicle.fuelType} />
-          <span className="text-xs text-carbon-muted font-mono">
+          <span className="text-caption text-carbon-muted font-mono">
             {result.distance.km.toFixed(1)} km
           </span>
           {result.duration.seconds > 0 && (
-            <span className="text-xs text-carbon-muted font-mono">
+            <span className="text-caption text-carbon-muted font-mono">
               {formatDuration(result.duration.seconds)}
             </span>
           )}
@@ -256,14 +327,14 @@ export default function TripResultPage() {
 
         {/* Estimate note for distance mode */}
         {mode === 'distance' && (
-          <p className="mt-3 text-[11px] text-amber-400 bg-amber-500/10 rounded-lg px-3 py-2 leading-relaxed">
+          <p className="mt-3 text-caption text-carbon-ink2 bg-carbon-surface2 border border-carbon-hairline rounded-lg px-3 py-2 leading-relaxed">
             Estimation indicative — calcul sans itinéraire précis.
           </p>
         )}
 
         {/* Electric disclaimer */}
         {isElectric && cost && !isFuelCost(cost) && cost.disclaimer && (
-          <p className="mt-3 text-[11px] text-amber-400 bg-amber-500/10 rounded-lg px-3 py-2 leading-relaxed">
+          <p className="mt-3 text-caption text-carbon-ink2 bg-carbon-surface2 border border-carbon-hairline rounded-lg px-3 py-2 leading-relaxed">
             {cost.disclaimer}
           </p>
         )}
@@ -330,9 +401,7 @@ export default function TripResultPage() {
         padding="md"
       >
         <div className="flex items-center justify-between mt-2">
-          <p className="text-sm text-carbon-ink2">
-            Passager ×{passengers}
-          </p>
+          <p className="text-sm text-carbon-ink2">Passager ×{passengers}</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
