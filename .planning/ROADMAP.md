@@ -18,7 +18,7 @@ breadth, not the foundation.
 - [x] **Phase 1: Precise Tolls End-to-End (Web)** - Estimate-primary tolls (re-scoped D-07: TollGuru paid/no key), graceful heuristic fallback as the live mode, broken out and persisted, shown clearly on web trip results. Precise TollGuru path built + dormant pending a key.
 - [x] **Phase 2: Editorial Dark Design System + Trip Result Redesign** - Documented editorial-dark token system + designed data-viz, proven on the highest-value screen (trip result). (completed 2026-06-02)
 - [x] **Phase 3: Web Redesign Rollout** - The editorial language applied consistently across all remaining web screens, within performance budgets. (completed 2026-06-02)
-- [ ] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom.
+- [x] **Phase 4: Multi-Source Vehicle Catalog + Scaled Showroom** - Catalog fed from multiple real-consumption sources (ADEME + EPA, extensible), normalized/deduped/merged into thousands of canonical models, with a server-side searched/paginated showroom. (completed 2026-06-02)
 - [ ] **Phase 5: Mobile Tolls + Editorial Redesign** - Precise tolls, the editorial-dark language, and the scaled server-side catalog brought to the Expo app with shared tokens.
 
 ## Phase Details
@@ -120,7 +120,7 @@ Plans:
 - [x] 04-03-PLAN.md — Server-side catalog API: extend GET /vehicles/catalog (search/brand/fuelCategory/pagination) + /catalog/brands facet + e2e (Wave 2)
 - [x] 04-04-PLAN.md — Merge orchestrator: ADEME-precedence first-writer-wins + ON CONFLICT upsert (idempotent, extensible) + merge unit spec (Wave 3)
 - [x] 04-05-PLAN.md — Showroom rework: garage/add → debounced server-side search + pagination, Phase 3 visuals preserved (Wave 3)
-- [ ] 04-06-PLAN.md — Phase verification checkpoint: catalog grew to thousands, multi-source/real consumption, no dupes, server-side fast showroom (Wave 4)
+- [x] 04-06-PLAN.md — Phase verification checkpoint: catalog grew to thousands, multi-source/real consumption, no dupes, server-side fast showroom (Wave 4)
 
 ### Phase 5: Mobile Tolls + Editorial Redesign
 **Goal**: The Expo mobile app matches the web — precise tolls with real-vs-estimate indication on trip results, the editorial-dark language applied via shared design tokens, and a garage showroom that browses the scaled catalog through the same server-side search API instead of loading all models.
@@ -143,5 +143,5 @@ Plans:
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
 | 2. Editorial Dark Design System + Trip Result Redesign | 5/5 | Complete   | 2026-06-02 |
 | 3. Web Redesign Rollout | 7/7 | Complete   | 2026-06-02 |
-| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 5/6 | In Progress|  |
+| 4. Multi-Source Vehicle Catalog + Scaled Showroom | 6/6 | Complete   | 2026-06-02 |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |

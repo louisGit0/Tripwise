@@ -19,7 +19,7 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** Phase 4 — multi-source-vehicle-catalog-scaled-showroom
+- **Current focus:** Phase 4 COMPLETE (multi-source catalog + scaled showroom, checkpoint approved) → next Phase 5 (mobile — FINAL phase)
 
 ## Current Position
 
@@ -118,7 +118,7 @@ Plan: 6 of 6
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** Phase 4 plans 04-02 (adapters) + 04-03 (search API) + **04-04 (merge orchestrator + idempotent ON CONFLICT — DEF-04-01-01 resolved)** DONE. Next: **plan 04-05** (showroom rework — switch `web/src/app/app/garage/add/page.tsx` from client load-all to the frozen server-side `/vehicles/catalog` listing + `/catalog/brands` facet + `fuelCategory` param; data-layer only, editorial-dark design preserved). Then **plan 04-06** (phase verification checkpoint — catalog grew to thousands, multi-source/real consumption, no dupes, fast server-side showroom). Continue `/gsd:execute-phase 4`.
+- **Next action:** Phase 4 COMPLETE + deployed (6/6 plans; 3 criticals fixed pre-push; checkpoint approved on live site; pushed a9e1171 → prod migration + one-time multi-source sync ran). CAT-01..06 delivered. Begin Phase 5 — Mobile Tolls + Editorial Redesign (MOB-01..03, FINAL phase): bring tolls (real/estimate semantics) + the editorial-dark language (mirrored in RN StyleSheet, no Tailwind — shared token source where practical) + server-side catalog browse (reuse `GET /vehicles/catalog` + `/catalog/brands`) to the Expo app. Watch: mobile has ~7 pre-existing TS errors unrelated to this work; `@rnmapbox/maps` needs an EAS dev build (placeholder in Expo Go). Entry: `/gsd:discuss-phase 5` → `/gsd:ui-phase 5` → `/gsd:plan-phase 5` → `/gsd:execute-phase 5`.
 - 🔒 Deferred (pre-existing, security): `web/src/components/MapboxMap.tsx` builds station popups via `setHTML` from IRVE name/address (trusted gov open-data) — low-risk latent XSS sink; sanitize / DOM-build the popup in a future cleanup. Plus IN: hero sr-only decimal nuance, stale globals.css serif comment.
 - **Watchpoint (Phase 3 screens):** the normalized atoms now carry weight 700 / canonical focus; remaining per-screen `font-semibold`/`font-medium` usages in the page files (~30 files) still need migration in their cluster plans — atoms are no longer the source of the stale weights.
 - **Updated:** 2026-06-02 (plan 04-04 complete)
