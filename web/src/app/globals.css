@@ -13,18 +13,28 @@
 
 :root {
   /* ── Dark (default) ──────────────────────────────────────────── */
-  --c-bg:       #0e0c0a;
-  --c-surface:  #181612;
-  --c-surface2: #221e18;
-  --c-ink:      #f0ece4;
-  --c-ink2:     #c4bdaf;
-  --c-muted:    #7a7163;
-  --c-faint:    #2e2820;
-  --c-hairline: #3a3328;
-  --c-accent:   #4d8bff;
-  --c-ev:       #4d8bff;
-  --c-fuel-gas: #ff7849;
-  --c-fuel-die: #ffc247;
+  /* Editorial-premium-dark ramp (PD-1) — refined surface + neutral.  */
+  --c-bg:        #0e0c0a;
+  --c-surface:   #17150f; /* was #181612 — elev 1 */
+  --c-surface2:  #211d16; /* was #221e18 — elev 2 */
+  --c-surface3:  #2a251c; /* NEW — elev 3 (hero plate / modal / tooltip) */
+  --c-ink:       #f2efe8; /* was #f0ece4 — primary text (~14:1) */
+  --c-ink2:      #c9c2b4; /* was #c4bdaf — secondary text (~9:1) */
+  --c-muted:     #8a8173; /* was #7a7163 — AA fix for small text (~4.8:1) */
+  --c-faint:     #2e2820;
+  --c-hairline:  #3a3328;
+  --c-accent:    #4d8bff;
+  --c-ev:        #4d8bff;
+  --c-fuel-gas:  #ff7849;
+  --c-fuel-die:  #ffc247;
+  --c-fuel-gpl:  #a78bfa; /* NEW — GPL data-viz (violet) */
+  --c-toll:      #b8a98c; /* NEW — toll segment (warm taupe, NOT an energy color) */
+
+  /* ── Typography size tokens (PD-2 — 4 sizes only) ────────────── */
+  --text-hero:    clamp(64px, 14vw, 112px); /* hero cost figure only */
+  --text-display: clamp(24px, 5vw, 40px);   /* serif title / large heading */
+  --text-body:    14px;                      /* body, inline numerics, labels */
+  --text-caption: 11px;                      /* eyebrow, caption, meta */
 
   /* ── Legacy semantic variables (mapped to Carbon) ────────────── */
   /* Existing pages use var(--background) / var(--border) etc.     */
@@ -43,18 +53,21 @@
 }
 
 [data-theme="dark"] {
-  --c-bg:       #0e0c0a;
-  --c-surface:  #181612;
-  --c-surface2: #221e18;
-  --c-ink:      #f0ece4;
-  --c-ink2:     #c4bdaf;
-  --c-muted:    #7a7163;
-  --c-faint:    #2e2820;
-  --c-hairline: #3a3328;
-  --c-accent:   #4d8bff;
-  --c-ev:       #4d8bff;
-  --c-fuel-gas: #ff7849;
-  --c-fuel-die: #ffc247;
+  --c-bg:        #0e0c0a;
+  --c-surface:   #17150f;
+  --c-surface2:  #211d16;
+  --c-surface3:  #2a251c;
+  --c-ink:       #f2efe8;
+  --c-ink2:      #c9c2b4;
+  --c-muted:     #8a8173;
+  --c-faint:     #2e2820;
+  --c-hairline:  #3a3328;
+  --c-accent:    #4d8bff;
+  --c-ev:        #4d8bff;
+  --c-fuel-gas:  #ff7849;
+  --c-fuel-die:  #ffc247;
+  --c-fuel-gpl:  #a78bfa;
+  --c-toll:      #b8a98c;
 }
 
 /* Light mode derivation.
@@ -63,19 +76,22 @@
    muted (#8a8275 on #fafaf7) ≈ 4.6:1 contrast — acceptable for
    body text ≥ 14px but avoid it on captions below 13px. */
 [data-theme="light"] {
-  --c-bg:       #fafaf7;
-  --c-surface:  #ffffff;
-  --c-surface2: #f3f1ec;
-  --c-ink:      #1c1a16;
-  --c-ink2:     #4a463e;
-  --c-muted:    #8a8275;
-  --c-faint:    #e8e5dd;
-  --c-hairline: #d8d4ca;
+  --c-bg:        #fafaf7;
+  --c-surface:   #ffffff;
+  --c-surface2:  #f3f1ec;
+  --c-surface3:  #ece9e2; /* NEW — light elev 3 */
+  --c-ink:       #1c1a16;
+  --c-ink2:      #4a463e;
+  --c-muted:     #8a8275;
+  --c-faint:     #e8e5dd;
+  --c-hairline:  #d8d4ca;
   /* Accents unchanged */
-  --c-accent:   #4d8bff;
-  --c-ev:       #4d8bff;
-  --c-fuel-gas: #ff7849;
-  --c-fuel-die: #ffc247;
+  --c-accent:    #4d8bff;
+  --c-ev:        #4d8bff;
+  --c-fuel-gas:  #ff7849;
+  --c-fuel-die:  #ffc247;
+  --c-fuel-gpl:  #7c3aed; /* NEW — light GPL data-viz (darker violet for contrast) */
+  --c-toll:      #9b8a6b; /* NEW — light toll segment (darker taupe for contrast) */
   /* Legacy overrides */
   --primary-foreground: #ffffff;
 }
@@ -109,12 +125,26 @@ body {
   overflow-y: scroll;
 }
 
-/* ── Typography reset ────────────────────────────────────────── */
+/* ── Typography reset (PD-2 — editorial serif display, 2 weights) ─ */
+/* h1/h2 = Instrument Serif (display tier); h3..h6 = Space Grotesk bold. */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display), -apple-system, system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.03em;
   margin: 0;
+}
+h1, h2 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+h1 {
+  line-height: 1.05;
+}
+h2 {
+  line-height: 1.1;
+}
+h3, h4, h5, h6 {
+  font-family: var(--font-display), -apple-system, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1.1;
 }
 
