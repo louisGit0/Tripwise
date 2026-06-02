@@ -48,7 +48,7 @@ function computeBounds(coords: [number, number][]): {
 
 export function MapboxMap({ result }: MapboxMapProps) {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   if (isExpoGo || !MapView || !Camera || !ShapeSource || !LineLayer || !MarkerView) {

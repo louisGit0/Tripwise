@@ -12,7 +12,7 @@ interface CardProps {
 }
 
 export function Card({ children, padding = 'md', style }: CardProps) {
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   return (
