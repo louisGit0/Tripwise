@@ -116,8 +116,8 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 > From user feedback after the v1.0 on-device review. **Every requirement ships web AND mobile** (except REL-01 = iOS).
 
 ### Polish & Account (POL)
-- [ ] **POL-01**: The toll "réel/≈ estimé" badge is **removed** from the result/detail (web) and dashboard result (mobile); the toll amount stays in the breakdown (the cost is already labelled estimated).
-- [ ] **POL-02**: A user can **share a calculated trip** from web and mobile (clean shareable summary).
+- [x] **POL-01**: The toll "réel/≈ estimé" badge is **removed** from the result/detail (web) and dashboard result (mobile); the toll amount stays in the breakdown (the cost is already labelled estimated).
+- [x] **POL-02**: A user can **share a calculated trip** from web and mobile (clean shareable summary).
 - [x] **POL-03**: A user can **edit their pseudo** (`display_name`) from Settings (web + mobile), persisted via `PATCH /users/me` (column already exists — no migration).
 
 ### Showroom v2 (SHOW)

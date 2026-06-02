@@ -166,7 +166,7 @@ pseudo editing + an onboarding tutorial, and publishes the app to the iOS App St
 
 ## Phases (v1.1)
 
-- [ ] **Phase 6: Polish & Account** — remove the toll "estimé" badge; trip share; edit pseudo (display_name) in settings.
+- [x] **Phase 6: Polish & Account** — remove the toll "estimé" badge; trip share; edit pseudo (display_name) in settings. (completed 2026-06-02)
 - [ ] **Phase 7: Showroom v2** — restyled vehicle cards + simplified navigation/search + vehicle photos (only if a free image source is viable, else dropped). Starts with a free-image-source spike.
 - [ ] **Phase 8: Onboarding** — post-signup tutorial explaining the app + each screen, replayable from Settings.
 - [ ] **Phase 9: iOS App Store Release** — EAS production build + App Store Connect submission (Apple Developer account required; Google Play deferred).
@@ -186,7 +186,7 @@ pseudo editing + an onboarding tutorial, and publishes the app to the iOS App St
 Plans:
 - [x] 06-01-PLAN.md — Backend: JWT-guarded PATCH /users/me (UpdateProfileDto trim/≤40, UsersService.updateProfile, returns profile) + e2e (Wave 1)
 - [x] 06-02-PLAN.md — Web: remove toll badge on result/detail (POL-01) + Partager via navigator.share+clipboard (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
-- [ ] 06-03-PLAN.md — Mobile: remove dashboard toll badge (POL-01) + enriched Share summary (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
+- [x] 06-03-PLAN.md — Mobile: remove dashboard toll badge (POL-01) + enriched Share summary (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
 
 ### Phase 7: Showroom v2
 **Goal**: The vehicle showroom (web `garage/add` + mobile `vehicles`) is materially better: each model is a designed card (not a text row), navigation/search is simpler and intuitive, and — if a free image source is viable — each card shows the vehicle's photo.
@@ -219,7 +219,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Polish & Account | 2/3 | In Progress|  |
+| 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
 | 7. Showroom v2 | 0/0 | Not started | - |
 | 8. Onboarding | 0/0 | Not started | - |
 | 9. iOS App Store Release | 0/0 | Not started | - |
