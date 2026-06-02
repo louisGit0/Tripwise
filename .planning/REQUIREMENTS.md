@@ -23,14 +23,14 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 ### Design System (DES)
 
 - [x] **DES-01**: A documented **"editorial premium dark"** design language exists — typography scale, color, spacing rhythm, surfaces, data-viz primitives — as reusable tokens
-- [ ] **DES-02**: Cost / consumption / toll figures are presented as **designed data-viz** (hero number + breakdown), not plain text rows
-- [ ] **DES-03**: Components have **designed interaction states** (hover / focus / press) and **loading skeletons**
-- [ ] **DES-04**: Key results use **smooth, compositor-friendly micro-interactions** (animated cost counters, transitions) within performance budgets
+- [x] **DES-02**: Cost / consumption / toll figures are presented as **designed data-viz** (hero number + breakdown), not plain text rows
+- [x] **DES-03**: Components have **designed interaction states** (hover / focus / press) and **loading skeletons**
+- [x] **DES-04**: Key results use **smooth, compositor-friendly micro-interactions** (animated cost counters, transitions) within performance budgets
 
 ### Web Redesign (WEB)
 
 - [ ] **WEB-01**: All web screens (landing, dashboard, trip result, garage, showroom, trips/history, favorites, fuel-prices, settings, auth) are **restyled in the editorial dark direction** with existing flows preserved
-- [ ] **WEB-02**: The **trip result** page is redesigned around the total cost + energy/toll breakdown + multi-energy comparison
+- [x] **WEB-02**: The **trip result** page is redesigned around the total cost + energy/toll breakdown + multi-energy comparison
 - [ ] **WEB-03**: The **dashboard** (calc entry + KPIs) is redesigned in the new language
 - [ ] **WEB-04**: Redesign meets Core Web Vitals targets (no layout shift, animations on transform/opacity only)
 

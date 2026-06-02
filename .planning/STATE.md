@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-02T06:03:32Z"
+last_updated: "2026-06-02T06:17:43.778Z"
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 10
-  completed_plans: 8
-  percent: 45
+  completed_plans: 9
+  percent: 33
 ---
 
 # Project State — verygoodtrip
@@ -24,12 +24,12 @@ progress:
 ## Current Position
 
 Phase: 2 (editorial-dark-design-system-trip-result-redesign) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 
 - **Phase:** 1 of 5 — Precise Tolls End-to-End (Web) — ✅ complete (estimate-primary)
 - **Phase 01.1:** Route-aware free toll estimator — ✅ complete (1/1 plan)
 - **Status:** Ready to execute
-- **Progress:** [████████░░] 80%
+- **Progress:** [█████████░] 90%
 
 ## Roadmap Snapshot
 
@@ -45,7 +45,7 @@ Plan: 4 of 5
 
 - Phases complete: 1/5
 - Requirements mapped: 23/23
-- Plans executed: 8 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files; 02-03 — DataBar/Skeleton data-viz primitives, ~9min, 2 tasks, 2 files)
+- Plans executed: 9 (01-01 — backend toll engine, ~25min, 3 tasks, 5 files; 01-02 — toll-estimate persistence, ~15min, 3 tasks, 5 files; 01-03 — web toll display, ~12min, 3 tasks, 4 files; 01-04 — verification checkpoint, re-scoped D-07; 01.1-01 — route-aware free toll estimator, ~7min, 3 tasks, 6 files; 02-01 — editorial-dark token foundation, ~10min, 3 tasks, 3 files; 02-02 — motion hooks, ~4min, 2 tasks, 2 files; 02-03 — DataBar/Skeleton data-viz primitives, ~9min, 2 tasks, 2 files; 02-04 — trip result page editorial-dark redesign, ~13min, 2 tasks, 2 files)
 
 ## Accumulated Context
 
@@ -64,6 +64,7 @@ Plan: 4 of 5
 - Consumption must stay real (source-attributed, no fabricated defaults) to protect the Core Value of accurate cost.
 - **D-07 (2026-06-01) — estimate-primary re-scope:** TollGuru is paid and a key cannot be obtained. The heuristic French-toll **estimate is adopted as the primary production mode**. The precise TollGuru code path stays built and dormant; it activates automatically if a `TOLLGURU_API_KEY` is ever configured. TOLL-01 (precise live) and TOLL-03 (class-1 live) are **deferred** to a future gap-closure plan.
 - **D-09 (2026-06-01) — route-aware estimator shipped (Phase 01.1):** The flat speed-fraction heuristic is replaced by a route-aware estimate — `classifyTolledKm(steps)` sums Mapbox `steps[].ref` autoroute km minus a `FREE_AUTOROUTES` set, × `NATIONAL_AVG_RATE_PER_KM = 0.09`. National average only (no per-operator overrides — `ref` yields the A-number, not the operator; YAGNI). Added via an **additive optional `steps?` 4th arg** on `computeTollCost` (cache + never-throw + dormant TollGuru branch untouched, LD-2). Mapbox `getDirections` now requests `steps=true`; `TripsService` threads `directions.steps`. Speed heuristic retained as the no-steps fallback. Always `isEstimate: true`; no UI/schema change (LD-6/LD-7). Paris→Lyon → €40.50 (in €30–45 band).
+- **D-10 (2026-06-02) — disclaimer washes neutralized (plan 02-04):** The distance-mode + EV disclaimer notes on the result page were converted from `bg-amber-500/10`/`text-amber-400` to neutral `bg-carbon-surface2`/`text-carbon-ink2`/hairline. Reason: the editorial color contract reserves the energy palette (incl. amber `--c-fuel-die`) for data-viz + FuelBadge only, and the plan's verification grep forbids `bg-amber` in the file. Soft informational notes therefore use surface tokens, not a warning color. Applies to any future screen carrying inline disclaimer notes.
 - **D-08 (2026-06-01) — free route-aware toll estimator (chosen alternative to TollGuru):** Research confirmed no permanently-free precise toll API for FR without a card (TollGuru = 14-day trial then $80+/mo; Google Routes = card + paid SKU beyond cap; FR open data has toll GATES but no tariff grid). Decision: **improve the estimate** to be route-aware — detect tolled autoroute km on the route and apply a per-network average €/km — fully free, no card, behind the same provider-agnostic `TollService.computeTollCost(coordinates,...)` interface. Stays labelled "≈ estimé". Likely implementation: Mapbox Directions `steps=true` road `ref` (A-roads) minus a free-autoroute exclusion list × per-operator €/km (Vinci/APRR/Sanef ~0.08–0.11 €/km); Overpass `toll=yes` is the fallback technique. Precise providers (Google Routes / open-data tariff engine) remain a later option behind the same interface.
 
 ### Todos / Watchpoints
@@ -90,11 +91,12 @@ Plan: 4 of 5
 
 ## Session Continuity
 
-- **Last action:** Phase 2 plan 02-03 complete — DES-01/02/03 data-viz primitives. 3 atomic commits (1cc5c56 DataBar initial, e3faccb Skeleton, ac1e281 DataBar Variant A refactor). `web/src/components/ui/DataBar.tsx` — token-driven bar: Variant A segmented Énergie/Péage (energy segment passed `energyFillVar`, toll segment internal `var(--c-toll)`, hidden when `tollValue===0` → full-width energy bar, D-04), Variant B single comparison (width value/max, muted non-current at inline opacity 0.45); fills via inline CSS-var `style` only (no Tailwind palette classes); scaleX(0→1) 600ms cubic-bezier reveal via mounted-flag effect, gated by `useReducedMotion` (reduced → scaleX(1)/transition:none); `pct()` clamps 0–100 + guards zero/NaN totals; heights sm=h-1.5/md=h-2.5. `web/src/components/ui/Skeleton.tsx` — bg-carbon-surface2 block, opacity-based animate-pulse dropped under reduced motion, width/height number→px or string, rounded override, aria-hidden. Web `tsc` clean + `build` 18/18 green; plan grep gate passes (scaleX/var(--c-toll)/useReducedMotion present, no bg-emerald/sky/violet/amber). Not yet pushed — orchestrator pushes after phase verification.
+- **Last action:** Phase 2 plan 02-04 complete — trip result page editorial-dark redesign (proof slice; DES-02/03/04 + WEB-02 now user-observable). 2 atomic commits (`9a0d217` hero region — serif `h1` title + `useCountUp` mono hero counter (aria-hidden + sr-only real value, tabular-nums fixed 2dp → no CLS) on `!bg-carbon-surface3` plate + Variant A `DataBar` Énergie/Péage breakdown with dotted legend (hide-when-toll-0, D-04) + metric tiles `reveal` stagger gated by `useReducedMotion`; new `reveal` keyframe in globals.css; `c28043c` comparison Variant B `DataBar` rows (energy/gpl CSS-var fills, current full-opacity + `← actuel` accent, others muted) replacing the deleted `categoryColor()` ad-hoc block + standardized `focus-visible:ring-carbon-accent/50` + stepper aria-labels (FLAG 1) + layout-mirroring `Skeleton`). All existing logic preserved (sessionStorage guard, `handleSave`/`/trips/save` payload, stepper math, multiResult, derivations) — MD-2. Web `tsc` clean + `build` 18/18 green (`/app/trips/result` 7.15 kB); grep gate passes (0 categoryColor/bg-emerald/sky/violet/amber/font-medium/font-semibold; DataBar/Skeleton/useCountUp/useReducedMotion/font-serif/aria-label/var(--c-toll) present). D-10: disclaimer washes neutralized to surface tokens. Not yet pushed — orchestrator pushes after phase verification.
+- **Phase 2 prior:** plan 02-03 complete — DES-01/02/03 data-viz primitives. 3 atomic commits (1cc5c56 DataBar initial, e3faccb Skeleton, ac1e281 DataBar Variant A refactor). `web/src/components/ui/DataBar.tsx` — token-driven bar: Variant A segmented Énergie/Péage (energy segment passed `energyFillVar`, toll segment internal `var(--c-toll)`, hidden when `tollValue===0` → full-width energy bar, D-04), Variant B single comparison (width value/max, muted non-current at inline opacity 0.45); fills via inline CSS-var `style` only (no Tailwind palette classes); scaleX(0→1) 600ms cubic-bezier reveal via mounted-flag effect, gated by `useReducedMotion` (reduced → scaleX(1)/transition:none); `pct()` clamps 0–100 + guards zero/NaN totals; heights sm=h-1.5/md=h-2.5. `web/src/components/ui/Skeleton.tsx` — bg-carbon-surface2 block, opacity-based animate-pulse dropped under reduced motion, width/height number→px or string, rounded override, aria-hidden. Web `tsc` clean + `build` 18/18 green; plan grep gate passes (scaleX/var(--c-toll)/useReducedMotion present, no bg-emerald/sky/violet/amber). Not yet pushed — orchestrator pushes after phase verification.
 - **Phase 2 prior:** plan 02-02 complete — DES-04 motion hooks. 2 atomic commits (92ed137 useReducedMotion, 538c3a9 useCountUp). `useReducedMotion.ts` SSR-safe matchMedia; `useCountUp.ts` rAF easeOutCubic 0→target 700ms with reduced-motion instant gate.
 - **Phase 2 prior:** plan 02-01 complete — editorial-dark token foundation (DES-01). 3 atomic commits (794fe0e globals.css tokens, ab54acf tailwind utilities, 46978a6 layout font wiring). New tokens `--c-surface3`/`--c-fuel-gpl`/`--c-toll`, refined surface+neutral ramp (muted AA fix #8a8173), serif h1/h2; Instrument Serif via next/font (2 weights 400/700).
 - **Phase 01.1 prior:** complete (plan 01.1-01) — route-aware free toll estimator behind unchanged `TollService` (D-09); 3 commits (d699031/f523620/70be240); full e2e 143/143 green.
 - **Phase 01 prior:** complete + pushed to `master` (cfdb828); estimate-primary (D-07); precise TollGuru path built + dormant.
 - **Watchpoint (Phase 3):** 72 `font-semibold`/`font-medium` usages across 30 web files still reference the now-unloaded 500/600 weights (deliberate per PD-2 2-weight system) — browser rounds to nearest loaded weight; Phase 3 migrates them to weight 700 emphasis or size hierarchy.
-- **Next action:** execute Phase 2 plan 02-04 — result-page redesign: consume `DataBar` (Variant A breakdown bar in hero plate; Variant B comparison bars replacing ad-hoc `bg-emerald/sky/violet/amber` block), `Skeleton` (replace 3-block placeholder with layout-matching skeleton tree), `useCountUp` (hero counter), serif title + staggered reveal. Énergie/Péage legend + réel/≈ estimé Pill/Tooltip stay caller-side.
+- **Next action:** execute Phase 2 plan 02-05 — phase verification checkpoint (manual observable pass: hero counts up smoothly + stops under prefers-reduced-motion; breakdown bar hides Péage when toll=0; no layout shift on skeleton→content swap; comparison bars token-driven). Last plan of Phase 2.
 - **Updated:** 2026-06-02
