@@ -62,8 +62,9 @@ export default function SettingsScreen() {
     if (!trimmed) return;
     setSavingName(true);
     try {
-      const r = await client.patch<ProfileResponse>('/users/me', { displayName: trimmed });
-      setDisplayName(r.data.displayName ?? '');
+      const r = await client.patch('/users/me', { displayName: trimmed });
+      const data = r.data as ProfileResponse;
+      setDisplayName(data.displayName ?? '');
       Toast.show({ type: 'success', text1: t('settings.pseudoSaved') });
     } catch {
       Toast.show({ type: 'error', text1: t('common.error') });

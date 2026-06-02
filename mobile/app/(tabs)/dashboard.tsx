@@ -296,9 +296,10 @@ function formatEur(n: number): string {
 
 /**
  * Toll-aware inline result — mirrors the web trip-result: an animated hero total
- * (energy + toll), an Énergie/Péage Variant-A DataBar (hidden when no toll, D-04),
- * and the réel / ≈ estimé Pill driven by `tollIsEstimate` (MOB-02). Reduced motion
- * is honored by AnimatedCounter (instant) + DataBar (no reveal).
+ * (energy + toll) and an Énergie/Péage Variant-A DataBar (hidden when no toll, D-04).
+ * The per-line réel/≈ estimé badge was removed (POL-01) — the toll amount stays in
+ * the Péage legend and `tollIsEstimate` keeps flowing in the data. Reduced motion is
+ * honored by AnimatedCounter (instant) + DataBar (no reveal).
  */
 function ResultCard({
   result,
