@@ -126,6 +126,12 @@ export const Fonts = tokens.fontFamily;
 // Numeric font weights (400 / 700 only).
 export const FontWeights = tokens.fontWeight;
 
+// Editorial 4-size scale (hero/display/body/caption) sourced from the shared
+// tokens — exposed here so atoms/screens read it via the aliased
+// `@/constants/theme` (the `@verygoodtrip/shared` alias does not resolve at
+// Metro runtime — see 05-01). Additive: the legacy `FontSizes` below is intact.
+export const FontSize = tokens.fontSize;
+
 // Legacy UI size scale consumed by existing screens (xs..2xl). Preserved so the
 // un-restyled screens keep compiling; the editorial 4-size scale lives on
 // `tokens.fontSize` (hero/display/body/caption) for the restyle plans.
