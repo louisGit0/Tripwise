@@ -118,7 +118,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 ### Polish & Account (POL)
 - [ ] **POL-01**: The toll "réel/≈ estimé" badge is **removed** from the result/detail (web) and dashboard result (mobile); the toll amount stays in the breakdown (the cost is already labelled estimated).
 - [ ] **POL-02**: A user can **share a calculated trip** from web and mobile (clean shareable summary).
-- [ ] **POL-03**: A user can **edit their pseudo** (`display_name`) from Settings (web + mobile), persisted via `PATCH /users/me` (column already exists — no migration).
+- [x] **POL-03**: A user can **edit their pseudo** (`display_name`) from Settings (web + mobile), persisted via `PATCH /users/me` (column already exists — no migration).
 
 ### Showroom v2 (SHOW)
 - [ ] **SHOW-01**: Showroom vehicle entries are **designed editorial-dark cards** (not text rows), web + mobile.
