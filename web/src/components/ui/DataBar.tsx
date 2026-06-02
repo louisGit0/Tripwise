@@ -5,51 +5,56 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 type DataBarHeight = 'sm' | 'md';
 
-/** One flush fill segment of a segmented (Variant A) bar. */
-export interface DataBarSegment {
-  /** Raw value sized against `total` (e.g. energyCost or tollCost). */
-  value: number;
-  /** Fill color as a CSS-var string, e.g. `var(--c-ev)` or `var(--c-toll)`. */
-  fillVar: string;
-}
-
 interface DataBarBaseProps {
   /** Bar height: `sm` = 6px (h-1.5), `md` = 10px (h-2.5). Default `md`. */
   height?: DataBarHeight;
   className?: string;
 }
 
-/** Variant B — single comparison bar (one value against a max). */
-interface DataBarSingleProps extends DataBarBaseProps {
-  value: number;
-  max: number;
-  /** Energy fill color as a CSS-var string, e.g. `var(--c-fuel-gas)`. */
-  fillVar: string;
-  /** Non-current rows render at opacity 0.45; current at opacity 1. */
-  muted?: boolean;
-  segments?: never;
-  total?: never;
-}
-
-/** Variant A — segmented breakdown bar (e.g. Énergie vs Péage). */
+/**
+ * Variant A — segmented breakdown bar (Énergie vs Péage).
+ * One track, two flush adjacent fills: the energy segment (`energyFillVar`)
+ * sized `energyValue / total`, then the toll segment (`var(--c-toll)`) sized
+ * `tollValue / total`. The toll segment is hidden entirely when `tollValue === 0`
+ * (D-04 hide-when-0), leaving a single full-width energy bar.
+ */
 interface DataBarSegmentedProps extends DataBarBaseProps {
-  /** Flush adjacent fills, rendered left→right. */
-  segments: DataBarSegment[];
-  /** Grand total the segments are sized against. */
+  energyValue: number;
+  tollValue: number;
+  /** Grand total the two segments are sized against. */
   total: number;
+  /** Energy fill color as a CSS-var string, e.g. `var(--c-ev)` / `var(--c-fuel-gas)`. */
+  energyFillVar: string;
   value?: never;
   max?: never;
   fillVar?: never;
   muted?: never;
 }
 
-export type DataBarProps = DataBarSingleProps | DataBarSegmentedProps;
+/**
+ * Variant B — single comparison bar (one value against a max).
+ * Non-current rows render muted (opacity 0.45); the current row at opacity 1.
+ */
+interface DataBarSingleProps extends DataBarBaseProps {
+  value: number;
+  max: number;
+  /** Fill color as a CSS-var string, e.g. `var(--c-fuel-die)`. */
+  fillVar: string;
+  muted?: boolean;
+  energyValue?: never;
+  tollValue?: never;
+  total?: never;
+  energyFillVar?: never;
+}
+
+export type DataBarProps = DataBarSegmentedProps | DataBarSingleProps;
 
 const heightMap: Record<DataBarHeight, string> = {
   sm: 'h-1.5',
   md: 'h-2.5',
 };
 
+const TOLL_FILL = 'var(--c-toll)';
 const REVEAL_TRANSITION = 'transform 600ms cubic-bezier(0.16,1,0.3,1)';
 
 function pct(part: number, whole: number): number {
@@ -64,8 +69,8 @@ export function DataBar(props: DataBarProps) {
   const reducedMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
 
-  // First paint renders scaleX(0); after mount we flip to scaleX(1) so the
-  // CSS transition fires. Under reduced motion the fill is final immediately.
+  // First paint renders scaleX(0); after mount we flip to scaleX(1) so the CSS
+  // transition fires. Under reduced motion the fill is final immediately.
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -79,22 +84,30 @@ export function DataBar(props: DataBarProps) {
 
   const trackClass = `relative w-full ${heightMap[height]} bg-carbon-surface2 rounded-full overflow-hidden ${className}`;
 
-  // Variant A — segmented breakdown bar.
-  if ('segments' in props && props.segments) {
+  // Variant A — segmented Énergie/Péage breakdown bar.
+  if ('energyValue' in props && props.energyValue !== undefined) {
+    const showToll = props.tollValue > 0;
     return (
       <div className={trackClass}>
         <div className="flex h-full w-full">
-          {props.segments.map((segment, index) => (
+          <div
+            className="h-full"
+            style={{
+              width: `${pct(props.energyValue, props.total)}%`,
+              background: props.energyFillVar,
+              ...fillReveal(),
+            }}
+          />
+          {showToll && (
             <div
-              key={index}
               className="h-full"
               style={{
-                width: `${pct(segment.value, props.total)}%`,
-                background: segment.fillVar,
+                width: `${pct(props.tollValue, props.total)}%`,
+                background: TOLL_FILL,
                 ...fillReveal(),
               }}
             />
-          ))}
+          )}
         </div>
       </div>
     );
