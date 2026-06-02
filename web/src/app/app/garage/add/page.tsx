@@ -12,6 +12,7 @@ import { Pill } from '@/components/ui/Pill';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { VehicleImage } from '@/components/ui/VehicleImage';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
@@ -204,33 +205,35 @@ export default function AddVehiclePage() {
         </p>
       </div>
 
-      {/* ── Sticky toolbar: search + fuel filters ─────────────── */}
+      {/* ── Sticky toolbar: search (primary) + fuel filters (quiet) ── */}
       <div className="sticky top-14 z-20 -mx-4 md:-mx-6 px-4 md:px-6 py-3 bg-carbon-bg/95 backdrop-blur-sm border-b border-carbon-hairline">
         <div className="flex flex-col gap-2.5">
+          {/* Search is the clear primary way to find a car: large, labelled, icon + clear. */}
           <div className="relative">
             <Search
-              size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-carbon-muted pointer-events-none"
+              size={18}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 z-10 text-carbon-muted pointer-events-none"
             />
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher une marque ou un modèle…"
-              aria-label="Rechercher une marque ou un modèle"
-              className="pl-9 pr-9"
+              placeholder="Rechercher votre voiture — marque ou modèle"
+              aria-label="Rechercher votre voiture par marque ou modèle"
+              className="h-12 pl-11 pr-10 text-base"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
                 aria-label="Effacer la recherche"
-                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors ${FOCUS_RING}`}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-carbon-muted hover:text-carbon-ink hover:bg-carbon-surface2 transition-colors ${FOCUS_RING}`}
               >
-                <X size={14} />
+                <X size={16} />
               </button>
             )}
           </div>
+          {/* Fuel filters — visually quieter than the search, so the photo cards stay the focus. */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1">
             {FUEL_FILTERS.map((f) => {
               const active = fuelFilter === f.key;
@@ -263,7 +266,7 @@ export default function AddVehiclePage() {
               <Skeleton width={128} height={20} />
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                 {[...Array(6)].map((_, i) => (
-                  <Skeleton key={i} height={80} rounded="rounded-card" />
+                  <Skeleton key={i} height={208} rounded="rounded-card" />
                 ))}
               </div>
             </div>
@@ -345,19 +348,27 @@ export default function AddVehiclePage() {
       >
         {selectedModel && (
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
-              <BrandAvatar brand={selectedModel.brand} size={40} />
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-carbon-ink truncate">
-                  {selectedModel.brand} {selectedModel.model}
-                  {selectedModel.year ? ` (${selectedModel.year})` : ''}
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <FuelBadge fuelType={selectedModel.fuelType} />
-                  <span className="text-[11px] text-carbon-muted font-mono">
-                    {selectedModel.consumption}{' '}
-                    {selectedModel.fuelType === 'ELECTRIC' ? 'kWh' : 'L'}/100km
-                  </span>
+            <div className="flex flex-col gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
+              {/* Photo (or brand placeholder) so the user confirms the right car. */}
+              <VehicleImage
+                brand={selectedModel.brand}
+                model={selectedModel.model}
+                fuelType={selectedModel.fuelType}
+              />
+              <div className="flex items-center gap-3">
+                <BrandAvatar brand={selectedModel.brand} size={40} />
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-carbon-ink truncate">
+                    {selectedModel.brand} {selectedModel.model}
+                    {selectedModel.year ? ` (${selectedModel.year})` : ''}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <FuelBadge fuelType={selectedModel.fuelType} />
+                    <span className="text-[11px] text-carbon-muted font-mono">
+                      {selectedModel.consumption}{' '}
+                      {selectedModel.fuelType === 'ELECTRIC' ? 'kWh' : 'L'}/100km
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -421,28 +432,34 @@ function ModelCard({
       type="button"
       onClick={() => onSelect(model)}
       aria-label={`Ajouter ${model.brand} ${model.model}${model.year ? ` (${model.year})` : ''} au garage`}
-      className="group flex flex-col gap-2.5 p-3.5 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
+      className="group flex flex-col gap-3 p-3 text-left rounded-card border border-carbon-hairline bg-carbon-surface hover:border-carbon-accent hover:bg-blue-500/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-sm font-bold text-carbon-ink truncate">{model.model}</p>
-          {model.year ? (
-            <p className="text-[11px] text-carbon-muted font-mono">{model.year}</p>
-          ) : null}
+      {/* Photo region — VehicleImage = photo or stylized brand placeholder (fixed frame, no CLS). */}
+      <VehicleImage brand={model.brand} model={model.model} fuelType={model.fuelType} />
+
+      {/* Info block — model name, fuel, consumption, add affordance. */}
+      <div className="flex flex-col gap-2 px-0.5">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-sm font-bold font-display text-carbon-ink truncate">{model.model}</p>
+            {model.year ? (
+              <p className="text-[11px] text-carbon-muted font-mono">{model.year}</p>
+            ) : null}
+          </div>
+          <FuelBadge fuelType={model.fuelType} className="shrink-0" />
         </div>
-        <FuelBadge fuelType={model.fuelType} className="shrink-0" />
-      </div>
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] text-carbon-muted font-mono">
-          {model.consumption} {isEv ? 'kWh' : 'L'}/100
-          {capacity ? ` · ${capacity} ${isEv ? 'kWh' : 'L'}` : ''}
-        </span>
-        <span
-          aria-hidden="true"
-          className="w-6 h-6 shrink-0 rounded-full border border-carbon-hairline text-carbon-muted flex items-center justify-center group-hover:bg-carbon-accent group-hover:text-white group-hover:border-transparent transition-colors"
-        >
-          <Plus size={13} />
-        </span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[11px] text-carbon-muted font-mono">
+            {model.consumption} {isEv ? 'kWh' : 'L'}/100
+            {capacity ? ` · ${capacity} ${isEv ? 'kWh' : 'L'}` : ''}
+          </span>
+          <span
+            aria-hidden="true"
+            className="w-6 h-6 shrink-0 rounded-full border border-carbon-hairline text-carbon-muted flex items-center justify-center group-hover:bg-carbon-accent group-hover:text-white group-hover:border-transparent transition-colors"
+          >
+            <Plus size={13} />
+          </span>
+        </div>
       </div>
     </button>
   );
