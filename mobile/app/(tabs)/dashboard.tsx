@@ -96,7 +96,11 @@ export default function DashboardScreen() {
 
   const handleShare = async () => {
     if (!result) return;
-    const cost = result.cost ? `${result.cost.totalCost.toFixed(2)} €` : '';
+    // Mirror the hero total (energy + toll) and the on-screen FR comma format,
+    // so the shared figure matches what the user sees (WR-02 / MOB-02).
+    const energyCost = result.cost?.totalCost ?? 0;
+    const tollCost = result.tollCost ?? 0;
+    const cost = formatEur(energyCost + tollCost);
     await Share.share({
       message: t('dashboard.shareText', {
         distance: `${result.distance.km} km`,

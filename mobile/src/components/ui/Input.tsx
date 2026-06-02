@@ -18,7 +18,7 @@ interface InputProps extends TextInputProps {
 }
 
 export function Input({ label, error, hint, containerStyle, ...props }: InputProps) {
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const [focused, setFocused] = useState(false);
 

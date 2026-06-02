@@ -25,7 +25,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function RootLayout() {
   const scheme = useColorScheme();
 
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     SpaceGrotesk_400Regular,
     SpaceGrotesk_700Bold,
     JetBrainsMono_400Regular,
@@ -33,12 +33,15 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
+    // Hide the splash once fonts resolve — OR fail — so a font-load error can
+    // never brick the app on a blank screen (WR-03). On error we degrade to the
+    // system font rather than returning null forever.
+    if (loaded || error) {
       SplashScreen.hideAsync().catch(() => {});
     }
-  }, [loaded]);
+  }, [loaded, error]);
 
-  if (!loaded) {
+  if (!loaded && !error) {
     return null;
   }
 

@@ -19,7 +19,7 @@ const config: ExpoConfig = {
       foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundImage: './assets/images/android-icon-background.png',
       monochromeImage: './assets/images/android-icon-monochrome.png',
-      backgroundColor: '#181612',
+      backgroundColor: '#0e0c0a',
     },
     package: 'com.verygoodtrip.app',
     edgeToEdgeEnabled: true,

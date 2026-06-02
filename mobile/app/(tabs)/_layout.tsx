@@ -18,7 +18,7 @@ function TabIcon({ name, color, size = 22 }: { name: string; color: string; size
 
 export default function TabLayout() {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   return (

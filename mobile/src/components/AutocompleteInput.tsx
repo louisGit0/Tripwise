@@ -24,7 +24,7 @@ interface AutocompleteInputProps {
 
 export function AutocompleteInput({ label, placeholder, value, onChange }: AutocompleteInputProps) {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   const [query, setQuery] = useState(value?.label ?? '');

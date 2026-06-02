@@ -37,7 +37,7 @@ export function Button({
   disabled = false,
   style,
 }: ButtonProps) {
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   const containerStyle: StyleProp<ViewStyle> = [
