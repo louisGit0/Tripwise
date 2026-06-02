@@ -1,20 +1,25 @@
 'use client';
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ArrowRight, MapPin, Plus } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { KPICell } from '@/components/ui/KPICell';
+import { NumberDisplay } from '@/components/ui/NumberDisplay';
+import { DataBar } from '@/components/ui/DataBar';
 import { FuelBadge } from '@/components/ui/FuelBadge';
 import { BrandAvatar } from '@/components/ui/BrandAvatar';
 import { Sparkline } from '@/components/ui/Sparkline';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Select } from '@/components/ui/Select';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import { useCountUp } from '@/hooks/useCountUp';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type {
@@ -82,12 +87,6 @@ function fuelPrice(fuelType: FuelType, p: UserPrices): number {
 }
 
 // ── Formatters ────────────────────────────────────────────────────
-const fmtEur = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'EUR',
-  maximumFractionDigits: 2,
-});
-const fmtNum = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const fmtDate = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: 'short' });
 
 // ── Inner component (needs useSearchParams) ───────────────────────
@@ -95,6 +94,7 @@ function DashboardInner() {
   const { showToast } = useToast();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
 
   // ── Data state ──────────────────────────────────────────────────
   const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
@@ -119,6 +119,15 @@ function DashboardInner() {
 
   // Count-up driver for the hero result figure (instant under reduced motion).
   const animatedResult = useCountUp(quickResultValue ?? 0);
+
+  // Staggered reveal (transform/opacity only) — gated off under reduced motion.
+  const revealStyle = (index: number): CSSProperties =>
+    reducedMotion
+      ? {}
+      : {
+          animation: 'reveal 360ms ease-out both',
+          animationDelay: `${Math.min(index * 60, 300)}ms`,
+        };
 
   // ── Load data on mount ──────────────────────────────────────────
   const loadData = useCallback(() => {
@@ -163,6 +172,9 @@ function DashboardInner() {
 
   const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId);
   const sparkData = stats?.dailyExpenses?.map((d) => d.cost) ?? [];
+  // Trailing-period daily series → micro-viz ratio (latest vs peak day).
+  const dailyMax = sparkData.length ? Math.max(...sparkData) : 0;
+  const latestDaily = sparkData.length ? sparkData[sparkData.length - 1] : 0;
 
   // ── Apply suggestion (simplified) ───────────────────────────────
   function applySuggestion(fav: Favorite) {
@@ -300,7 +312,7 @@ function DashboardInner() {
 
           {/* Vehicle selector */}
           {vehiclesLoading ? (
-            <p className="text-sm text-carbon-muted">Chargement des véhicules...</p>
+            <Skeleton width="100%" height={40} rounded="rounded-xl" />
           ) : vehicles.length === 0 ? (
             <p className="text-sm text-carbon-muted">Aucun véhicule. Ajoutez-en un dans le Garage.</p>
           ) : (
@@ -346,99 +358,156 @@ function DashboardInner() {
         </div>
       </SectionCard>
 
-      {/* ── KPI grid ─────────────────────────────────────────────── */}
+      {/* ── KPI band (designed data-viz) ──────────────────────────── */}
       <SectionCard title={<Eyebrow>Ce mois</Eyebrow>} padding="md">
-        <div className="grid grid-cols-2 gap-4 pt-3">
-          <KPICell
-            label="Dépenses du mois"
-            value={statsLoading ? '—' : fmtEur.format(stats?.totalCost ?? 0)}
-            size="sm"
-          />
-          <KPICell
-            label="Trajets"
-            value={statsLoading ? '—' : fmtNum.format(stats?.tripCount ?? 0)}
-            size="sm"
-          />
-          <KPICell
-            label="Distance totale"
-            value={statsLoading ? '—' : fmtNum.format(stats?.totalDistance ?? 0)}
-            unit="km"
-            size="sm"
-          />
-          <KPICell
-            label="Économies vs essence"
-            value={
-              statsLoading
-                ? '—'
-                : stats?.savedVsGas !== null
-                  ? fmtEur.format(stats?.savedVsGas?.amount ?? 0)
-                  : <span className="text-xs text-carbon-muted font-normal">Uniquement pour VE</span>
-            }
-            delta={
-              !statsLoading && (stats?.savedVsGas?.percent ?? 0) !== 0
-                ? stats?.savedVsGas?.percent
-                : undefined
-            }
-            size="sm"
-          />
+        {statsLoading ? (
+          <div className="grid grid-cols-2 gap-4 pt-3">
+            {[0, 1, 2, 3].map((k) => (
+              <div key={k} className="flex flex-col gap-1.5">
+                <Skeleton width="55%" height={10} />
+                <Skeleton width="70%" height={26} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 pt-3">
+            <div style={revealStyle(0)} className="flex flex-col gap-2">
+              <KPICell
+                label="Dépenses du mois"
+                value={
+                  <NumberDisplay
+                    value={stats?.totalCost ?? 0}
+                    decimals={2}
+                    unit="€"
+                    size="lg"
+                    className="font-bold"
+                  />
+                }
+                size="sm"
+              />
+              {dailyMax > 0 && (
+                <DataBar height="sm" value={latestDaily} max={dailyMax} fillVar="var(--c-accent)" />
+              )}
+            </div>
+            <div style={revealStyle(1)}>
+              <KPICell
+                label="Trajets"
+                value={
+                  <NumberDisplay
+                    value={stats?.tripCount ?? 0}
+                    decimals={0}
+                    size="lg"
+                    className="font-bold"
+                  />
+                }
+                size="sm"
+              />
+            </div>
+            <div style={revealStyle(2)}>
+              <KPICell
+                label="Distance totale"
+                value={
+                  <NumberDisplay
+                    value={stats?.totalDistance ?? 0}
+                    decimals={0}
+                    unit="km"
+                    size="lg"
+                    className="font-bold"
+                  />
+                }
+                size="sm"
+              />
+            </div>
+            <div style={revealStyle(3)}>
+              <KPICell
+                label="Économies vs essence"
+                value={
+                  stats?.savedVsGas !== null ? (
+                    <NumberDisplay
+                      value={stats?.savedVsGas?.amount ?? 0}
+                      decimals={2}
+                      unit="€"
+                      size="lg"
+                      className="font-bold"
+                    />
+                  ) : (
+                    <span className="text-xs text-carbon-muted font-normal">Uniquement pour VE</span>
+                  )
+                }
+                delta={
+                  (stats?.savedVsGas?.percent ?? 0) !== 0
+                    ? stats?.savedVsGas?.percent
+                    : undefined
+                }
+                size="sm"
+              />
+            </div>
+          </div>
+        )}
+      </SectionCard>
+
+      {/* ── Sparkline (30-day expenses) ───────────────────────────── */}
+      <SectionCard title="Dépenses 30j" padding="md">
+        <div className="pt-3 h-16">
+          {statsLoading ? (
+            <Skeleton width="100%" height={64} rounded="rounded-lg" />
+          ) : sparkData.length > 0 ? (
+            <Sparkline
+              data={sparkData}
+              color="var(--c-accent)"
+              width={600}
+              height={64}
+              className="w-full h-full"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-xs text-carbon-muted">Aucune donnée</span>
+            </div>
+          )}
         </div>
       </SectionCard>
 
-      {/* ── Sparkline + active vehicle ───────────────────────────── */}
-      <div className="grid grid-cols-2 gap-4">
-        <SectionCard title="Dépenses 30j" padding="md">
-          <div className="pt-3 h-16">
-            {sparkData.length > 0 ? (
-              <Sparkline
-                data={sparkData}
-                color="var(--c-accent)"
-                width={300}
-                height={64}
-                className="w-full h-full"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-xs text-carbon-muted">Aucune donnée</span>
-              </div>
-            )}
+      {/* ── Active vehicle ────────────────────────────────────────── */}
+      <SectionCard title="Véhicule actif" padding="md">
+        {vehiclesLoading ? (
+          <div className="pt-3 flex items-center gap-3">
+            <Skeleton width={36} height={36} rounded="rounded-full" />
+            <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+              <Skeleton width="50%" height={14} />
+              <Skeleton width="30%" height={11} />
+            </div>
           </div>
-        </SectionCard>
-
-        <SectionCard title="Véhicule actif" padding="md">
-          {vehiclesLoading ? (
-            <p className="text-sm text-carbon-muted pt-3">Chargement...</p>
-          ) : vehicles.length === 0 ? (
-            <div className="pt-3 flex flex-col gap-2">
-              <p className="text-sm text-carbon-muted">Aucun véhicule</p>
-              <Link
-                href="/app/garage/add"
-                className="text-xs text-carbon-accent font-medium hover:underline"
-              >
-                Ajouter un véhicule
-              </Link>
-            </div>
-          ) : selectedVehicle ? (
-            <div className="pt-3 flex items-center gap-3">
-              <BrandAvatar brand={selectedVehicle.vehicleModel.brand} size={36} />
-              <div className="min-w-0">
-                <p className="font-semibold text-carbon-ink text-sm truncate">
-                  {selectedVehicle.nickname ??
-                    `${selectedVehicle.vehicleModel.brand} ${selectedVehicle.vehicleModel.model}`}
-                </p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <FuelBadge fuelType={selectedVehicle.vehicleModel.fuelType} />
-                </div>
+        ) : vehicles.length === 0 ? (
+          <div className="pt-3 flex flex-col gap-2">
+            <p className="text-sm text-carbon-muted">Aucun véhicule</p>
+            <Link
+              href="/app/garage/add"
+              className={`text-xs text-carbon-accent font-normal hover:underline rounded ${FOCUS_RING}`}
+            >
+              Ajouter un véhicule
+            </Link>
+          </div>
+        ) : selectedVehicle ? (
+          <div className="pt-3 flex items-center gap-3">
+            <BrandAvatar brand={selectedVehicle.vehicleModel.brand} size={36} />
+            <div className="min-w-0">
+              <p className="font-bold text-carbon-ink text-sm truncate">
+                {selectedVehicle.nickname ??
+                  `${selectedVehicle.vehicleModel.brand} ${selectedVehicle.vehicleModel.model}`}
+              </p>
+              <div className="flex items-center gap-2 mt-0.5">
+                <FuelBadge fuelType={selectedVehicle.vehicleModel.fuelType} />
               </div>
             </div>
-          ) : null}
-        </SectionCard>
-      </div>
+          </div>
+        ) : null}
+      </SectionCard>
 
       {/* ── Onboarding banner — shown only when no vehicles yet ─────── */}
       {!statsLoading && vehicles.length === 0 && (
         <SectionCard padding="md">
           <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <p className="text-sm font-semibold text-carbon-ink">Bienvenue sur verygoodtrip</p>
+            <p className="text-sm font-bold text-carbon-ink">Bienvenue sur verygoodtrip</p>
             <p className="text-sm text-carbon-muted max-w-xs">
               Ajoutez votre premier véhicule pour calculer le coût de vos trajets.
             </p>
@@ -463,25 +532,26 @@ function DashboardInner() {
           padding="none"
         >
           <div className="flex flex-col divide-y divide-carbon-hairline">
-            {suggestions.map((fav) => (
+            {suggestions.map((fav, i) => (
               <button
                 key={fav.id}
                 type="button"
+                style={revealStyle(i)}
                 onClick={() => applySuggestion(fav)}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full"
+                className={`flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full ${FOCUS_RING}`}
               >
                 <MapPin size={13} className="text-carbon-muted shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-carbon-ink truncate">
+                  <p className="text-xs font-normal text-carbon-ink truncate">
                     {fav.name}
                   </p>
                   <p className="text-[11px] text-carbon-muted truncate">
                     {fav.originLabel.split(',')[0]}
-                    <span className="mx-1">→</span>
+                    <span className="mx-1 text-carbon-muted">→</span>
                     {fav.destinationLabel.split(',')[0]}
                   </p>
                 </div>
-                <span className="text-[11px] text-carbon-accent font-medium shrink-0">
+                <span className="text-[11px] text-carbon-accent font-normal shrink-0">
                   Sélectionner
                 </span>
               </button>
@@ -491,7 +561,22 @@ function DashboardInner() {
       )}
 
       {/* ── Recent trips table ───────────────────────────────────── */}
-      {recentTrips.length > 0 && (
+      {statsLoading ? (
+        <SectionCard title={<Eyebrow>Trajets récents</Eyebrow>} padding="none">
+          <div className="flex flex-col divide-y divide-carbon-hairline">
+            {[0, 1, 2, 3].map((k) => (
+              <div key={k} className="flex items-center gap-3 px-4 py-3">
+                <Skeleton width={40} height={11} />
+                <div className="flex-1">
+                  <Skeleton width="60%" height={12} />
+                </div>
+                <Skeleton width={44} height={18} rounded="rounded-full" />
+                <Skeleton width={52} height={14} />
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+      ) : recentTrips.length > 0 ? (
         <SectionCard
           title={<Eyebrow>Trajets récents</Eyebrow>}
           action={
@@ -502,12 +587,13 @@ function DashboardInner() {
           padding="none"
         >
           <div className="flex flex-col divide-y divide-carbon-hairline">
-            {recentTrips.map((trip) => (
+            {recentTrips.map((trip, i) => (
               <button
                 key={trip.id}
                 type="button"
+                style={revealStyle(i)}
                 onClick={() => router.push(`/app/trips/${trip.id}`)}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full"
+                className={`flex items-center gap-3 px-4 py-3 hover:bg-carbon-surface2 transition-colors text-left w-full ${FOCUS_RING}`}
               >
                 <span className="text-[11px] text-carbon-muted font-mono w-10 shrink-0 tabular-nums">
                   {fmtDate.format(new Date(trip.tripDate))}
@@ -529,7 +615,7 @@ function DashboardInner() {
             ))}
           </div>
         </SectionCard>
-      )}
+      ) : null}
       <Hairline />
     </div>
   );
