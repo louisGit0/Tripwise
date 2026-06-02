@@ -7,6 +7,27 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { VehicleModel, FuelType } from './entities/vehicle-model.entity';
+import {
+  CanonicalVehicle,
+  CatalogSourceAdapter,
+} from './adapters/catalog-source-adapter.interface';
+
+/**
+ * Precedence-ordered, source-agnostic merge (CAT-03 / CAT-05).
+ *
+ * Sorts adapters by `precedence` ascending (ADEME=0 first, EPA=10 second), then
+ * runs each adapter's `load()` + `normalize()` into a Map keyed by the uppercased
+ * `brand|model|fuelType`. First-writer-wins → ADEME wins on overlap (PD4-1), EPA
+ * only fills gaps. DB-agnostic and idempotent: re-running rebuilds the identical
+ * set. A 3rd adapter drops into the array with no change here (CAT-05).
+ *
+ * STUB (RED) — implemented in the GREEN step of Task 1.
+ */
+export async function mergeCanonical(
+  _adapters: CatalogSourceAdapter[],
+): Promise<CanonicalVehicle[]> {
+  return Promise.resolve([]);
+}
 
 // ── ADEME API types ────────────────────────────────────────────────────────
 
