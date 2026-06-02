@@ -4,7 +4,16 @@ Out-of-scope discoveries logged during execution. Do NOT fix in the discovering 
 
 ## From plan 04-01 (schema foundation)
 
-### DEF-04-01-01 — ADEME sync `doSync` must adopt ON CONFLICT (owned by 04-02/04-04)
+### DEF-04-01-01 — ADEME sync `doSync` must adopt ON CONFLICT (owned by 04-02/04-04) — ✅ RESOLVED in 04-04
+
+> **Resolution (plan 04-04, commit 7f5b511):** `doSync` now splits the merged
+> set by source and upserts via `createQueryBuilder().insert()` — ADEME with
+> `.orUpdate(['consumption','battery_capacity_kwh','tank_capacity_liters','source'],['brand','model','fuel_type'])`,
+> EPA with `.orIgnore()` — keyed on the canonical UNIQUE triple. The legacy
+> `repo.save()` collision is gone; the sync is idempotent (CAT-05). The
+> background bootstrap sync is additionally skipped under `NODE_ENV=test`
+> (avoids the live ADEME fetch overwriting seeded fixtures), so the e2e log is
+> clean. Full e2e 150/150 green.
 
 - **Discovered during:** plan 04-01, Task 2 verification (vehicles e2e).
 - **Symptom:** With the new `UQ_vehicle_models_canonical` unique constraint now
