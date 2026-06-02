@@ -185,7 +185,7 @@ pseudo editing + an onboarding tutorial, and publishes the app to the iOS App St
 **Plans**: 3 plans
 Plans:
 - [x] 06-01-PLAN.md — Backend: JWT-guarded PATCH /users/me (UpdateProfileDto trim/≤40, UsersService.updateProfile, returns profile) + e2e (Wave 1)
-- [ ] 06-02-PLAN.md — Web: remove toll badge on result/detail (POL-01) + Partager via navigator.share+clipboard (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
+- [x] 06-02-PLAN.md — Web: remove toll badge on result/detail (POL-01) + Partager via navigator.share+clipboard (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
 - [ ] 06-03-PLAN.md — Mobile: remove dashboard toll badge (POL-01) + enriched Share summary (POL-02) + editable pseudo in settings (POL-03) (Wave 2)
 
 ### Phase 7: Showroom v2
@@ -219,7 +219,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Polish & Account | 1/3 | In Progress|  |
+| 6. Polish & Account | 2/3 | In Progress|  |
 | 7. Showroom v2 | 0/0 | Not started | - |
 | 8. Onboarding | 0/0 | Not started | - |
 | 9. iOS App Store Release | 0/0 | Not started | - |
