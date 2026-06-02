@@ -14,15 +14,29 @@ import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
-import { Card } from '@/src/components/ui/Card';
-import { Colors, FontSizes, Spacing } from '@/constants/theme';
+import { SectionCard } from '@/src/components/ui/SectionCard';
+import { Eyebrow } from '@/src/components/ui/Eyebrow';
+import { Pill } from '@/src/components/ui/Pill';
+import { Colors, Fonts, FontSize, FontSizes, Spacing } from '@/constants/theme';
 import { useDebounce } from '@/src/hooks/useDebounce';
 import client from '@/src/api/client';
 import type { UserVehicle, VehicleModel } from '@/src/types/api';
 
+// Editorial fuel badge — EV reads the accent tint, everything else neutral.
+function FuelPill({ fuelType }: { fuelType: string }) {
+  return (
+    <Pill color={fuelType === 'ELECTRIC' ? 'accent' : 'neutral'} size="sm">
+      {fuelType}
+    </Pill>
+  );
+}
+
+// Per-fuel consumption unit (mirrors the web showroom).
+const unitFor = (fuelType: string) => (fuelType === 'ELECTRIC' ? 'kWh' : 'L');
+
 export default function VehiclesScreen() {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
@@ -54,36 +68,42 @@ export default function VehiclesScreen() {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: c.background }} contentContainerStyle={styles.container}>
+    <ScrollView style={{ backgroundColor: c.bg }} contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={[styles.pageTitle, { color: c.text }]}>{t('vehicles.title')}</Text>
+        <View style={styles.headerTitle}>
+          <Eyebrow>{t('nav.vehicles')}</Eyebrow>
+          <Text style={[styles.pageTitle, { color: c.ink }]}>{t('vehicles.title')}</Text>
+        </View>
         <Button label={t('vehicles.add')} onPress={() => setShowAddModal(true)} size="sm" />
       </View>
 
       {vehicles.length === 0 ? (
-        <Text style={[styles.empty, { color: c.mutedFg }]}>{t('vehicles.empty')}</Text>
+        <Text style={[styles.empty, { color: c.mutedText }]}>{t('vehicles.empty')}</Text>
       ) : (
         vehicles.map((v) => (
-          <Card key={v.id}>
+          <SectionCard key={v.id}>
             <View style={styles.vehicleRow}>
               <View style={styles.vehicleInfo}>
-                <Text style={[styles.vehicleName, { color: c.text }]}>
+                <Text style={[styles.vehicleName, { color: c.ink }]}>
                   {v.nickname ?? `${v.vehicleModel.brand} ${v.vehicleModel.model}`}
                 </Text>
-                <Text style={[styles.vehicleSub, { color: c.textSecondary }]}>
-                  {v.vehicleModel.fuelType} · {v.vehicleModel.consumptionPer100km} L/100km
-                </Text>
+                <View style={styles.vehicleMeta}>
+                  <FuelPill fuelType={v.vehicleModel.fuelType} />
+                  <Text style={[styles.vehicleSub, { color: c.mutedText }]}>
+                    {v.vehicleModel.consumptionPer100km} {unitFor(v.vehicleModel.fuelType)}/100km
+                  </Text>
+                </View>
               </View>
               <View style={styles.vehicleActions}>
                 <TouchableOpacity onPress={() => setEditTarget(v)} style={styles.iconBtn}>
-                  <Text style={{ color: c.primary }}>✏️</Text>
+                  <Text style={[styles.actionLabel, { color: c.ink2 }]}>{t('common.edit')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleDelete(v.id)} style={styles.iconBtn}>
-                  <Text style={{ color: c.destructive }}>🗑</Text>
+                  <Text style={[styles.actionLabel, { color: c.fuelGas }]}>{t('common.delete')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          </Card>
+          </SectionCard>
         ))
       )}
 
@@ -107,7 +127,7 @@ export default function VehiclesScreen() {
 
 function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onClose: () => void; onSaved: () => void }) {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   const [search, setSearch] = useState('');
@@ -151,11 +171,11 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View style={[styles.modalContainer, { backgroundColor: c.background }]}>
-        <View style={styles.modalHeader}>
-          <Text style={[styles.modalTitle, { color: c.text }]}>{t('vehicles.add')}</Text>
+      <View style={[styles.modalContainer, { backgroundColor: c.bg }]}>
+        <View style={[styles.modalHeader, { borderBottomColor: c.hairline }]}>
+          <Text style={[styles.modalTitle, { color: c.ink }]}>{t('vehicles.add')}</Text>
           <TouchableOpacity onPress={onClose}>
-            <Text style={{ color: c.primary, fontSize: FontSizes.base }}>{t('common.close')}</Text>
+            <Text style={[styles.closeLabel, { color: c.accent }]}>{t('common.close')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -172,15 +192,18 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={[styles.catalogItem, { borderBottomColor: c.border }]}
+                  style={[styles.catalogItem, { borderBottomColor: c.hairline }]}
                   onPress={() => setSelected(item)}
                 >
-                  <Text style={[styles.catalogName, { color: c.text }]}>
+                  <Text style={[styles.catalogName, { color: c.ink }]}>
                     {item.brand} {item.model}
                   </Text>
-                  <Text style={[styles.catalogSub, { color: c.textSecondary }]}>
-                    {item.fuelType} · {item.consumptionPer100km} L/100km
-                  </Text>
+                  <View style={styles.catalogMeta}>
+                    <FuelPill fuelType={item.fuelType} />
+                    <Text style={[styles.catalogSub, { color: c.mutedText }]}>
+                      {item.consumptionPer100km} {unitFor(item.fuelType)}/100km
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               )}
             />
@@ -188,9 +211,9 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
         ) : (
           <ScrollView contentContainerStyle={styles.formContainer}>
             <TouchableOpacity onPress={() => setSelected(null)} style={styles.backBtn}>
-              <Text style={{ color: c.primary }}>← {t('common.back')}</Text>
+              <Text style={[styles.closeLabel, { color: c.accent }]}>← {t('common.back')}</Text>
             </TouchableOpacity>
-            <Text style={[styles.selectedModel, { color: c.text }]}>
+            <Text style={[styles.selectedModel, { color: c.ink }]}>
               {selected.brand} {selected.model}
             </Text>
             <Input
@@ -235,7 +258,7 @@ function AddVehicleModal({ visible, onClose, onSaved }: { visible: boolean; onCl
 
 function EditVehicleModal({ vehicle, onClose, onSaved }: { vehicle: UserVehicle; onClose: () => void; onSaved: () => void }) {
   const { t } = useTranslation();
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
 
   const [nickname, setNickname] = useState(vehicle.nickname ?? '');
@@ -265,15 +288,15 @@ function EditVehicleModal({ vehicle, onClose, onSaved }: { vehicle: UserVehicle;
 
   return (
     <Modal visible animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <View style={[styles.modalContainer, { backgroundColor: c.background }]}>
-        <View style={styles.modalHeader}>
-          <Text style={[styles.modalTitle, { color: c.text }]}>{t('vehicles.editTitle')}</Text>
+      <View style={[styles.modalContainer, { backgroundColor: c.bg }]}>
+        <View style={[styles.modalHeader, { borderBottomColor: c.hairline }]}>
+          <Text style={[styles.modalTitle, { color: c.ink }]}>{t('vehicles.editTitle')}</Text>
           <TouchableOpacity onPress={onClose}>
-            <Text style={{ color: c.primary }}>{t('common.close')}</Text>
+            <Text style={[styles.closeLabel, { color: c.accent }]}>{t('common.close')}</Text>
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={styles.formContainer}>
-          <Text style={[styles.selectedModel, { color: c.text }]}>
+          <Text style={[styles.selectedModel, { color: c.ink }]}>
             {vehicle.vehicleModel.brand} {vehicle.vehicleModel.model}
           </Text>
           <Input label={t('vehicles.nickname')} value={nickname} onChangeText={setNickname} />
@@ -302,15 +325,18 @@ function EditVehicleModal({ vehicle, onClose, onSaved }: { vehicle: UserVehicle;
 
 const styles = StyleSheet.create({
   container: { padding: Spacing[4], gap: Spacing[3] },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  pageTitle: { fontSize: FontSizes['2xl'], fontWeight: '700', marginTop: Spacing[2] },
-  empty: { textAlign: 'center', marginTop: Spacing[8], fontSize: FontSizes.base },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
+  headerTitle: { gap: 2 },
+  pageTitle: { fontFamily: Fonts.display, fontSize: FontSizes['2xl'], fontWeight: '700' },
+  empty: { textAlign: 'center', marginTop: Spacing[8], fontSize: FontSizes.base, fontFamily: Fonts.displayRegular },
   vehicleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  vehicleInfo: { flex: 1, gap: 2 },
-  vehicleName: { fontSize: FontSizes.base, fontWeight: '600' },
-  vehicleSub: { fontSize: FontSizes.sm },
-  vehicleActions: { flexDirection: 'row', gap: Spacing[2] },
+  vehicleInfo: { flex: 1, gap: Spacing[2] },
+  vehicleName: { fontFamily: Fonts.display, fontSize: FontSizes.base, fontWeight: '700' },
+  vehicleMeta: { flexDirection: 'row', alignItems: 'center', gap: Spacing[2] },
+  vehicleSub: { fontFamily: Fonts.mono, fontSize: FontSizes.sm },
+  vehicleActions: { flexDirection: 'row', gap: Spacing[3] },
   iconBtn: { padding: Spacing[2] },
+  actionLabel: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSize.caption },
   modalContainer: { flex: 1 },
   modalHeader: {
     flexDirection: 'row',
@@ -319,11 +345,13 @@ const styles = StyleSheet.create({
     padding: Spacing[4],
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  modalTitle: { fontSize: FontSizes.lg, fontWeight: '600' },
-  catalogItem: { padding: Spacing[4], borderBottomWidth: StyleSheet.hairlineWidth },
-  catalogName: { fontSize: FontSizes.base, fontWeight: '500' },
-  catalogSub: { fontSize: FontSizes.sm, marginTop: 2 },
+  modalTitle: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
+  closeLabel: { fontFamily: Fonts.display, fontWeight: '700', fontSize: FontSizes.base },
+  catalogItem: { padding: Spacing[4], borderBottomWidth: StyleSheet.hairlineWidth, gap: Spacing[2] },
+  catalogName: { fontFamily: Fonts.display, fontSize: FontSizes.base, fontWeight: '700' },
+  catalogMeta: { flexDirection: 'row', alignItems: 'center', gap: Spacing[2] },
+  catalogSub: { fontFamily: Fonts.mono, fontSize: FontSizes.sm },
   formContainer: { padding: Spacing[4], gap: Spacing[4] },
   backBtn: { marginBottom: Spacing[2] },
-  selectedModel: { fontSize: FontSizes.lg, fontWeight: '600' },
+  selectedModel: { fontFamily: Fonts.display, fontSize: FontSizes.lg, fontWeight: '700' },
 });
