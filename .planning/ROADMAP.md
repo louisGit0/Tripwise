@@ -69,8 +69,15 @@ Plans:
   2. The trip result page presents total cost as a designed hero figure with a clear energy + toll breakdown and multi-energy comparison — not plain text rows.
   3. Interactive elements on the result page show designed hover/focus/press states and loading skeletons while data resolves.
   4. The total cost animates with a smooth, compositor-friendly counter/transition that stays within performance budget (no jank, transform/opacity only).
-**Plans**: TBD
+**Plans**: 5 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 02-01-PLAN.md — Token + font foundation: evolve globals.css surface/neutral ramp + new surface3/toll/gpl + 4 type-size vars + serif headings, map to Tailwind utilities + spacing aliases, wire Instrument Serif via next/font (Wave 1)
+- [ ] 02-02-PLAN.md — Motion hooks: useReducedMotion (SSR-safe gate) + useCountUp (700ms easeOutCubic rAF counter, reduced-motion-aware) (Wave 1)
+- [ ] 02-03-PLAN.md — Data-viz primitives: DataBar (Variant A segmented Énergie/Péage + Variant B single, scaleX reveal, token-driven) + Skeleton atom (Wave 2)
+- [ ] 02-04-PLAN.md — Trip result redesign: serif title + animated mono hero counter + segmented breakdown bar + comparison bars + interaction states + stepper a11y + layout-mirroring skeleton (Wave 3)
+- [ ] 02-05-PLAN.md — Visual + motion human-verify checkpoint (hero count-up, hide-when-toll-0, reduced-motion, theme parity) (Wave 4)
 
 ### Phase 3: Web Redesign Rollout
 **Goal**: Every remaining web screen wears the editorial-dark language consistently, with existing flows intact and Core Web Vitals preserved, so the whole web app feels like one premium product.
@@ -117,7 +124,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Precise Tolls End-to-End (Web) | 4/4 | Complete (re-scoped: estimate-primary) | 2026-06-01 |
 | 01.1. Route-aware free toll estimator | 1/1 | Complete | 2026-06-01 |
-| 2. Editorial Dark Design System + Trip Result Redesign | 0/0 | Not started | - |
+| 2. Editorial Dark Design System + Trip Result Redesign | 0/5 | Planned | - |
 | 3. Web Redesign Rollout | 0/0 | Not started | - |
 | 4. Multi-Source Vehicle Catalog + Scaled Showroom | 0/0 | Not started | - |
 | 5. Mobile Tolls + Editorial Redesign | 0/0 | Not started | - |
