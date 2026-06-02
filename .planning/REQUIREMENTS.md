@@ -122,7 +122,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 
 ### Showroom v2 (SHOW)
 - [ ] **SHOW-01**: Showroom vehicle entries are **designed editorial-dark cards** (not text rows), web + mobile.
-- [ ] **SHOW-02**: Each card shows the **vehicle's photo** — _only if a free, viable image source exists (decided by a spike); otherwise dropped + documented._
+- [x] **SHOW-02**: Each card shows the **vehicle's photo** — _only if a free, viable image source exists (decided by a spike); otherwise dropped + documented._
 - [ ] **SHOW-03**: Showroom **navigation/search is simplified** and intuitive (today "too complicated"), web + mobile.
 
 ### Onboarding (ONB)

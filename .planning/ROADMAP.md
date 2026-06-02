@@ -199,7 +199,7 @@ Plans:
 **UI hint**: yes
 **Plans**: 4 plans
 Plans:
-- [ ] 07-01-PLAN.md — Backend image-resolve: VehicleImageService (CarImages, key server-side, in-memory cache, AbortSignal.timeout, never-throw) + JWT-guarded GET /vehicles/catalog/image + .env.example + unit/e2e (Wave 1)
+- [x] 07-01-PLAN.md — Backend image-resolve: VehicleImageService (CarImages, key server-side, in-memory cache, AbortSignal.timeout, never-throw) + JWT-guarded GET /vehicles/catalog/image + .env.example + unit/e2e (Wave 1)
 - [ ] 07-02-PLAN.md — Web showroom v2: VehicleImage atom (photo-or-brand-placeholder) + designed garage/add cards + simpler search/nav, Phase-4 server search preserved (Wave 2)
 - [ ] 07-03-PLAN.md — Mobile showroom v2: RN VehicleImage + designed catalog cards + simpler search, Phase-4 server search preserved (Wave 2)
 - [ ] 07-04-PLAN.md — Cross-platform human-verify checkpoint (cards, photos-or-placeholder incl. no-key path, simpler nav, flows intact) (Wave 3)
@@ -226,6 +226,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
-| 7. Showroom v2 | 0/4 | Planned | - |
+| 7. Showroom v2 | 1/4 | In Progress|  |
 | 8. Onboarding | 0/0 | Not started | - |
 | 9. iOS App Store Release | 0/0 | Not started | - |
