@@ -255,6 +255,34 @@ describe('Vehicles (e2e)', () => {
     });
   });
 
+  // ── Image-resolve (CARIMAGES_API_KEY UNSET dans le harness → graceful null) ──
+
+  describe('GET /api/v1/vehicles/catalog/image', () => {
+    it('sans clé configurée → 200 { imageUrl: null } (repli gracieux, never throws)', async () => {
+      const token = await registerAndLogin(app, 'veh-image-nokey@test.com');
+      const res = await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog/image?make=Tesla&model=Model%203')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(res.body).toEqual({ imageUrl: null });
+    });
+
+    it('retourne 401 sans token (JWT requis)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog/image?make=Tesla&model=Model%203')
+        .expect(401);
+    });
+
+    it('retourne 400 si un paramètre requis manque (model absent)', async () => {
+      const token = await registerAndLogin(app, 'veh-image-badreq@test.com');
+      await request(app.getHttpServer())
+        .get('/api/v1/vehicles/catalog/image?make=Tesla')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
+    });
+  });
+
   // ── Véhicules utilisateur ──────────────────────────────────────────────────
 
   describe('GET /api/v1/vehicles/me', () => {

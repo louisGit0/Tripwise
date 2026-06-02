@@ -14,7 +14,9 @@ import {
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { VehicleSyncService } from './vehicle-sync.service';
+import { VehicleImageService } from './vehicle-image.service';
 import { CatalogQueryDto } from './dto/catalog-query.dto';
+import { CatalogImageQueryDto } from './dto/catalog-image-query.dto';
 import { AddUserVehicleDto } from './dto/add-user-vehicle.dto';
 import { UpdateUserVehicleDto } from './dto/update-user-vehicle.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -26,6 +28,7 @@ export class VehiclesController {
   constructor(
     private readonly vehiclesService: VehiclesService,
     private readonly vehicleSyncService: VehicleSyncService,
+    private readonly vehicleImageService: VehicleImageService,
   ) {}
 
   // ── Catalogue public ───────────────────────────────────────────────────────
@@ -39,6 +42,17 @@ export class VehiclesController {
   @Get('catalog/brands')
   getCatalogBrands(@Query() query: CatalogQueryDto) {
     return this.vehiclesService.findCatalogBrands(query);
+  }
+
+  // NOTE: declared BEFORE `catalog/:id` so Nest does not match 'image' as an id.
+  // Returns { imageUrl: string | null } — server-side CarImages resolve, key-safe,
+  // never-throw (graceful → null → client renders a brand placeholder).
+  @Get('catalog/image')
+  @UseGuards(JwtAuthGuard)
+  getCatalogImage(@Query() query: CatalogImageQueryDto) {
+    return this.vehicleImageService
+      .resolveImageUrl(query.make, query.model)
+      .then((imageUrl) => ({ imageUrl }));
   }
 
   @Get('catalog/:id')
