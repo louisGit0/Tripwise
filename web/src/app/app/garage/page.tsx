@@ -12,9 +12,14 @@ import { FuelBadge } from '@/components/ui/FuelBadge';
 import { BrandAvatar } from '@/components/ui/BrandAvatar';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { apiClient } from '@/lib/api';
 import type { UserVehicle, UserVehicleWithStats } from '@/types/api';
+
+// Canonical focus token — applied to every interactive element incl. icon buttons.
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-carbon-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-carbon-bg';
 
 // UserVehicle may or may not carry stats — support both shapes
 type GarageVehicle = UserVehicle | UserVehicleWithStats;
@@ -141,9 +146,22 @@ export default function GaragePage() {
 
       {/* ── Vehicle list ─────────────────────────────────────── */}
       {isLoading ? (
-        <div className="flex flex-col gap-3 animate-pulse">
+        <div className="flex flex-col gap-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-16 bg-carbon-surface2 rounded-card" />
+            <SectionCard key={i} padding="none">
+              <div className="px-4 py-3 flex items-center gap-3">
+                <Skeleton width={36} height={36} rounded="rounded-full" />
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <Skeleton width="42%" height={12} />
+                  <Skeleton width="64%" height={10} />
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Skeleton width={32} height={32} rounded="rounded-lg" />
+                  <Skeleton width={32} height={32} rounded="rounded-lg" />
+                  <Skeleton width={32} height={32} rounded="rounded-lg" />
+                </div>
+              </div>
+            </SectionCard>
           ))}
         </div>
       ) : vehicles.length === 0 ? (
@@ -174,7 +192,7 @@ export default function GaragePage() {
                   {/* Main info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-carbon-ink text-sm truncate">{name}</span>
+                      <span className="font-bold text-carbon-ink text-sm truncate">{name}</span>
                       {isDefault && (
                         <Pill color="accent" size="sm">Par défaut</Pill>
                       )}
@@ -197,9 +215,9 @@ export default function GaragePage() {
                       <button
                         type="button"
                         onClick={() => handleSetDefault(v.id)}
-                        aria-label="Définir comme actif"
+                        aria-label={`Définir « ${name} » comme véhicule par défaut`}
                         disabled={isSettingDefault === v.id}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-40"
+                        className={`w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-40 ${FOCUS_RING}`}
                       >
                         <Star size={14} />
                       </button>
@@ -207,16 +225,16 @@ export default function GaragePage() {
                     <button
                       type="button"
                       onClick={() => openEdit(v)}
-                      aria-label="Modifier"
-                      className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-carbon-accent hover:bg-blue-500/10 transition-colors"
+                      aria-label={`Modifier le véhicule « ${name} »`}
+                      className={`w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-carbon-accent hover:bg-blue-500/10 transition-colors ${FOCUS_RING}`}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setDeleteVehicle(v)}
-                      aria-label="Supprimer"
-                      className="w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      aria-label={`Supprimer le véhicule « ${name} »`}
+                      className={`w-8 h-8 flex items-center justify-center rounded-lg text-carbon-muted hover:text-red-400 hover:bg-red-500/10 transition-colors ${FOCUS_RING}`}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -271,7 +289,7 @@ export default function GaragePage() {
             <div className="flex items-center gap-3 p-3 bg-carbon-surface2 rounded-xl border border-carbon-hairline">
               <BrandAvatar brand={editVehicle.vehicleModel.brand} size={32} />
               <div>
-                <p className="text-sm font-medium text-carbon-ink">
+                <p className="text-sm font-bold text-carbon-ink">
                   {editVehicle.vehicleModel.brand} {editVehicle.vehicleModel.model}
                 </p>
                 <FuelBadge fuelType={editVehicle.vehicleModel.fuelType} />
