@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Sparkles,
   Route,
@@ -76,6 +76,7 @@ export function OnboardingTour() {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [step, setStep] = useState(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Fetch the current user once; auto-open only when the per-user flag is unset (ONB-5).
   useEffect(() => {
@@ -132,6 +133,62 @@ export function OnboardingTour() {
     return () => document.removeEventListener('keydown', onKey);
   }, [open, dismiss]);
 
+  // Lock background scroll while the modal is open (WR-03).
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  // Focus management + trap (WR-02): move focus into the dialog on open, keep
+  // Tab/Shift+Tab within it, and restore focus to the trigger on close.
+  useEffect(() => {
+    if (!open) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const node = dialogRef.current;
+
+    const getFocusable = (): HTMLElement[] => {
+      if (!node) return [];
+      const selector =
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      return Array.from(node.querySelectorAll<HTMLElement>(selector));
+    };
+
+    // Move focus into the dialog (first focusable, else the panel itself).
+    (getFocusable()[0] ?? node)?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) {
+        e.preventDefault();
+        node?.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || !node?.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !node?.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const current = STEPS[step];
@@ -156,8 +213,10 @@ export function OnboardingTour() {
 
       {/* Panel */}
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={[
-          'relative z-10 w-full max-w-md flex flex-col',
+          'relative z-10 w-full max-w-md flex flex-col outline-none',
           'bg-carbon-surface border border-carbon-hairline rounded-card shadow-2xl',
           transitionClass,
         ].join(' ')}

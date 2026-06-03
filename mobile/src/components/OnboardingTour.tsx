@@ -43,18 +43,20 @@ export function OnboardingTour() {
   const [step, setStep] = useState(0);
   const [userId, setUserId] = useState<string | null>(null);
   const mountedRef = useRef(true);
+  // Last known authenticated user id — source of truth for persisting the seen
+  // flag, independent of the in-flight /auth/me request and render timing (WR-01).
+  const idRef = useRef<string | null>(null);
 
   // Resolve the user id, auto-show on unset flag, and wire the replay event.
   useEffect(() => {
     mountedRef.current = true;
-    let resolvedId: string | null = null;
 
     client
       .get<MeResponse>('/auth/me')
       .then(async (r) => {
         const id = r.data?.id;
         if (!id) return;
-        resolvedId = id;
+        idRef.current = id;
         if (!mountedRef.current) return;
         setUserId(id);
         const seen = await hasSeenOnboarding(id);
@@ -69,9 +71,8 @@ export function OnboardingTour() {
 
     const sub = DeviceEventEmitter.addListener(ONBOARDING_OPEN_EVENT, () => {
       if (!mountedRef.current) return;
-      // Replay always opens, even when the flag is set. Backfill the id if the
-      // /auth/me read has resolved by now.
-      if (!userId && resolvedId) setUserId(resolvedId);
+      // Replay always opens, even when the flag is set. The id (when known) is
+      // read from idRef at dismiss time, so no gating is needed here.
       setStep(0);
       setOpen(true);
     });
@@ -80,11 +81,12 @@ export function OnboardingTour() {
       mountedRef.current = false;
       sub.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const dismiss = useCallback(() => {
-    if (userId) void markOnboardingSeen(userId);
+    // Persist with whatever id is known (ref is the freshest; fall back to state).
+    const id = idRef.current ?? userId;
+    if (id) void markOnboardingSeen(id);
     setOpen(false);
   }, [userId]);
 
