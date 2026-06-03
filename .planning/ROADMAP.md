@@ -214,8 +214,8 @@ Plans:
 **UI hint**: yes
 **Plans**: 3 plans
 Plans:
-- [ ] 08-01-PLAN.md — Web onboarding: seen-flag util (localStorage) + OnboardingTour 7-step editorial-dark carousel (auto-show via /auth/me + replay window event) + AppLayout mount + Settings "Revoir le tutoriel" (Wave 1)
-- [ ] 08-02-PLAN.md — Mobile onboarding: seen-flag util (expo-secure-store) + RN OnboardingTour Modal 7 steps (FR+EN i18next, auto-show + DeviceEventEmitter replay) + tabs-layout mount + Settings replay (Wave 1)
+- [x] 08-01-PLAN.md — Web onboarding: seen-flag util (localStorage) + OnboardingTour 7-step editorial-dark carousel (auto-show via /auth/me + replay window event) + AppLayout mount + Settings "Revoir le tutoriel" (Wave 1)
+- [x] 08-02-PLAN.md — Mobile onboarding: seen-flag util (expo-secure-store) + RN OnboardingTour Modal 7 steps (FR+EN i18next, auto-show + DeviceEventEmitter replay) + tabs-layout mount + Settings replay (Wave 1)
 - [ ] 08-03-PLAN.md — Cross-platform human-verify checkpoint: first-login auto-show, no-reshow persistence, Settings replay, 7 steps editorial-dark FR/FR+EN, no regression (Wave 2)
 
 ### Phase 9: iOS App Store Release
@@ -232,5 +232,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
 | 7. Showroom v2 | 3/4 | In Progress|  |
-| 8. Onboarding | 0/3 | Planned    |  |
+| 8. Onboarding | 2/3 | In Progress|  |
 | 9. iOS App Store Release | 0/0 | Not started | - |

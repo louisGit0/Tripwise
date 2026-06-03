@@ -126,7 +126,7 @@ shipped capabilities are tracked as Validated in `.planning/PROJECT.md`.
 - [ ] **SHOW-03**: Showroom **navigation/search is simplified** and intuitive (today "too complicated"), web + mobile.
 
 ### Onboarding (ONB)
-- [ ] **ONB-01**: A **post-signup tutorial** explains the app + each screen (persisted "seen" so it doesn't auto-reshow) and is **replayable from Settings**, web + mobile.
+- [x] **ONB-01**: A **post-signup tutorial** explains the app + each screen (persisted "seen" so it doesn't auto-reshow) and is **replayable from Settings**, web + mobile.
 
 ### Release (REL)
 - [ ] **REL-01**: The app is **published to the iOS App Store** (EAS prod build + App Store Connect submission). Apple Developer account/credentials/review owned by the user. Google Play deferred.
