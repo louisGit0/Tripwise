@@ -255,17 +255,23 @@ describe('Vehicles (e2e)', () => {
     });
   });
 
-  // ── Image-resolve (CARIMAGES_API_KEY UNSET dans le harness → graceful null) ──
+  // ── Image byte-proxy (CARIMAGES_API_KEY UNSET dans le harness → graceful 204) ─
+  //
+  // L'endpoint est un BYTE PROXY (D-35) : il streame des octets image (200) ou
+  // répond 204 sur miss/no-key/échec. Sans clé dans le harness → 204, sans aucune
+  // clé dans la réponse (le proxy ne fuit jamais l'api_key).
 
   describe('GET /api/v1/vehicles/catalog/image', () => {
-    it('sans clé configurée → 200 { imageUrl: null } (repli gracieux, never throws)', async () => {
+    it('sans clé configurée → 204 No Content (repli gracieux, never throws)', async () => {
       const token = await registerAndLogin(app, 'veh-image-nokey@test.com');
       const res = await request(app.getHttpServer())
         .get('/api/v1/vehicles/catalog/image?make=Tesla&model=Model%203')
         .set('Authorization', `Bearer ${token}`)
-        .expect(200);
+        .expect(204);
 
-      expect(res.body).toEqual({ imageUrl: null });
+      // 204 → corps vide ; aucune fuite de clé dans le corps ni les en-têtes.
+      expect(res.body).toEqual({});
+      expect(res.text).toBeFalsy();
     });
 
     it('retourne 401 sans token (JWT requis)', async () => {

@@ -145,10 +145,9 @@ export interface CatalogPage {
   totalPages: number;
 }
 
-/** Result of GET /vehicles/catalog/image — `imageUrl` is null when no key / no match / failure. */
-export interface CatalogImageResult {
-  imageUrl: string | null;
-}
+// GET /vehicles/catalog/image is now a BYTE PROXY (D-35): it streams image bytes
+// (200) or 204 on a miss — there is no JSON `{ imageUrl }` contract anymore, so
+// VehicleImage consumes the response as a blob directly.
 
 export interface TripStats {
   month?: string;

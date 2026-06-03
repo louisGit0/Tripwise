@@ -37,14 +37,9 @@ export interface CatalogPage {
   totalPages: number;
 }
 
-/**
- * GET /vehicles/catalog/image?make=&model= → { imageUrl: string | null }.
- * `null` when no CARIMAGES_API_KEY, no match, or any failure (07-01) → the
- * client renders the stylized brand placeholder.
- */
-export interface CatalogImageResult {
-  imageUrl: string | null;
-}
+// GET /vehicles/catalog/image is now a BYTE PROXY (D-35): the native <Image>
+// points straight at it with the JWT header and renders the streamed bytes (200)
+// or falls back to a placeholder on 204/error — there is no JSON contract anymore.
 
 export interface UserVehicle {
   id: string;

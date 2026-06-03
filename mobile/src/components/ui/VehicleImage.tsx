@@ -6,12 +6,15 @@ import {
   Text,
   View,
   useColorScheme,
+  type ImageSourcePropType,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
 import { Colors, Fonts, Radius } from '@/constants/theme';
-import client from '@/src/api/client';
-import type { CatalogImageResult } from '@/src/types/api';
+import { getToken } from '@/src/auth/storage';
+
+/** Base API (mirroir du client axios) — sert à pointer l'Image vers NOTRE endpoint. */
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1';
 
 interface VehicleImageProps {
   brand: string;
@@ -23,7 +26,7 @@ interface VehicleImageProps {
 
 type ImageState =
   | { status: 'loading' }
-  | { status: 'image'; url: string }
+  | { status: 'image'; source: ImageSourcePropType }
   | { status: 'placeholder' };
 
 /** Stable per-brand hue (mirrors the web BrandAvatar) so each brand keeps a
@@ -48,33 +51,44 @@ function brandInitials(brand: string): string {
 /**
  * Photo-or-stylized-brand-placeholder visual for a catalog model (RN).
  *
- * Fetches the vehicle photo via `GET /vehicles/catalog/image` (the 07-01 server
- * endpoint — the CarImages key never reaches the app) and, on a null result OR
- * any failure OR a dead CDN URL (`onError`), falls back to a designed brand
- * placeholder tinted with the stable per-brand hue. It NEVER throws and NEVER
- * shows a broken image. The fixed frame is sized by the caller via `style`, so
- * the photo resolving causes no reflow.
+ * Points the native `<Image>` straight at OUR byte-proxy endpoint
+ * (`GET /vehicles/catalog/image`) with the JWT in an `Authorization` header — the
+ * backend resolves + fetches the CarImages bytes server-side, so the signed URL
+ * and api_key never reach the app. A 200 streams the photo; a 204 (miss) / any
+ * failure fires `onError` → a designed brand placeholder tinted with the stable
+ * per-brand hue. It NEVER shows a broken image. The fixed frame is sized by the
+ * caller via `style`, so the photo resolving causes no reflow.
  */
 export function VehicleImage({ brand, model, style }: VehicleImageProps) {
   const scheme = useColorScheme() ?? 'dark';
   const c = Colors[scheme];
   const [state, setState] = useState<ImageState>({ status: 'loading' });
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setState({ status: 'loading' });
+    setLoaded(false);
 
-    client
-      .get<CatalogImageResult>('/vehicles/catalog/image', { params: { make: brand, model } })
-      .then((r) => {
-        if (cancelled) return;
-        const url = r.data?.imageUrl;
-        setState(url ? { status: 'image', url } : { status: 'placeholder' });
-      })
-      .catch(() => {
-        // Network / non-2xx / parse failure → degrade to the placeholder (never throw).
-        if (!cancelled) setState({ status: 'placeholder' });
+    (async () => {
+      const token = await getToken();
+      if (cancelled) return;
+
+      // No token → no authed fetch is possible → straight to the placeholder.
+      if (!token) {
+        setState({ status: 'placeholder' });
+        return;
+      }
+
+      const uri =
+        `${API_BASE}/vehicles/catalog/image` +
+        `?make=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`;
+
+      setState({
+        status: 'image',
+        source: { uri, headers: { Authorization: `Bearer ${token}` } },
       });
+    })();
 
     return () => {
       cancelled = true;
@@ -92,12 +106,20 @@ export function VehicleImage({ brand, model, style }: VehicleImageProps) {
       )}
 
       {state.status === 'image' && (
-        <Image
-          source={{ uri: state.url }}
-          style={StyleSheet.absoluteFill}
-          resizeMode="cover"
-          onError={() => setState({ status: 'placeholder' })}
-        />
+        <>
+          <Image
+            source={state.source}
+            style={StyleSheet.absoluteFill}
+            resizeMode="cover"
+            onLoad={() => setLoaded(true)}
+            onError={() => setState({ status: 'placeholder' })}
+          />
+          {!loaded && (
+            <View style={styles.fill}>
+              <ActivityIndicator color={c.accent} size="small" />
+            </View>
+          )}
+        </>
       )}
 
       {state.status === 'placeholder' && (
