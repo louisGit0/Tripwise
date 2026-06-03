@@ -135,15 +135,17 @@ export class VehicleImageService {
       return this.cacheMiss(cacheKey);
     }
 
-    // (4) Appel CarImages — la clé voyage en header Bearer (jamais dans l'URL
-    //     sortante, donc jamais dans un log d'URL). make/model URL-encodés (anti-SSRF).
+    // (4) Appel CarImages — `signed-url` exige la clé en query `api_key` (le header
+    //     Bearer est REJETÉ : {"error":"API key required"}). La clé part vers CarImages
+    //     mais n'est jamais loggée (on ne logge que le status) ni renvoyée au client
+    //     (le contrôleur proxifie les octets). make/model URL-encodés (anti-SSRF).
     try {
       const url =
-        `${SIGNED_URL_ENDPOINT}?make=${encodeURIComponent(trimmedMake)}` +
+        `${SIGNED_URL_ENDPOINT}?api_key=${encodeURIComponent(apiKey)}` +
+        `&make=${encodeURIComponent(trimmedMake)}` +
         `&model=${encodeURIComponent(trimmedModel)}`;
 
       const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${apiKey}` },
         signal: AbortSignal.timeout(IMAGE_TIMEOUT_MS),
       });
 

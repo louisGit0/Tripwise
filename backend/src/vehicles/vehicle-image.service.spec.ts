@@ -221,10 +221,10 @@ describe('VehicleImageService', () => {
     });
   });
 
-  // ── Clé en header Bearer + jamais dans l'URL sortante ──────────────────────
+  // ── Clé en query api_key (exigée par CarImages) — jamais renvoyée au client ──
 
   describe('key safety (outbound request)', () => {
-    it('sends the configured key as a Bearer header, never in the outbound URL', async () => {
+    it('sends the configured key as the api_key query param (CarImages rejects Bearer)', async () => {
       fetchSpy.mockResolvedValue(jsonResponse({ url: SIGNED_URL }));
       const service = makeService('secret-key-12345');
 
@@ -233,12 +233,12 @@ describe('VehicleImageService', () => {
       expect(fetchSpy).toHaveBeenCalledTimes(1);
       const [url, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
 
-      const headers = init.headers as Record<string, string>;
-      expect(headers.Authorization).toBe('Bearer secret-key-12345');
-
-      // The key is server-side only — it must NEVER be smuggled into the outbound
-      // request URL query string (it travels in the Authorization header instead).
-      expect(url).not.toContain('secret-key-12345');
+      // CarImages' signed-url endpoint REQUIRES the key in the api_key query param;
+      // a Bearer header is rejected ({"error":"API key required"}). The key reaching
+      // CarImages here is fine + required; the security boundary is that the controller
+      // proxies the IMAGE BYTES so the key/signed-URL never reach the app's own client.
+      expect(url).toContain('api_key=secret-key-12345');
+      expect(init.headers).toBeUndefined();
     });
 
     it('URL-encodes make/model into the query string', async () => {
