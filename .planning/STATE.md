@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: post-launch refinements + iOS release
 status: executing
-last_updated: "2026-06-03T14:13:04.026Z"
+last_updated: "2026-06-03T15:56:12.964Z"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
-  percent: 50
+  completed_plans: 11
+  percent: 75
 ---
 
 # Project State — verygoodtrip
