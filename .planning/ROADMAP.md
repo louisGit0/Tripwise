@@ -232,5 +232,5 @@ Plans:
 |-------|----------------|--------|-----------|
 | 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
 | 7. Showroom v2 | 3/4 | In Progress|  |
-| 8. Onboarding | 0/3 | Planned | - |
+| 8. Onboarding | 0/3 | Planned    |  |
 | 9. iOS App Store Release | 0/0 | Not started | - |
