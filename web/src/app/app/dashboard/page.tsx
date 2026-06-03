@@ -451,7 +451,7 @@ function DashboardInner() {
         <div className="pt-3 h-16">
           {statsLoading ? (
             <Skeleton width="100%" height={64} rounded="rounded-lg" />
-          ) : sparkData.length > 0 ? (
+          ) : sparkData.length >= 2 ? (
             <Sparkline
               data={sparkData}
               color="var(--c-accent)"

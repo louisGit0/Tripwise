@@ -424,18 +424,36 @@ describe('Trips CRUD (e2e)', () => {
       expect(res.body).toHaveProperty('savedVsGas');
       expect(res.body).toHaveProperty('dailyExpenses');
       expect(res.body.tripCount).toBeGreaterThanOrEqual(1);
+
+      // dailyExpenses : série 30j roulante contiguë, ordre chronologique croissant.
+      const daily = res.body.dailyExpenses as { date: string; cost: number }[];
+      expect(daily).toHaveLength(30);
+      const dates = daily.map((d) => d.date);
+      expect([...dates].sort()).toEqual(dates); // déjà trié croissant
+      // Le trajet seedé (totalCost 40) est daté d'aujourd'hui → présent dans la fenêtre.
+      const totalSeries = daily.reduce((s, d) => s + d.cost, 0);
+      expect(totalSeries).toBeCloseTo(40, 2);
+      // La dernière entrée correspond à aujourd'hui et porte le coût du trajet.
+      expect(daily[daily.length - 1].cost).toBeCloseTo(40, 2);
     });
 
-    it('retourne des zéros pour un mois sans trajet', async () => {
+    it('KPIs mensuels à zéro pour un mois sans trajet, mais série 30j toujours présente', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/v1/trips/stats?month=2020-01')
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
+      // Les KPIs restent cadrés sur le mois demandé (janvier 2020 → vide).
       expect(res.body.totalCost).toBe(0);
       expect(res.body.tripCount).toBe(0);
       expect(res.body.averageCostPerKm).toBeNull();
-      expect(res.body.dailyExpenses).toHaveLength(0);
+
+      // La série 30j est INDÉPENDANTE du mois : toujours 30 entrées, et le
+      // trajet seedé d'aujourd'hui (40) y figure même si janvier 2020 est vide.
+      const daily = res.body.dailyExpenses as { date: string; cost: number }[];
+      expect(daily).toHaveLength(30);
+      const totalSeries = daily.reduce((s, d) => s + d.cost, 0);
+      expect(totalSeries).toBeCloseTo(40, 2);
     });
 
     it('reflète le péage via totalCost sans double comptage', async () => {

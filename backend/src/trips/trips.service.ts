@@ -154,6 +154,11 @@ function categoryToFuelTypes(category: string): FuelType[] {
 function round2(n: number): number { return Math.round(n * 100) / 100; }
 function round4(n: number): number { return Math.round(n * 10000) / 10000; }
 
+/** Clé jour locale YYYY-MM-DD (cohérente avec les bornes de fenêtre en heure locale). */
+function localDayKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 // ── Service ────────────────────────────────────────────────────────────────
 
 @Injectable()
@@ -382,6 +387,11 @@ export class TripsService {
     const start = new Date(year, monthNum - 1, 1);
     const end   = new Date(year, monthNum, 1);
 
+    // Série 30j roulante — INDÉPENDANTE du filtre mois. Toujours calculée pour
+    // que le sparkline "Dépenses 30j" ne soit jamais vide même si le mois
+    // courant n'a aucun trajet (ex : 1er juin avec des trajets de fin mai).
+    const dailyExpenses = await this.computeRolling30DayExpenses(userId, now);
+
     const trips = await this.tripRepo
       .createQueryBuilder('trip')
       .where('trip.userId = :userId', { userId })
@@ -397,7 +407,7 @@ export class TripsService {
         tripCount:        0,
         averageCostPerKm: null,
         savedVsGas:       null,
-        dailyExpenses:    [],
+        dailyExpenses,
       };
     }
 
@@ -422,28 +432,6 @@ export class TripsService {
       savedVsGas = { amount: savedAmount, percent: savedPercent };
     }
 
-    // dailyExpenses : agrégation par jour
-    const dayMap = new Map<string, { cost: number; categories: Set<FuelCategory> }>();
-    for (const trip of trips) {
-      const key = new Date(trip.tripDate).toISOString().substring(0, 10);
-      if (!dayMap.has(key)) dayMap.set(key, { cost: 0, categories: new Set() });
-      const day = dayMap.get(key)!;
-      day.cost += Number(trip.totalCost);
-      day.categories.add(toCategory(trip.fuelType));
-    }
-
-    const dailyExpenses: DailyExpense[] = [...dayMap.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-14)
-      .map(([date, { cost, categories }]) => {
-        const cats = [...categories];
-        return {
-          date,
-          cost:         round2(cost),
-          fuelCategory: cats.length > 1 ? 'mixed' : (cats[0] ?? 'gas'),
-        };
-      });
-
     return {
       month,
       totalCost:        round2(totalCost),
@@ -453,6 +441,49 @@ export class TripsService {
       savedVsGas,
       dailyExpenses,
     };
+  }
+
+  /**
+   * Série contiguë des dépenses sur les 30 derniers jours (zero-filled),
+   * terminant aujourd'hui, en ordre chronologique croissant. Toujours 30
+   * entrées — INDÉPENDANTE du filtre mois des autres KPIs. Garantit que le
+   * sparkline "Dépenses 30j" du dashboard ne soit jamais vide.
+   */
+  private async computeRolling30DayExpenses(userId: string, now: Date): Promise<DailyExpense[]> {
+    const DAYS = 30;
+    // Bornes en heure locale, cohérentes avec localDayKey.
+    const windowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (DAYS - 1));
+    const windowEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
+    const trips = await this.tripRepo
+      .createQueryBuilder('trip')
+      .where('trip.userId = :userId', { userId })
+      .andWhere('trip.isArchived = :archived', { archived: false })
+      .andWhere('trip.tripDate >= :windowStart AND trip.tripDate < :windowEnd', { windowStart, windowEnd })
+      .getMany();
+
+    const dayMap = new Map<string, { cost: number; categories: Set<FuelCategory> }>();
+    for (const trip of trips) {
+      const key = localDayKey(new Date(trip.tripDate));
+      if (!dayMap.has(key)) dayMap.set(key, { cost: 0, categories: new Set() });
+      const day = dayMap.get(key)!;
+      day.cost += Number(trip.totalCost);
+      day.categories.add(toCategory(trip.fuelType));
+    }
+
+    const series: DailyExpense[] = [];
+    for (let i = DAYS - 1; i >= 0; i--) {
+      const d     = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+      const key   = localDayKey(d);
+      const entry = dayMap.get(key);
+      const cats  = entry ? [...entry.categories] : [];
+      series.push({
+        date:         key,
+        cost:         round2(entry?.cost ?? 0),
+        fuelCategory: cats.length > 1 ? 'mixed' : (cats[0] ?? 'gas'),
+      });
+    }
+    return series;
   }
 
   // ── Multi-energy comparison ─────────────────────────────────────────────────
