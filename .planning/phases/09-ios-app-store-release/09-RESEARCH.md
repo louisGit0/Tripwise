@@ -14,6 +14,53 @@ The deepest pitfall is **first-rejection time-loss**: Apple Review is 24-48h `[A
 
 **Primary recommendation:** Treat Phase 9 as **three sequential waves**, each gated by an explicit human-verify checkpoint because the user owns the Apple account: **Wave 1 — Config & assets (agent-owned)**: harden `app.config.ts` (encryption flag, privacy manifest, usage strings if needed), produce final 1024×1024 App Store icon, draft App Store Connect metadata (name, subtitle, FR/EN description, keywords, support URL, privacy policy URL), draft a minimal privacy policy page (host on the existing Vercel `web/` deployment), and prepare a 6.7" iPhone screenshot set; **Wave 2 — Apple account setup (user-owned, checkpointed)**: enroll Apple Developer Program (or confirm enrolled), create the App Record on App Store Connect (returns `ascAppId`), confirm `appleTeamId`, create an App Store Connect API key (`.p8` + key ID + issuer ID), set EAS Secrets (`MAPBOX_DOWNLOAD_TOKEN`, the production `EXPO_PUBLIC_API_URL`, the production `EXPO_PUBLIC_MAPBOX_TOKEN`); **Wave 3 — Build & submit**: `eas build --profile production --platform ios`, then `eas submit --profile production --platform ios` (API-key auth), TestFlight smoke (the user installs on their device, taps through every screen), then "Submit for Review" in App Store Connect. Google Play is explicitly out of scope (deferred).
 
+## Critical Updates (2026-06-03 re-research pass)
+
+Two findings during a re-research pass against current Apple + Apple TN3194 docs that the planner MUST honour over what the rest of this document still says:
+
+1. **Screenshot sizes — OVERRIDE D-44/D-45 and §Don't Hand-Roll row 5 + §Pitfall 3-area:** Apple's 2026 primary iPhone screenshot is now **6.9″ at 1320 × 2868 (iPhone 17 Pro Max class)**, with **6.5″ at 1242 × 2688 (iPhone 11 Pro Max class)** as the only required fallback. The "6.7″ only" claim in Don't Hand-Roll (A3) is the **previous** generation's primary and may now upload but is no longer "the primary". Plan Wave 1/Wave 3 must produce **6.9″ + 6.5″** sets. ([CITED: developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/], confirmed via independent 2026 guides linked under Sources.)
+
+2. **Sign in with Apple account deletion — token revoke is the recommended pattern:** Apple TN3194 (Handling account deletions and revoking tokens for Sign in with Apple) frames `POST https://appleid.apple.com/auth/revoke` (ES256 client_secret JWT signed by the existing `.p8`, with the user's Apple refresh token) as the correct way to handle deletion for SIWA users. Wording is "should", not "must" — some apps pass review without it. Planner must surface this as an **explicit user decision** in the Wave-1 backend slice (D-41): ship `DELETE /users/me` with token revoke (safer, +1 small migration to store the Apple refresh token + small new revoke service) or without (faster, accept a small risk of a rejection round-trip). Recommend "without" by default; flip to "with" if user wants zero-rejection-risk. ([CITED: developer.apple.com/documentation/technotes/tn3194-handling-account-deletions-and-revoking-tokens-for-sign-in-with-apple], [CITED: developer.apple.com/documentation/signinwithapplerestapi/revoke-tokens])
+
+These two override the corresponding statements below where they conflict.
+
+<user_constraints>
+## User Constraints (from CONTEXT.md)
+
+### Locked Decisions
+- **D-36 Identity** — Bundle id `com.verygoodtrip.app`, app name `verygoodtrip`, version `1.0.0`, build via EAS `autoIncrement`.
+- **D-37 EAS production env** — `EXPO_PUBLIC_API_URL` (Render prod), `EXPO_PUBLIC_MAPBOX_TOKEN` (public, restricted to bundle id), `MAPBOX_DOWNLOAD_TOKEN` (DOWNLOADS:READ secret) set in EAS Dashboard scoped to `production` (never committed); `eas.json` production profile already links via `"environment": "production"`.
+- **D-38 Info.plist** — `ITSAppUsesNonExemptEncryption: false`; no location/camera/photo/mic permissions; rely on Expo SDK 54 module-level privacy manifests.
+- **D-39 Privacy + Support URLs** — `/privacy` + `/support` pages on the existing Vercel `web/` deployment, editorial-dark, FR.
+- **D-40 Division of labor** — Agent prepares config/assets/metadata draft/runbook; user owns Apple Developer Program, EAS env vars, ASC app shell, `eas build`/`eas submit`, screenshots, Apple review.
+- **D-41 Account deletion** — `DELETE /users/me` (JWT-guarded, `@CurrentUser`), TypeORM cascades wired, returns 204 + e2e; web Settings danger zone + Modal confirm + BFF logout; mobile Settings danger zone + Alert.alert confirm + signOut. (See Critical Updates #2 for the optional SIWA token revoke add-on.)
+- **D-42 No iPad** — `ios.supportsTablet: false` (already correct in `app.config.ts`).
+- **D-43 ASC API key (.p8)** — Use App Store Connect API key for `eas submit`, not Apple ID + 2FA.
+- **D-44 ASC listing draft (FR-only at launch)** — Travel/Navigation, 4+, keywords + promotional text + 5 phone screenshots (now 6.9″ + 6.5″, see Critical Updates #1), demo reviewer account with seeded data, FR+EN reviewer notes.
+- **D-45 Plan waves** — Wave 1 BLOCKING: D-41 slice + privacy/support pages. Wave 2 parallel: config hardening + privacy-manifest audit. Wave 3: 5 FR phone screenshots (6.9″+6.5″). Wave 4 USER-OWNED BLOCKING: Apple Developer + ASC app shell + `.p8` + `appleTeamId`/`ascAppId` + EAS env vars. Wave 5: `eas build` → TestFlight smoke on physical iPhone → `eas submit` → fill listing → Submit for Review.
+
+### Claude's Discretion
+CONTEXT was generated in auto-mode after the user declined two clarification prompts. All choices are reversible by the user before Wave 5. Agent owns: exact `/privacy` + `/support` page copy (FR, RGPD-aware, editorial-dark), exact `app.config.ts` and `eas.json` patches (kept under user review before Wave 4), account-deletion UX wording, reviewer notes text, backend e2e scaffold for `DELETE /users/me`, runbook step ordering.
+
+### Deferred Ideas (OUT OF SCOPE)
+- Google Play release ("iOS maintenant, Google Play plus tard")
+- Crash-reporting / analytics SDKs (Sentry, Crashlytics, PostHog)
+- iPad-optimized layout
+- Push notifications, deep-link universal links, in-app purchases
+- App Preview video (optional; can add later without a new build)
+- EN App Store listing (can be added post-launch without a new build)
+</user_constraints>
+
+<phase_requirements>
+## Phase Requirements
+
+| ID | Description | Research Support |
+|----|-------------|------------------|
+| REL-01 | The app is published to the iOS App Store (EAS prod build + App Store Connect submission). Apple Developer account/credentials/review owned by the user. Google Play deferred. | Standard Stack: `eas-cli` + ASC `.p8`. Architecture: 5-wave plan (D-45) with the account-deletion slice (D-41) + `/privacy` + `/support` as Wave-1 blockers. Pitfalls catalogue covers every common reason Apple rejects v1.0 submissions (icon alpha, privacy manifest gap, export compliance, Mapbox token misconfig, ATT mis-declaration, name collision, demo-account onboarding tour). |
+
+> The REL-01 success criterion translates to **five gates**, three of which are human-driven (Wave 4 setup, Wave 5 build, Wave 5 submit). Agent's deliverable is "everything ready for Wave 4" + runbook.
+</phase_requirements>
+
 ## Architectural Responsibility Map
 
 | Capability | Primary Tier | Secondary Tier | Rationale |
