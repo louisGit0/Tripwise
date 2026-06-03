@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { Sun, Moon, LogOut } from 'lucide-react';
+import { Sun, Moon, LogOut, PlayCircle } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { logout } from '@/lib/auth';
 import { apiClient } from '@/lib/api';
+import { ONBOARDING_OPEN_EVENT } from '@/lib/onboarding';
 import type { UserProfile } from '@/types/api';
 
 type Theme = 'light' | 'dark';
@@ -155,6 +156,23 @@ export default function SettingsPage() {
           className="w-full"
         >
           Se déconnecter
+        </CTAButton>
+      </SectionCard>
+
+      {/* ── Aide ──────────────────────────────────────────────── */}
+      <SectionCard title="Aide" padding="md">
+        <Hairline className="my-3" />
+        <p className="text-xs text-carbon-muted mb-3">
+          Redécouvrez les fonctionnalités de l&apos;application.
+        </p>
+        <CTAButton
+          variant="ghost"
+          size="md"
+          icon={<PlayCircle size={14} />}
+          onClick={() => window.dispatchEvent(new Event(ONBOARDING_OPEN_EVENT))}
+          className="w-full"
+        >
+          Revoir le tutoriel
         </CTAButton>
       </SectionCard>
 

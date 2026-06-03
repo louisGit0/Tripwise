@@ -20,6 +20,7 @@ import { Wordmark } from '@/components/ui/Wordmark';
 import { Hairline } from '@/components/ui/Hairline';
 import { StatusDot } from '@/components/ui/StatusDot';
 import { TripModal } from '@/components/TripModal';
+import { OnboardingTour } from '@/components/OnboardingTour';
 
 // ── Nav items definition ────────────────────────────────────────
 type NavKey = 'dashboard' | 'trips' | 'garage' | 'fuelPrices' | 'settings';
@@ -297,6 +298,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* ── Trip calculator modal ─────────────────────────── */}
       <TripModal open={tripModalOpen} onClose={() => setTripModalOpen(false)} />
+
+      {/* ── Onboarding tour (auto-shows once per user; replay via window event) ── */}
+      <OnboardingTour />
     </div>
   );
 }
