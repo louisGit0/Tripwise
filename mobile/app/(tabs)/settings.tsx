@@ -8,6 +8,7 @@ import {
   useColorScheme,
   Alert,
   Appearance,
+  DeviceEventEmitter,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
@@ -18,6 +19,7 @@ import { Button } from '@/src/components/ui/Button';
 import { Input } from '@/src/components/ui/Input';
 import { useAuth } from '@/src/context/AuthContext';
 import client from '@/src/api/client';
+import { ONBOARDING_OPEN_EVENT } from '@/src/lib/onboarding';
 import Constants from 'expo-constants';
 
 interface ProfileResponse {
@@ -166,6 +168,14 @@ export default function SettingsScreen() {
             size="sm"
           />
         </View>
+      </SectionCard>
+
+      <SectionCard title={t('settings.help')}>
+        <Button
+          label={t('onboarding.replay')}
+          onPress={() => DeviceEventEmitter.emit(ONBOARDING_OPEN_EVENT)}
+          variant="secondary"
+        />
       </SectionCard>
 
       <SectionCard title={t('settings.account')}>
