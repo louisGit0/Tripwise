@@ -167,8 +167,8 @@ pseudo editing + an onboarding tutorial, and publishes the app to the iOS App St
 ## Phases (v1.1)
 
 - [x] **Phase 6: Polish & Account** — remove the toll "estimé" badge; trip share; edit pseudo (display_name) in settings. (completed 2026-06-02)
-- [ ] **Phase 7: Showroom v2** — restyled vehicle cards + simplified navigation/search + vehicle photos (only if a free image source is viable, else dropped). Starts with a free-image-source spike.
-- [ ] **Phase 8: Onboarding** — post-signup tutorial explaining the app + each screen, replayable from Settings.
+- [x] **Phase 7: Showroom v2** — restyled vehicle cards + simplified navigation/search + vehicle photos via free CarImages (secure server byte-proxy, key server-side). (completed 2026-06-03)
+- [x] **Phase 8: Onboarding** — post-signup tutorial explaining the app + each screen, replayable from Settings. (completed 2026-06-03)
 - [ ] **Phase 9: iOS App Store Release** — EAS production build + App Store Connect submission (Apple Developer account required; Google Play deferred).
 
 ## Phase Details (v1.1)
@@ -216,7 +216,7 @@ Plans:
 Plans:
 - [x] 08-01-PLAN.md — Web onboarding: seen-flag util (localStorage) + OnboardingTour 7-step editorial-dark carousel (auto-show via /auth/me + replay window event) + AppLayout mount + Settings "Revoir le tutoriel" (Wave 1)
 - [x] 08-02-PLAN.md — Mobile onboarding: seen-flag util (expo-secure-store) + RN OnboardingTour Modal 7 steps (FR+EN i18next, auto-show + DeviceEventEmitter replay) + tabs-layout mount + Settings replay (Wave 1)
-- [ ] 08-03-PLAN.md — Cross-platform human-verify checkpoint: first-login auto-show, no-reshow persistence, Settings replay, 7 steps editorial-dark FR/FR+EN, no regression (Wave 2)
+- [x] 08-03-PLAN.md — Cross-platform human-verify checkpoint: first-login auto-show, no-reshow persistence, Settings replay, 7 steps editorial-dark FR/FR+EN, no regression (Wave 2)
 
 ### Phase 9: iOS App Store Release
 **Goal**: The Expo app is published to the iOS App Store. All code/config/assets prepared by the agent; the Apple Developer account, credentials, and Apple review are owned by the user.
@@ -231,6 +231,6 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
-| 7. Showroom v2 | 3/4 | In Progress|  |
-| 8. Onboarding | 2/3 | In Progress|  |
+| 7. Showroom v2 | 5/5 | Complete   | 2026-06-03 |
+| 8. Onboarding | 3/3 | Complete   | 2026-06-03 |
 | 9. iOS App Store Release | 0/0 | Not started | - |
