@@ -130,6 +130,13 @@ export default {
     help: 'Help',
     logout: 'Sign out',
     logoutConfirm: 'Do you want to sign out?',
+    dangerZone: 'Danger zone',
+    deleteAccount: 'Delete my account',
+    deleteAccountHint:
+      'Deleting your account is permanent: your vehicles, trips and favorites will be erased and cannot be recovered.',
+    deleteAccountTitle: 'Permanently delete your account?',
+    deleteAccountConfirm:
+      'This action is irreversible. All your data — vehicles, trips and favorites — will be permanently deleted.',
     version: 'Version',
   },
   onboarding: {

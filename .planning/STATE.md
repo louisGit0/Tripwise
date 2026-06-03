@@ -19,7 +19,7 @@ progress:
 - **Core value:** Give an accurate, trustworthy total trip cost (energy + tolls) for a specific vehicle, instantly.
 - **Milestone:** Precise tolls + editorial premium redesign + multi-source vehicle catalog (web + mobile)
 - **Mode:** Vertical MVP
-- **Current focus:** v1.1 Phases 6 + 7 + 8 COMPLETE (photos live) → only **Phase 9 — iOS App Store release** remains
+- **Current focus:** v1.1 Phases 6 + 7 + 8 COMPLETE → **Phase 9 iOS release: agent prep COMPLETE, user-owned EAS build/submit pending** (see 09-01-RUNBOOK.md)
 
 ## Current Position
 

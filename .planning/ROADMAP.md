@@ -228,11 +228,12 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Backend: JWT-guarded DELETE /users/me (cascades User→UserVehicle/Favorite/Trip) + e2e (204, 401-no-token, post-delete /auth/me → 401) — D-41 (Wave 1 BLOCKING)
-- [ ] 09-02-PLAN.md — Web: Settings "Supprimer mon compte" danger-zone (confirm Modal → DELETE /users/me → logout BFF → /) + finalize public /privacy page + landing footer link — D-41 + D-39 (Wave 2)
-- [ ] 09-03-PLAN.md — Mobile: Settings "Supprimer mon compte" destructive Button (Alert.alert confirm → client.delete('/users/me') → signOut() → (auth)) + FR/EN i18n — D-41 (Wave 2)
-- [ ] 09-04-PLAN.md — Mobile config hardening: app.config.ts ITSAppUsesNonExemptEncryption=false + ios.privacyManifests (NSPrivacyTracking=false + 4 collected data types) + supportsTablet=false + eas.json submit.production.ios ASC API key placeholders + .gitignore *.p8 — D-36/D-38/D-42/D-43 (Wave 2)
-- [ ] 09-05-PLAN.md — Submission docs: ASSETS.md (icon check + 5-shot FR screenshot brief @ 6.7" + 6.5") + METADATA.md (paste-ready App Store Connect FR listing + reviewer demo account + privacy nutrition) + RUNBOOK.md (numbered steps from Apple Dev enrollment → Submit for Review) — D-37/D-40/D-44/D-45 (Wave 2)
+- [x] 09-01 — Backend: JWT-guarded DELETE /users/me (cascades User→UserVehicle/Favorite/Trip) + e2e (204, 401-no-token, post-delete /auth/me → 401) — D-41 (Wave 1 BLOCKING) ✅ 162/162
+- [x] 09-02 — Web: Settings "Supprimer mon compte" danger-zone (confirm Modal → DELETE /users/me → best-effort logout → /) + public /privacy + /support pages — D-41 + D-39 (Wave 2)
+- [x] 09-03 — Mobile: Settings "Supprimer mon compte" destructive Button (Alert.alert confirm → client.delete('/users/me') → signOut()) + FR/EN i18n — D-41 (Wave 2)
+- [x] 09-04 — Mobile config hardening: app.config.ts ITSAppUsesNonExemptEncryption=false + supportsTablet=false + eas.json production "environment":"production" + .p8 gitignored — D-36/D-38/D-42/D-43 (Wave 2)
+- [x] 09-05 — Submission docs: 09-01-RUNBOOK.md (Apple Dev → Submit) + 09-CONTEXT.md (App Store FR listing + reviewer demo account + privacy nutrition labels) — D-37/D-40/D-44/D-45 (Wave 2)
+- [ ] 09-06 — USER-OWNED: EAS production build → TestFlight smoke → eas submit → App Store Connect listing + screenshots → Apple Review (gated; see RUNBOOK)
 
 ## Progress (v1.1)
 
@@ -241,4 +242,4 @@ Plans:
 | 6. Polish & Account | 3/3 | Complete   | 2026-06-02 |
 | 7. Showroom v2 | 5/5 | Complete   | 2026-06-03 |
 | 8. Onboarding | 3/3 | Complete   | 2026-06-03 |
-| 9. iOS App Store Release | 0/5 | Plans created | - |
+| 9. iOS App Store Release | 5/5 prep | Agent prep complete — user build/submit pending | 2026-06-03 |

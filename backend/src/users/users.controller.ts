@@ -1,4 +1,12 @@
-import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -26,5 +34,18 @@ export class UsersController {
       provider: updated.provider,
       createdAt: updated.createdAt,
     };
+  }
+
+  /**
+   * DELETE /api/v1/users/me — supprime définitivement le compte de l'utilisateur
+   * authentifié et toutes ses données (véhicules, favoris, trajets) via cascade FK.
+   * IDOR-safe : la cible vient de @CurrentUser(), aucun id n'est accepté en paramètre.
+   * Requis par Apple (Guideline 5.1.1 (v) — suppression de compte in-app). Retourne 204.
+   */
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteMe(@CurrentUser() user: User): Promise<void> {
+    await this.usersService.deleteAccount(user.id);
   }
 }

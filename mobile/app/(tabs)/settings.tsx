@@ -95,6 +95,32 @@ export default function SettingsScreen() {
     ]);
   };
 
+  const handleDeleteAccount = () => {
+    Alert.alert(t('settings.deleteAccountTitle'), t('settings.deleteAccountConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('settings.deleteAccount'),
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await client.delete('/users/me');
+          } catch {
+            // Échec AVANT suppression : on signale et on s'arrête.
+            Toast.show({ type: 'error', text1: t('common.error') });
+            return;
+          }
+          // Compte supprimé côté serveur. Purge de session best-effort :
+          // en cas d'échec, l'intercepteur 401 effacera le token au prochain appel.
+          try {
+            await signOut();
+          } catch {
+            /* ignore */
+          }
+        },
+      },
+    ]);
+  };
+
   const version = Constants.expoConfig?.version ?? '1.0.0';
 
   return (
@@ -182,6 +208,17 @@ export default function SettingsScreen() {
         <Button label={t('settings.logout')} onPress={handleLogout} variant="destructive" />
       </SectionCard>
 
+      <SectionCard title={t('settings.dangerZone')}>
+        <Text style={[styles.dangerHint, { color: c.mutedText }]}>
+          {t('settings.deleteAccountHint')}
+        </Text>
+        <Button
+          label={t('settings.deleteAccount')}
+          onPress={handleDeleteAccount}
+          variant="destructive"
+        />
+      </SectionCard>
+
       <Text style={[styles.version, { color: c.mutedText }]}>
         {t('settings.version')} {version}
       </Text>
@@ -195,6 +232,7 @@ const styles = StyleSheet.create({
   pageTitle: { fontFamily: Fonts.display, fontSize: FontSizes['2xl'], fontWeight: '700' },
   row: { flexDirection: 'row', gap: Spacing[2] },
   pseudoGroup: { gap: Spacing[3] },
+  dangerHint: { fontFamily: Fonts.displayRegular, fontSize: FontSizes.sm, marginBottom: Spacing[3] },
   optionBtn: {
     flex: 1,
     borderRadius: 8,

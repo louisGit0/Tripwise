@@ -10,9 +10,26 @@ const config: ExpoConfig = {
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
   ios: {
-    supportsTablet: true,
+    // Phone-first v1.0: iPad support would require a full 12.9" iPad screenshot set at
+    // App Review with no iPad-optimized layout to show. Revisit when iPad is a real target.
+    supportsTablet: false,
     bundleIdentifier: 'com.verygoodtrip.app',
     usesAppleSignIn: true,
+    infoPlist: {
+      // The app uses only standard HTTPS (no custom/proprietary cryptography), so it
+      // qualifies for the US export-compliance encryption exemption. Declaring this
+      // here skips the "export compliance" question on every App Store submission.
+      ITSAppUsesNonExemptEncryption: false,
+    },
+    // App-level privacy manifest. We do NOT track users and contact no tracking
+    // domains. Required-reason API declarations (NSPrivacyAccessedAPITypes) are
+    // contributed automatically by the Expo SDK 54 modules' own manifests and merged
+    // at build time. The authoritative data-collection disclosure lives in the App
+    // Store Connect "App Privacy" questionnaire (see 09-CONTEXT.md → App Privacy).
+    privacyManifests: {
+      NSPrivacyTracking: false,
+      NSPrivacyTrackingDomains: [],
+    },
   },
   android: {
     adaptiveIcon: {

@@ -63,4 +63,18 @@ export class UsersService {
     await this.userRepo.update(userId, { displayName });
     return this.userRepo.findOneByOrFail({ id: userId });
   }
+
+  /**
+   * Supprime définitivement le compte de l'utilisateur courant et toutes ses
+   * données liées. Les FK `user_vehicles.user_id`, `favorites.user_id` et
+   * `trips.user_id` sont en `onDelete: CASCADE` → un seul DELETE sur `users`
+   * efface en cascade véhicules, favoris et trajets.
+   *
+   * Exigé par Apple (App Store Guideline 5.1.1 (v)) : toute app proposant la
+   * création de compte / Sign in with Apple DOIT offrir la suppression de compte
+   * dans l'app. Prend l'id de @CurrentUser() — jamais un id arbitraire (IDOR-safe).
+   */
+  async deleteAccount(userId: string): Promise<void> {
+    await this.userRepo.delete(userId);
+  }
 }

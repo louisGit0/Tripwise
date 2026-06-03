@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
-import { Sun, Moon, LogOut, PlayCircle } from 'lucide-react';
+import { Sun, Moon, LogOut, PlayCircle, Trash2 } from 'lucide-react';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Hairline } from '@/components/ui/Hairline';
 import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useToast } from '@/providers/ToastProvider';
 import { logout } from '@/lib/auth';
@@ -31,6 +32,8 @@ export default function SettingsPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [isSavingName, setIsSavingName] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -69,6 +72,28 @@ export default function SettingsPage() {
   async function handleLogout() {
     await logout();
     router.push('/login');
+    router.refresh();
+  }
+
+  async function handleDeleteAccount() {
+    setIsDeleting(true);
+    try {
+      await apiClient.delete('/users/me');
+    } catch {
+      // Échec AVANT suppression : on garde la modale ouverte pour réessayer.
+      setIsDeleting(false);
+      showToast('error', 'La suppression a échoué. Réessayez.');
+      return;
+    }
+    // Le compte est supprimé côté serveur. La purge de session est best-effort :
+    // si elle échoue, l'intercepteur 401 nettoiera de toute façon la session.
+    try {
+      await logout();
+    } catch {
+      /* ignore */
+    }
+    setConfirmDelete(false);
+    router.push('/');
     router.refresh();
   }
 
@@ -176,10 +201,63 @@ export default function SettingsPage() {
         </CTAButton>
       </SectionCard>
 
+      {/* ── Zone de danger ─────────────────────────────────────── */}
+      <SectionCard title="Zone de danger" padding="md">
+        <Hairline className="my-3" />
+        <p className="text-xs text-carbon-muted mb-3">
+          La suppression de votre compte est définitive : vos véhicules, trajets et favoris
+          seront effacés et ne pourront pas être récupérés.
+        </p>
+        <CTAButton
+          variant="danger"
+          size="md"
+          icon={<Trash2 size={14} />}
+          onClick={() => setConfirmDelete(true)}
+          className="w-full"
+        >
+          Supprimer mon compte
+        </CTAButton>
+      </SectionCard>
+
       {/* Version */}
       <p className="text-caption text-carbon-muted font-mono text-center">
         Version · v2.4 — BUILD 0521
       </p>
+
+      {/* Confirmation de suppression de compte */}
+      <Modal
+        open={confirmDelete}
+        onClose={() => {
+          if (!isDeleting) setConfirmDelete(false);
+        }}
+        title="Supprimer définitivement votre compte ?"
+        footer={
+          <div className="flex gap-2 justify-end">
+            <CTAButton
+              variant="ghost"
+              size="md"
+              onClick={() => setConfirmDelete(false)}
+              disabled={isDeleting}
+            >
+              Annuler
+            </CTAButton>
+            <CTAButton
+              variant="danger"
+              size="md"
+              icon={<Trash2 size={14} />}
+              onClick={handleDeleteAccount}
+              loading={isDeleting}
+            >
+              Supprimer mon compte
+            </CTAButton>
+          </div>
+        }
+      >
+        <p className="text-sm text-carbon-ink2">
+          Cette action est irréversible. Toutes vos données — véhicules, trajets et favoris —
+          seront définitivement supprimées.
+        </p>
+      </Modal>
     </div>
   );
 }

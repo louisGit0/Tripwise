@@ -130,6 +130,13 @@ export default {
     help: 'Aide',
     logout: 'Se déconnecter',
     logoutConfirm: 'Voulez-vous vous déconnecter ?',
+    dangerZone: 'Zone de danger',
+    deleteAccount: 'Supprimer mon compte',
+    deleteAccountHint:
+      'La suppression de votre compte est définitive : vos véhicules, trajets et favoris seront effacés et ne pourront pas être récupérés.',
+    deleteAccountTitle: 'Supprimer définitivement votre compte ?',
+    deleteAccountConfirm:
+      'Cette action est irréversible. Toutes vos données — véhicules, trajets et favoris — seront définitivement supprimées.',
     version: 'Version',
   },
   onboarding: {

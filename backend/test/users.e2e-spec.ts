@@ -175,4 +175,47 @@ describe('Users (e2e)', () => {
       expect(me.body.email).toBe('frank@example.com');
     });
   });
+
+  // ── DELETE /api/v1/users/me ─────────────────────────────────────────────────
+
+  describe('DELETE /api/v1/users/me', () => {
+    it('retourne 401 sans token', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/v1/users/me')
+        .expect(401);
+    });
+
+    it('supprime le compte (204), invalide le token et libère l’email', async () => {
+      // Utilisateur dédié à la suppression
+      const reg = await request(app.getHttpServer())
+        .post('/api/v1/auth/register')
+        .send({ email: 'gina@example.com', password: 'Passw0rd', displayName: 'Gina' });
+      const ginaToken = reg.body.accessToken as string;
+
+      // Le compte existe
+      await request(app.getHttpServer())
+        .get('/api/v1/auth/me')
+        .set('Authorization', `Bearer ${ginaToken}`)
+        .expect(200);
+
+      // Suppression → 204 sans corps
+      const del = await request(app.getHttpServer())
+        .delete('/api/v1/users/me')
+        .set('Authorization', `Bearer ${ginaToken}`)
+        .expect(204);
+      expect(del.body).toEqual({});
+
+      // Le même token ne résout plus aucun utilisateur → 401
+      await request(app.getHttpServer())
+        .get('/api/v1/auth/me')
+        .set('Authorization', `Bearer ${ginaToken}`)
+        .expect(401);
+
+      // L'email est de nouveau disponible (la ligne users a bien été supprimée)
+      await request(app.getHttpServer())
+        .post('/api/v1/auth/register')
+        .send({ email: 'gina@example.com', password: 'Passw0rd', displayName: 'Gina 2' })
+        .expect(201);
+    });
+  });
 });
