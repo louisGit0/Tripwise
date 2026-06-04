@@ -20,6 +20,11 @@ const config: ExpoConfig = {
       // qualifies for the US export-compliance encryption exemption. Declaring this
       // here skips the "export compliance" question on every App Store submission.
       ITSAppUsesNonExemptEncryption: false,
+      // @rnmapbox/maps links CoreLocation, so Apple's static analysis (ITMS-90683)
+      // requires a when-in-use purpose string even though we never request location
+      // at runtime. Providing it prevents an App Review rejection.
+      NSLocationWhenInUseUsageDescription:
+        'Votre position peut être utilisée pour centrer la carte de votre trajet autour de vous. L’app fonctionne sans cette autorisation.',
     },
     // App-level privacy manifest. We do NOT track users and contact no tracking
     // domains. Required-reason API declarations (NSPrivacyAccessedAPITypes) are
