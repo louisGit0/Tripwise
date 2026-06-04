@@ -76,6 +76,7 @@ const config: ExpoConfig = {
     reactCompiler: true,
   },
   extra: {
+    eas: { projectId: 'c6cc2597-2473-4370-a1c4-fe53da2c881a' },
     apiUrl: process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000/api/v1',
     mapboxToken: process.env.EXPO_PUBLIC_MAPBOX_TOKEN ?? '',
   },
