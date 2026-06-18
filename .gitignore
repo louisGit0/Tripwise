@@ -90,3 +90,11 @@ temp/
 # Editor and local tooling artifacts
 .claude/
 **/.claude/
+
+# Internal project docs kept out of VCS
+CLAUDE.md
+**/CLAUDE.md
+
+# Local PDF generator and its output (kept out of the repo)
+/scripts/
+verygoodtrip-context-memory.pdf
